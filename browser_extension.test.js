@@ -21,6 +21,19 @@ assert.begin();
 	assert.equal(div.childNodes.length, 0, 'There is 0 child text node in container after it has been cleared');
 })();
 
+(function() {
+	var div = document.createElement('div');
+
+	//add random nodes
+	assert.equal(div.childNodes.length, 0, 'There is 0 child node in newly created container');
+	div.appendChilds([document.createElement('span'), document.createElement('span')]);
+	assert.equal(div.childNodes.length, 2, 'There is 2 child nodes in container after 2 child nodes have been added');
+
+	//add text node
+	div.appendChilds([document.createTextNode('hop')]);
+	assert.equal(div.childNodes.length, 3, 'There is 3 child nodes in container after 1 child text node has been added');
+})();
+
 //element
 (function() {
 	var a = document.createElement('a');
@@ -39,6 +52,7 @@ assert.begin();
 	a.setAttributes({'class' : 'useless', title : 'Useless link'});
 
 	assert.equal(a.getAttribute('class'), 'useless', 'Attribute "class" has been overriden with good value');
+	assert.equal(a.getAttribute('title'), 'Useless link', 'Attribute "title" has been set with good value');
 
 })();
 
@@ -63,6 +77,31 @@ assert.begin();
 	assert.notOk(clicked, 'Button has not been clicked yet');
 	button.click();
 	assert.ok(clicked, 'Button listener has been set successfully');
+})();
+
+//form
+(function() {
+	var form = document.createElement('form');
+	var input = document.createFullElement('input', {name : 'value_1'});
+	var select = document.createFullElement('select', {name : 'value_2'});
+	var button_submit = document.createFullElement('button', {type : 'submit'}, 'Submit');
+	var button_close = document.createFullElement('button', {type : 'button'}, 'Close');
+	var p = document.createFullElement('p', {}, 'Form errors placeholder');
+	form.appendChilds([input, select, button_submit, button_close, p]);
+
+	form.disable();
+	assert.ok(input.hasAttribute('disabled'), 'Input field has been disabled');
+	assert.ok(select.hasAttribute('disabled'), 'Select field has been disabled');
+	assert.ok(button_submit.hasAttribute('disabled'), 'Submit button has been disabled');
+	assert.ok(button_close.hasAttribute('disabled'), 'Normal button has been disabled');
+	assert.notOk(p.hasAttribute('disabled'), 'Paragraph element has not been disabled');
+
+	form.enable();
+	assert.notOk(input.hasAttribute('disabled'), 'Input field has been enabled');
+	assert.notOk(select.hasAttribute('disabled'), 'Select field has been enabled');
+	assert.notOk(button_submit.hasAttribute('disabled'), 'Submit button has been enabled');
+	assert.notOk(button_close.hasAttribute('disabled'), 'Normal button has been enabled');
+	assert.notOk(p.hasAttribute('disabled'), 'Paragraph has never been disabled');
 })();
 
 //storage
