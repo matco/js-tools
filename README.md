@@ -18,10 +18,17 @@ Usage
 ----------
 The branch ```subtreeable``` can be used to import tools in your projects using [Git subtree](http://git-scm.com/book/ch6-7.html).
 * Add this repository as a remote to your project
-```git remote add -f js-tools https://github.com/matco/js-tools.git```
+```
+git remote add -f js-tools https://github.com/matco/js-tools.git
+```
 * Create the subtree from branch ```subtreeable```
-```git subtree add --prefix js-tools-folder js-tools subtreeable --squash```
+```
+git subtree add --prefix js-tools-folder js-tools subtreeable --squash
+```
 * Update js-tools in your project
-```git fetch js-tools subtreeable git subtree pull --prefix js-tools-folder js-tools subtreeable --squash```
+```
+git fetch js-tools subtreeable
+git subtree pull --prefix js-tools-folder js-tools subtreeable --squash
+```
 
 You are free to remove any tool you don't need.
