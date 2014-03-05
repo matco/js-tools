@@ -209,6 +209,18 @@ assert.begin();
 	assert.notOk(Function.isFunction([]), 'Empty array is not a function');
 })();
 
+//negatize
+(function() {
+	function is_odd(number) {
+		return number % 2 == 0;
+	}
+	assert.ok(is_odd(2), '2 is odd according to function is_odd');
+	assert.notOk(is_odd(5), '5 is not odd to function is_odd');
+	var is_even = is_odd.negatize();
+	assert.notOk(is_even(2), '2 is not even according to negatized function is_odd');
+	assert.ok(is_even(5), '5 is even according to negatized function is_odd');
+})();
+
 //callbackize
 (function() {
 	var text = 'toto';
