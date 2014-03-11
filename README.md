@@ -23,7 +23,7 @@ git remote add -f js-tools https://github.com/matco/js-tools.git
 ```
 * Create the subtree from branch ```subtreeable```
 ```
-git subtree add --prefix js-tools-folder js-tools subtreeable --squash
+git subtree add --prefix js-tools-folder js-tools/subtreeable --squash
 ```
 * Update js-tools in your project
 ```
