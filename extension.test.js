@@ -109,6 +109,35 @@ assert.begin();
 	assert.equal(Object.values(object)[1], embedded_object, 'Second value of object "{toto : "toto", titi : embedded_object}" is "embedded_object"');
 })();
 
+//key
+(function() {
+	assert.equal(Object.key({titi : 'tutu'}, 'tutu'), 'titi', 'Key for a string value is the right key');
+	assert.equal(Object.key({titi : 42}, 42), 'titi', 'Key for a number value is the right key');
+	assert.doesThrow(
+		function() {
+			Object.key({titi : 'tutu'}, 'toto');
+		},
+		function() {
+			return this.message === 'Object does not contains value'
+		},
+		'Asking key for a non existing value throws an exception'
+	);
+
+	var embedded_object = {mama : 'momo', mimi : 'mumu'};
+	var object = {toto : 'toto', titi :embedded_object};
+
+	assert.equal(Object.key(object, embedded_object), 'titi', 'Key for an object value is the right key');
+	assert.doesThrow(
+		function() {
+			Object.key(object, {mama : 'momo', mimi : 'mumu'});
+		},
+		function() {
+			return this.message === 'Object does not contains value'
+		},
+		'Asking key for a similar value throws an exception'
+	);
+})();
+
 //update
 (function() {
 	var object = {

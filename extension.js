@@ -70,6 +70,16 @@ if(!Object.values) {
 		return values;
 	};
 }
+if(!Object.key) {
+	Object.key = function(object, value) {
+		for(var key in object) {
+			if(object.hasOwnProperty(key) && object[key] === value) {
+				return key;
+			}
+		}
+		throw new Error('Object does not contains value');
+	};
+}
 if(!Object.update) {
 	Object.update = function(object, values) {
 		for(var key in values) {
