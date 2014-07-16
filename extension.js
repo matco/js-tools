@@ -391,6 +391,10 @@ Date.parseToFullDisplay = function(date) {
 	var parts = date.match(/(\d+)/g);
 	return new Date(parts[2], parts[1] - 1, parts[0], parts[3], parts[4], parts[5]);
 };
+Date.parseToFullDisplayUTC = function(date) {
+	var parts = date.match(/(\d+)/g);
+	return new Date(Date.UTC(parts[2], parts[1] - 1, parts[0], parts[3], parts[4], parts[5]));
+};
 Date.getDurationLiteral = function(duration) {
 	var d, result = '';
 	//write seconds

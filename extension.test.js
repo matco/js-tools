@@ -668,6 +668,22 @@ assert.equal(new Date('2011/10/10').getDayName('en'), 'Monday', 'Day name for da
 		Date.parseToFullDisplay('25.01.2009 22:62:46').getTime(),
 		new Date(2009, 0, 25, 23, 2, 46).getTime(),
 		'Parsing date "25.01.2009 22:62:46" gives the good date');
+	assert.equal(
+		Date.parseToFullDisplayUTC('25.01.2009 22:38:46').getTime(),
+		new Date(Date.UTC(2009, 0, 25, 22, 38, 46)).getTime(),
+		'Parsing date "25.01.2009 22:38:46" gives the good date');
+	assert.equal(
+		Date.parseToFullDisplayUTC('25.01.2009 22:62:46').getTime(),
+		new Date(Date.UTC(2009, 0, 25, 23, 2, 46)).getTime(),
+		'Parsing date "25.01.2009 22:62:46" gives the good date');
+	assert.equal(
+		Date.parseToFullDisplayUTC('25.01.2014 10:42:30').getTime() - Date.parseToFullDisplay('25.01.2014 10:42:30').getTime(),
+		1 * 60 * 60 * 1000,
+		'There is 1 hour between date "25.01.2014 10:42:30" parsed as UTC and the same date parsed as local time (UTC+1 in winter)');
+	assert.equal(
+		Date.parseToFullDisplayUTC('25.07.2014 10:42:30').getTime() - Date.parseToFullDisplay('25.07.2014 10:42:30').getTime(),
+		2 * 60 * 60 * 1000,
+		'There is 2 hours between date "25.07.2014 10:42:30" parsed as UTC and the same date parsed as local time (UTC+2 in summer)');
 })();
 
 (function() {
