@@ -30,5 +30,5 @@ Timeframe.prototype.toString = function() {
 	return this.startDate + ' - ' + this.stopDate;
 };
 Timeframe.prototype.equals = function(timeframe) {
-	return this.startDate.getTime() == timeframe.startDate.getTime() && this.stopDate.getTime() == timeframe.stopDate.getTime();
+	return this.startDate.getTime() === timeframe.startDate.getTime() && this.stopDate.getTime() === timeframe.stopDate.getTime();
 };

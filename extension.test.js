@@ -241,7 +241,7 @@ assert.begin();
 //negatize
 (function() {
 	function is_odd(number) {
-		return number % 2 == 0;
+		return number % 2 === 0;
 	}
 	assert.ok(is_odd(2), '2 is odd according to function is_odd');
 	assert.notOk(is_odd(5), '5 is not odd to function is_odd');
