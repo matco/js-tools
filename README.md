@@ -12,6 +12,8 @@ js-tools is a set of tools for developing Javascript applications.
 
 **reviver.js** transforms a tree or raw objects in a tree of typed object.
 
+**bus.js** creates a bus for your events.
+
 All tools are tested in their related file *.test.js.
 
 Usage
