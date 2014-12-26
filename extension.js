@@ -327,16 +327,18 @@ Array.prototype.replace = function(oldElement, newElement) {
 		this[index] = newElement;
 	}
 };
-Array.prototype.find = function(callback, thisArgument) {
-	var i = 0, length = this.length;
-	for(; i < length; i++) {
-		var element = this[i];
-		if(callback.call(thisArgument, element, i, this)) {
-			return element;
+if(!Array.prototype.find) {
+	Array.prototype.find = function(callback, thisArgument) {
+		var i = 0, length = this.length;
+		for(; i < length; i++) {
+			var element = this[i];
+			if(callback.call(thisArgument, element, i, this)) {
+				return element;
+			}
 		}
-	}
-	throw new Error('Unable to find element');
-};
+		return undefined;
+	};
+}
 
 //date
 //helpers
