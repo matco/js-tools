@@ -143,6 +143,10 @@ HTMLSelectElement.prototype.fillObjects = function(objects, value_property, labe
 	return this.fill(entries, blank_option, selected_entries);
 };
 
+//HTMLDataListElement
+HTMLDataListElement.prototype.fill = HTMLSelectElement.prototype.fill;
+HTMLDataListElement.prototype.fillObjects = HTMLSelectElement.prototype.fillObjects;
+
 //HTMLCollection
 HTMLCollection.prototype.indexOf = Array.prototype.indexOf;
 HTMLCollection.prototype.filter = Array.prototype.filter;
@@ -168,4 +172,3 @@ Event.stop = function(event) {
 		event.preventDefault();
 	}
 };
-
