@@ -4,7 +4,7 @@ js-tools is a set of tools for developing Javascript applications.
 
 **extension.js** extends base Javascript classes with useful methods and helpers.
 
-**browser_extension.js** extends DOM Javascript classes to make everyday DOM operations easier.
+**dom_extension.js** extends DOM Javascript classes to make everyday DOM operations easier.
 
 **lzw.js** is an implementation of LZW.
 
