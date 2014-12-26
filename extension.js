@@ -247,7 +247,8 @@ Array.objectFilter = function(properties) {
 	return function(object) {
 		for(var property in properties) {
 			if(properties.hasOwnProperty(property)) {
-				var object_value = Function.isFunction(object[property]) ? object[property].call(object) : object[property];
+				//if object property is a function, call it only if the asked value is not a function too
+				var object_value = Function.isFunction(object[property]) && !Function.isFunction(properties[property]) ? object[property].call(object) : object[property];
 				if(object_value !== properties[property]) {
 					return false;
 				}
