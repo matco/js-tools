@@ -14,6 +14,8 @@ js-tools is a set of tools for developing Javascript applications.
 
 **bus.js** creates a bus for your events.
 
+**uuid.js** generates UUIDs.
+
 All tools are tested in their related file *.test.js.
 
 Usage
