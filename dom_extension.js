@@ -193,7 +193,7 @@ Storage.prototype.setObject = function(key, value) {
 };
 Storage.prototype.getObject = function(key) {
 	var item = this.getItem(key);
-	return item ? JSON.parse(item) : null;
+	return item ? JSON.parse(item) : undefined;
 };
 
 //Event
