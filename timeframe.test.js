@@ -14,7 +14,7 @@ assert.equal(timeframe.getDays(), 0, 'There is 0 day between [2010/12/31] and [2
 
 timeframe = new Timeframe(new Date('2010/12/27'), new  Date('2010/12/31'));
 assert.equal(timeframe.getDays(), 4, 'There is 4 days between [2010/12/27] and [2010/12/31]');
-timeframe.shift(7);
+timeframe.shiftDays(7);
 assert.equal(timeframe.getDays(), 4, 'There is still 4 days between [2010/12/27] and [2010/12/31] with a shift of 7 days');
 assert.equal(timeframe.startDate.toDisplay(), '03.01.2011', 'Timeframe beginning [2010/12/27] begins [2011/01/03] with a shift of 7 days');
 assert.equal(timeframe.stopDate.toDisplay(), '07.01.2011', 'Timeframe ending [2010/12/31] ends [2011/01/06] with a shift of 7 days');
