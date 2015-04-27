@@ -125,3 +125,5 @@ bus.reset();
 assert.ok(bus.listeners.isEmpty(), 'Bus has no more listener after being reset');
 assert.notOk(bus.isRegistered(beep_counter), 'Listener is not registered after bus has been reset');
 assert.notOk(bus.isRegistered(beep_recorder), 'Listener is not registered after bus has been reset');
+
+assert.end();

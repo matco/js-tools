@@ -5,6 +5,7 @@ function Bus() {
 	this.paused = false;
 	this.locked = false;
 	this.listeners = [];
+	this.onEvent;
 }
 
 Bus.prototype.disable = function() {
@@ -54,13 +55,13 @@ Bus.prototype.isRegistered = function(listener) {
 	Bus.prototype.dispatch = function(event) {
 		if(this.enabled) {
 			if(!this.paused) {
-				//length may change during dispatch because the event may cause a deletion
-				for(var i = 0; i < this.listeners.length; i++) {
-					event.hit(this.listeners[i]);
-				}
+				this.listeners.forEach(event.hit, event);
 			}
 			else {
 				awainting_events.push(event);
+			}
+			if(this.onEvent) {
+				this.onEvent(event);
 			}
 		}
 	};
