@@ -27,9 +27,9 @@ encoded_text = 'a	text	with	someāabulations';
 assert.equal(LZW.CompressToString(text), encoded_text, 'LZW for "a	text	with	some	tabulations" is "a	text	with	someāabulations"');
 assert.equal(LZW.DecompressString(LZW.CompressToString(text)), text, 'LZW encoding then decoding a text gives the same text');
 
-text = '{"id": "Test","shortname": {"en": "Test",},"longname": {"en": "Test",},"description": {},"url": "http://127.0.0.1:8080","email": "info@rodanotech.ch","emailCheckMode": "NONE","passwordStrong": false,"passwordLength": 4,"passwordValidityDuration": 0,"passwordMaxAttemptsPerDay": 0,"passwordUniqueness": false,"introductionText": "Rodano Test Study","copyright": "Copyright &#169; 2008-2011 RODANOTECH, All rights reserved.","configVersion": 5,"configDate": 1348752519734,"configUser": "mcorag","languageIds": ["en","fr"],"defaultLanguageId": "en","userAttributes": ["PHONE"],"countries": {"FR": {"id": "FR","shortname": {"en": "France"},"longname": {},"description": {},"entity": "COUNTRY"},"GB": {"id": "GB","shortname": {"en": "United Kindgow"},"longname": {},"description": {},"entity": "COUNTRY"}},"languages": {},"scopeModels": {"Country": {"id": "Country","shortname": {"en": "Country",},"pluralShortname": {"en": "Countries",},"longname": {"en": "Country",},"description": {},"defaultParentId": "Study","parents": ["Study"],"virtual": false,"scopeFormat": "${parent}-${siblingsNumber:2}","modificationDate": "2009-04-28T19:38:35.000+0000","workflows": [],"crfMode": "NORMAL","color": "#72bf44","searchComplements": false,"entity": "SCOPE_MODEL"},"Patient": {"id": "Patient","shortname": {"en": "Patient",},"pluralShortname": {"en": "Patients",},"longname": {"en": "Patient",},"description": {},"defaultParentId": "Center","parents": ["Center"],"virtual": false,"maxNumber": 600,"scopeFormat": "${parent}-${siblingsNumber:2}","modificationDate": "2009-04-29T11:16:40.000+0000","workflows": [],"crfMode": "NORMAL","scopesPerPage": 200,"searchComplements": false,"entity": "SCOPE_MODEL"}}}';
-encoded_text = '{"id": "Test","shortnameĄ ĀenĘćĉċ,}člongĔĖĘĚĜąĞĊČĢ"dĉcriptiĥĪıurlĝhttp://127.0Ō.1:80ŒČ"emaiŀĭinfo@rodanotech.ŪŕŗřlChũkMţėĭNONEŕpasswđdStŢĦĘfalsečſƁƃrdLěgthĘ4ƐƀƂƄVƌĂityDľaĹĻą0ƝƒƄMaxAŃŗĸsPerDayĘƭ"ƑƟƔUniquěĉsƊƌƎčŝƇţucƪnĈxċĭRţťo ĈĊ ƆudƾčcopyĶgłĝCǪǬiǮt &#169; 20œ-ǿ11 RODAźTECH, All ǭłsȕĉƺved.ŕǩŞǴVƺsĺĬ 5ǨĥfǴƼŨĘ13487525197ȳȫȢgUƎrĝmǩragŕlťguɈeIdǌą[ŖĜčfɃ]čĳƋultLɌɎgɐăĭěŕuɂƴƇibuŨɓ ɕPHŻŽɛ"ǩunɮĉĪ"FRʁĂĝʃŕďđēĕŸęɖʇɇncėıĤĦĨʎ{ıĳsĵķǖļčěĹƥǰOUNTRY"ıGBʅɧĆʰʉĐĒʙʁɩĭǅƤȝ KŝdgowʮģĥħʍʢĲĴĶĸȧˌʤƤƾĭCʨʪʬʮʖɣɏɳʛčʞǪeŶĳƍʁǱɽƇ˕ʏʆ˖o˪rǧĎʷʌĩąīǰ˰ɾ˲İƐlƨlS˵ʹ˸ʐ˯˱iʀġˈʘˋ̆ʻĆ˩˼ǧʜˎʠˑ˸̖ɞɠParʤɑĝǤǦž̟ʤɳɕ̤ƾɺviĒɎś ƋƍƏĎǩpeFđŘǚĆ${ſ̠ɾ}-̀ȦblŝgsNumbƺ:2}ŕmţiȭcƩȧȯʎ"ǿ09-04Ȃ8TȺ:38ͫ5ŌȀ+ȀȀŕƓkfĤw̩ɺĵf˥͟źRMALȠoĤɃĭ#72bf44ʉe̟ŪǱmplŗ̨Ǎ̵ʣɾ˔̣˗PE_MȈE΅ı̞ĹʤʲĝΫ̊ɾʶʋ̅ʏ̑"ΰέ̌ǁ̀ɇ̂̄̏ζȨθ͜Λλʗˊ˷ςίυβλʝʟːƫę̛aɟt̞̓t̢˖ʤƺ̦Ϛ̩"CϞɚč̮̰ƌΜǏ"Řx͎͐ϟą6Ȁˡ̸̺̼Ʃĝ̀͂ʤ͇ͅɯ͊Ħ͍͏͑r͓͕č͗d͙i͛ǖ͞ĝͣͥ͡Ȃ9ͩŐǺ:4ōͳͲͳ͵đͷ͹ͻǨr;ŷĝ΁΃΅϶ˣƸƺ̞ɥĘ͡ˡΓrΕoΗΙĖɾɳ̴Ϭ˓ʦĭS΢ΤΦDΨ˛}';
-assert.equal(LZW.CompressToString(text), encoded_text, 'LZW can encodes long text');
+text = 'This is free and unencumbered software released into the public domain. Anyone is free to copy, modify, publish, use, compile, sell, or distribute this software, either in source code form or as a compiled binary, for any purpose, commercial or non-commercial, and by any means. In jurisdictions that recognize copyright laws, the author or authors of this software dedicate any and all copyright interest in the software to the public domain. We make this dedication for the benefit of the public at large and to the detriment of our heirs and successors. We intend this dedication to be an overt act of relinquishment in perpetuity of all present and future rights to this software under copyright law. THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. For more information, please refer to <http://unlicense.org>';
+encoded_text = LZW.CompressToString(text);
+assert.ok((encoded_text.length - text.length) < 0, 'Encoded text is shorter than text');
 assert.equal(LZW.DecompressString(LZW.CompressToString(text)), text, 'LZW encoding then decoding a text gives the same text');
 
 text = '$42!-21=abc';
@@ -45,7 +45,7 @@ text = '►◄▬■☺♥';
 assert.notEqual(LZW.DecompressString(LZW.CompressToString(text)), text, 'LZW does not works with characters code greater than 256 (using more than 8 bits)');
 
 //test with big data
-(function() {
+function test_big_data(callback) {
 	var xhr = new XMLHttpRequest();
 	xhr.addEventListener(
 		'load',
@@ -60,14 +60,16 @@ assert.notEqual(LZW.DecompressString(LZW.CompressToString(text)), text, 'LZW doe
 			compressed_config = LZW.CompressToString(config);
 			uncompressed_config = LZW.DecompressString(compressed_config);
 			assert.equal(config, uncompressed_config, 'LZW works with big files');
+
+			test_very_big_data();
 		}
 	);
-	xhr.open('GET', '/configs/test/test.json', true);
-	xhr.send(null);
-})();
+	xhr.open('GET', 'https://ajax.googleapis.com/ajax/libs/swfobject/2.2/swfobject.js', true);
+	xhr.send();
+}
 
 //test with very big data which can exceed 2^16 for the dictionary
-(function() {
+function test_very_big_data() {
 	var xhr = new XMLHttpRequest();
 	xhr.addEventListener(
 		'load',
@@ -86,6 +88,8 @@ assert.notEqual(LZW.DecompressString(LZW.CompressToString(text)), text, 'LZW doe
 			assert.end();
 		}
 	);
-	xhr.open('GET', '/configs/msbase/msbase.json', true);
-	xhr.send(null);
-})();
+	xhr.open('GET', 'https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js', true);
+	xhr.send();
+};
+
+test_big_data();
