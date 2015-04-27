@@ -125,7 +125,7 @@ if(!Function.isFunction) {
 Function.prototype.negatize = function() {
 	var original = this;
 	return function() {
-		return !!!original.apply(null, arguments);
+		return !!!original.apply(undefined, arguments);
 	};
 };
 Function.prototype.callbackize = function() {
@@ -144,11 +144,21 @@ Function.prototype.memoize = function() {
 
 	var memoized = function() {
 		var parameters = [];
-		for (var i = 0; i < arguments.length; i++) {
-			parameters[i] = arguments[i];
+		//add context in parameters
+		if(this) {
+			if(!this.serialize) {
+				throw new Error('Unable to memoize method in object is not serializable (i.e. it has no serialize method)');
+			}
+			parameters.push(this.serialize());
 		}
+		else {
+			parameters.push(undefined);
+		}
+		//add function arguments
+		parameters.pushAll(Array.prototype.slice.call(arguments));
+
 		if(!(parameters in cache)) {
-			cache[parameters] = original.apply(null, arguments);
+			cache[parameters] = original.apply(this, arguments);
 		}
 
 		return cache[parameters];
@@ -352,10 +362,16 @@ if(!Date.isValidDate) {
 		return Date.isDate(date) && !isNaN(date.getTime());
 	};
 }
-Date.MS_IN_DAY = 24 * 60 * 60 * 1000;
-Date.MS_IN_HOUR = 60 * 60 * 1000;
-Date.MS_IN_MINUTE = 60 * 1000;
+
+Date.SECONDS_IN_MINUTE = 60;
+Date.MINUTES_IN_HOUR = 60;
+Date.HOURS_IN_DAY = 24;
+
 Date.MS_IN_SECOND = 1000;
+Date.MS_IN_MINUTE = Date.SECONDS_IN_MINUTE * Date.MS_IN_SECOND;
+Date.MS_IN_HOUR = Date.MINUTES_IN_HOUR * Date.MS_IN_MINUTE;
+Date.MS_IN_DAY = Date.HOURS_IN_DAY * Date.MS_IN_HOUR;
+
 Date.locale = {
 	en : {
 		day_names : ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
@@ -370,6 +386,8 @@ Date.locale = {
 		month_names_short : ['Jan', 'Fev', 'Mar', 'Avr', 'Mai', 'Juin', 'Juil', 'Août', 'Sep', 'Oct', 'Nov', 'Dec']
 	}
 };
+
+//naive way to calculate differences
 Date.getDifferenceInDays = function(start, stop) {
 	var time = stop.getTime() - start.getTime();
 	return time / Date.MS_IN_DAY;
@@ -401,29 +419,29 @@ Date.parseToFullDisplayUTC = function(date) {
 Date.getDurationLiteral = function(duration) {
 	var d, result = '';
 	//write seconds
-	d = duration % 60;
+	d = duration % Date.SECONDS_IN_MINUTE;
 	if(d) {
 		result = d + ' seconds';
 	}
-	duration = Math.floor(duration / 60);
+	duration = Math.floor(duration / Date.SECONDS_IN_MINUTE);
 	if(duration < 1) {
 		return result;
 	}
 	//write minutes
-	d = duration % 60;
+	d = duration % Date.MINUTES_IN_HOUR;
 	if(d) {
 		result = d + ' minutes' + (result ? ' ' + result : '');
 	}
-	duration = Math.floor(duration / 60);
+	duration = Math.floor(duration / Date.MINUTES_IN_HOUR);
 	if(duration < 1) {
 		return result;
 	}
 	//write hours
-	d = duration % 24;
+	d = duration % Date.HOURS_IN_DAY;
 	if(d) {
 		result = d + ' hours' + (result ? ' ' + result : '');
 	}
-	duration = Math.floor(duration / 24);
+	duration = Math.floor(duration / Date.HOURS_IN_DAY);
 	if(duration < 1) {
 		return result;
 	}
@@ -439,13 +457,13 @@ Date.prototype.toFullDisplay = function() {
 };
 Date.prototype.format = function(formatter) {
 	return formatter.replaceObject({
-		'day' : this.getDate().pad(2),
-		'month' : (this.getMonth() + 1).pad(2),
-		'year' : this.getFullYear(),
-		'hour' : this.getHours().pad(2),
-		'minute' : this.getMinutes().pad(2),
-		'second' : this.getSeconds().pad(2),
-		'millisecond' : this.getMilliseconds().pad(3)
+		day : this.getDate().pad(2),
+		month : (this.getMonth() + 1).pad(2),
+		year : this.getFullYear(),
+		hour : this.getHours().pad(2),
+		minute : this.getMinutes().pad(2),
+		second : this.getSeconds().pad(2),
+		millisecond : this.getMilliseconds().pad(3)
 	});
 };
 Date.prototype.getDayName = function(language) {
@@ -476,6 +494,7 @@ Date.prototype.isBefore = function(date) {
 Date.prototype.isAfter = function(date) {
 	return date.isBefore(this);
 };
+//add duration
 Date.prototype.addSeconds = function(seconds) {
 	this.setTime(this.getTime() + seconds * Date.MS_IN_SECOND);
 	return this;
@@ -492,17 +511,47 @@ Date.prototype.addDays = function(days) {
 	this.setTime(this.getTime() + days * Date.MS_IN_DAY);
 	return this;
 };
+//add period
 Date.prototype.addMonths = function(months) {
-	this.setMonth(this.getMonth() + 1);
+	this.setMonth(this.getMonth() + months);
 	return this;
 };
+Date.prototype.addYears = function(years) {
+	this.setFullYear(this.getFullYear() + years);
+	return this;
+};
+//round
+Date.prototype.roundToDay = function() {
+	this.roundToHour();
+	if(this.getHours() > (Date.HOURS_IN_DAY / 2)) {
+		this.addDays(1);
+	}
+	this.setHours(0);
+	return this;
+};
+Date.prototype.roundToHour = function() {
+	this.roundToMinute();
+	if(this.getMinutes() >= (Date.MINUTES_IN_HOUR / 2)) {
+		this.addHours(1);
+	}
+	this.setMinutes(0);
+	return this;
+};
+Date.prototype.roundToMinute = function() {
+	if(this.getSeconds() >= (Date.SECONDS_IN_MINUTE / 2)) {
+		this.addMinutes(1);
+	}
+	this.setSeconds(0);
+	return this;
+};
+
 Date.prototype.getAge = function() {
 	return new Date().getTime() - this.getTime();
 };
 Date.prototype.getAgeLiteral = function() {
 	var real_age = this.getAge();
 	if(real_age < 0) {
-		throw new Error('Future date not supported');
+		throw new Error('Date in the future not supported');
 	}
 	var age = Math.round(real_age / Date.MS_IN_SECOND);
 	if(age === 0) {
@@ -511,21 +560,21 @@ Date.prototype.getAgeLiteral = function() {
 	if(age === 1) {
 		return 'a second ago';
 	}
-	if(age < 60) {
+	if(age < Date.SECONDS_IN_MINUTE) {
 		return age + ' seconds ago';
 	}
 	age = Math.round(real_age / Date.MS_IN_MINUTE);
 	if(age === 1) {
 		return 'a minute ago';
 	}
-	if(age < 60) {
+	if(age < Date.MINUTES_IN_HOUR) {
 		return age + ' minutes ago';
 	}
 	age = Math.round(real_age / Date.MS_IN_HOUR);
 	if(age === 1) {
 		return 'an hour ago';
 	}
-	if(age < 24) {
+	if(age < Date.HOURS_IN_DAY) {
 		return age + ' hours ago';
 	}
 	age = Math.round(real_age / Date.MS_IN_DAY);

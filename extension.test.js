@@ -253,8 +253,8 @@ assert.begin();
 //callbackize
 (function() {
 	var text = 'toto';
-	assert.equal(String.prototype.toUpperCase.callbackize().call(null, text), 'TOTO', 'Callbackize transform method function into callable function');
-	assert.equal(String.prototype.substring.callbackize(0, 2).call(null, text), 'to', 'Callbackize preserves arguments');
+	assert.equal(String.prototype.toUpperCase.callbackize().call(undefined, text), 'TOTO', 'Callbackize transform method function into callable function');
+	assert.equal(String.prototype.substring.callbackize(0, 2).call(undefined, text), 'to', 'Callbackize preserves arguments');
 
 	var people = ["Anakin", "Luke", "Leia", "Han"];
 	assert.similar(people.map(String.prototype.toUpperCase.callbackize()), ["ANAKIN", "LUKE", "LEIA", "HAN"], 'Callbackize transform method function into callable function which is handy for array functions');
@@ -264,10 +264,15 @@ assert.begin();
 //memoize
 (function() {
 	var calculated = false;
+	var result;
+
+	//function
 	var square = function(value) {
 		calculated = true;
 		return Math.pow(value, 2);
 	};
+
+	//test function
 	assert.equal(square(2), 4, '2 square is 4');
 	assert.ok(calculated, '2 square has been calculated');
 
@@ -282,23 +287,144 @@ assert.begin();
 	);
 
 	square = square.memoize();
+
 	calculated = false;
-	square(2);
+	result = square(2);
+	assert.equal(result, 4, '2 square is 4');
 	assert.ok(calculated, 'On first call, 2 square has been calculated');
+
 	calculated = false;
-	square(3);
+	result = square(3);
+	assert.equal(result, 9, '3 square is 9');
 	assert.ok(calculated, 'On first call, 3 square has been calculated');
+
 	calculated = false;
-	square(3);
+	result = square(3);
+	assert.equal(result, 9, '3 square is 9');
 	assert.notOk(calculated, 'On second call, 3 square has not been calculated');
-	square(3);
+	result = square(3);
+	assert.equal(result, 9, '3 square is 9');
 	assert.notOk(calculated, 'On third call, 3 square has not been calculated');
+
 	square = square.unmemoize();
-	square(2);
+
+	result = square(2);
+	assert.equal(result, 4, '2 square is 4');
 	assert.ok(calculated, 'Memoization has been disabled, 2 square has been calculated');
+
 	calculated = false;
-	square(3);
+	result = square(3);
+	assert.equal(result, 9, '3 square is 9');
 	assert.ok(calculated, 'Memoization has been disabled, 3 square has been calculated');
+
+	//method
+	function Square(size) {
+		this.size = size;
+	}
+	Square.prototype.getArea = function() {
+		calculated = true;
+		return Math.pow(this.size, 2);
+	};
+
+	//test function
+	assert.equal(new Square(2).getArea(), 4, 'Area of square of size 2 is 4');
+	assert.ok(calculated, 'Area of square has been calculated');
+
+	Square.prototype.getArea = Square.prototype.getArea.memoize();
+
+	assert.doesThrow(
+		function() {
+			new Square(2).getArea();
+		},
+		function() {
+			return this.message === 'Unable to memoize method in object is not serializable (i.e. it has no serialize method)'
+		},
+		'It is not possible to memoize a method if its object is not serializable'
+	);
+
+	Square.prototype.serialize = function() {
+		return this.size;
+	};
+
+	calculated = false;
+	result = new Square(2).getArea();
+	assert.equal(result, 4, 'Area of square of size 2 is 4');
+	assert.ok(calculated, 'On first call, area for square of size 2 has been calculated');
+
+	calculated = false;
+	result = new Square(3).getArea();
+	assert.equal(result, 9, 'Area of square of size 3 is 9');
+	assert.ok(calculated, 'On first call, area for square of size 3 has been calculated');
+
+	calculated = false;
+	result = new Square(3).getArea();
+	assert.equal(result, 9, 'Area of square of size 3 is 9');
+	assert.notOk(calculated, 'On second call, area for square of size 3 has not been calculated');
+
+	result = new Square(3).getArea();
+	assert.equal(result, 9, 'Area of square of size 3 is 8');
+	assert.notOk(calculated, 'On third call, area for square of size 3 square has not been calculated');
+
+	Square.prototype.getArea = Square.prototype.getArea.unmemoize();
+
+	result = new Square(2).getArea();
+	assert.equal(result, 4, 'Area of square of size 2 is 4');
+	assert.ok(calculated, 'Memoization has been disabled, area for square of size 2 has been calculated');
+
+	calculated = false;
+	result = new Square(3).getArea();
+	assert.equal(result, 9, 'Area of square of size 3 is 9');
+	assert.ok(calculated, 'Memoization has been disabled, area for square of size 3 has been calculated');
+
+	//method with parameter
+	Square.prototype.getCuboidVolume = function(height) {
+		calculated = true;
+		return this.getArea() * height;
+	};
+
+	Square.prototype.getCuboidVolume = Square.prototype.getCuboidVolume.memoize();
+
+	calculated = false;
+	result = new Square(2).getCuboidVolume(3);
+	assert.equal(result, 12, 'Cuboid volume of square of size 2 and height 3 is 12');
+	assert.ok(calculated, 'On first call, cuboid volume has been calculated');
+
+	calculated = false;
+	result = new Square(2).getCuboidVolume(4);
+	assert.equal(result, 16, 'Cuboid volume of square of size 2 and height 4 is 16');
+	assert.ok(calculated, 'On first call, cuboid volume has been calculated');
+
+	calculated = false;
+	result = new Square(3).getCuboidVolume(3);
+	assert.equal(result, 27, 'Cuboid volume of square of size 3 and height is 27');
+	assert.ok(calculated, 'On first call, cuboid volume has been calculated');
+
+	calculated = false;
+	result = new Square(2).getCuboidVolume(4);
+	assert.equal(result, 16, 'Cuboid volume of square of size 2 and height 4 is 16');
+	assert.notOk(calculated, 'On second call, acuboid volume has not been calculated');
+
+	calculated = false;
+	result = new Square(3).getCuboidVolume(3);
+	assert.equal(result, 27, 'Cuboid volume of square of size 3 and height is 27');
+	assert.notOk(calculated, 'On second call, cuboid volume has not been calculated');
+
+	calculated = false;
+	result = new Square(3).getCuboidVolume(3);
+	assert.equal(result, 27, 'Cuboid volume of square of size 3 and height is 27');
+	assert.notOk(calculated, 'On third call, cuboid volume square has not been calculated');
+
+	Square.prototype.getCuboidVolume = Square.prototype.getCuboidVolume.unmemoize();
+
+	result = new Square(2).getCuboidVolume(3);
+	assert.equal(result, 12, 'Cuboid volume of square of size 2 and height 3 is 12');
+	assert.ok(calculated, 'Memoization has been disabled, cuboid volume square has been calculated');
+
+	calculated = false;
+	result = new Square(3).getCuboidVolume(3);
+	assert.equal(result, 27, 'Cuboid volume of square of size 3 and height is 27');
+	assert.ok(calculated, 'Memoization has been disabled, cuboid volume square has been calculated');
+
 })();
 
 //string
@@ -307,7 +433,7 @@ assert.begin();
 	assert.equal('toto'.rightPad(3, '='), 'toto', 'Pad "toto" to 3 with "=" gives "toto"');
 	assert.equal('toto'.rightPad(6, '='), 'toto==', 'Pad "toto" to 6 with "=" gives "toto=="');
 	assert.equal('toto'.rightPad(6, 'to'), 'tototo', 'Pad "toto" to 6 with "to" gives "tototo"');
-	assert.equal('toto'.rightPad(7, 'tu'), 'tototutu', 'Pad "toto" to 7 with "to" gives "tototutu"');
+	assert.equal('toto'.rightPad(7, 'tu'), 'tototutu', 'Pad "toto" to 7 with "tu" gives "tototutu"');
 	assert.equal('toto'.rightPad(-5, '='), 'toto', 'Pad "toto" to -5 with "=" gives "toto"');
 	assert.equal(''.rightPad(3, '='), '===', 'Pad empty string to 3 with "=" gives "==="');
 	assert.equal(''.rightPad(5, ' '), '     ', 'Pad empty string to 5 with space gives 5 spaces');
@@ -698,6 +824,28 @@ assert.equal(new Date('2011/10/10').getDayName('en'), 'Monday', 'Day name for da
 })();
 
 (function() {
+	var date = Date.parseToFullDisplay('20.01.2015 22:42:12');
+	date.roundToMinute();
+	assert.equal(date.toFullDisplay(), '20.01.2015 22:42:00', 'Rounding date to minute give a date with 0 second');
+	date.roundToHour();
+	assert.equal(date.toFullDisplay(), '20.01.2015 23:00:00', 'Rounding date to hour give a date with 0 minute');
+	date.roundToDay();
+	assert.equal(date.toFullDisplay(), '21.01.2015 00:00:00', 'Rounding date to day give a date with 0 hour');
+
+	var date = Date.parseToFullDisplay('20.01.2015 12:29:52');
+	date.roundToMinute();
+	assert.equal(date.toFullDisplay(), '20.01.2015 12:30:00', 'Rounding date to minute give a date with 0 second');
+	date.roundToHour();
+	assert.equal(date.toFullDisplay(), '20.01.2015 13:00:00', 'Rounding date to hour give a date with 0 minute');
+	date.roundToDay();
+	assert.equal(date.toFullDisplay(), '21.01.2015 00:00:00', 'Rounding date to day give a date with 0 hour');
+
+	var date = Date.parseToFullDisplay('20.01.2015 03:00:12');
+	date.roundToDay();
+	assert.equal(date.toFullDisplay(), '20.01.2015 00:00:00', 'Rounding date to day give a date with 0 hour');
+})();
+
+(function() {
 	var date = new Date();
 	var time = date.getTime();
 	date.addSeconds(2);
@@ -739,9 +887,9 @@ assert.equal(new Date('2011/10/10').getDayName('en'), 'Monday', 'Day name for da
 			new Date().addSeconds(10).getAgeLiteral();
 		},
 		function() {
-			return this.message === 'Future date not supported'
+			return this.message === 'Date in the future not supported';
 		},
-		'Calling age literal on a date in the future throws an exception with message : "Future date not supported"'
+		'Calling age literal on a date in the future throws an exception with message : "Date in the future not supported"'
 	);
 })();
 
