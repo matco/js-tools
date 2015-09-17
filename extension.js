@@ -306,6 +306,14 @@ Array.prototype.containsAll = function(elements) {
 	}
 	return true;
 };
+Array.prototype.containsOne = function(elements) {
+	for(var i = elements.length - 1; i >= 0; i--) {
+		if(this.contains(elements[i])) {
+			return true;
+		}
+	}
+	return false;
+};
 Array.prototype.pushAll = function(array) {
 	var i = 0, length = array.length;
 	for(; i < length; i++) {

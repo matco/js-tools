@@ -627,6 +627,10 @@ assert.notEqual([1,2,3], [1,2,3], 'New array [1,2,3] is not equals to an other n
 	assert.notOk(array.containsAll(['toto', 'titi', 'tutu', 'tata']), 'Array ["toto","titi","tutu"] does not contain all ["toto","titi","tutu","tata"]');
 	assert.notOk(array.containsAll(['toto', 'tata']), 'Array ["toto","titi","tutu"] does not contain all ["toto","tata"]');
 	assert.notOk(array.containsAll(['tata']), 'Array ["toto","titi","tutu"] does not contain ["tata"]');
+
+	assert.ok(array.containsOne(['titi', 'tata']), 'Array ["toto","titi","tutu"] contains one of ["titi","tata"]');
+	assert.notOk(array.containsOne([]), 'Array ["toto","titi","tutu"] does not contains one of []');
+	assert.notOk(array.containsOne(['tata', 'tyty']), 'Array ["toto","titi","tutu"] does not contain one of ["tata","tyty"]');
 })();
 
 //contains same
