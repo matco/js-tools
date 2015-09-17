@@ -25,6 +25,13 @@ if(!Object.equals) {
 		if(typeof(object_1) !== typeof(object_2)) {
 			return false;
 		}
+		//type objects
+		if(object_1.equals) {
+			return object_1.equals(object_2);
+		}
+		if(object_2.equals) {
+			return object_2.equals(object_1);
+		}
 		//arrays
 		if(Array.isArray(object_1) && Array.isArray(object_2)) {
 			if(object_1.length !== object_2.length) {
@@ -51,7 +58,7 @@ if(!Object.equals) {
 			}
 			return true;
 		}
-		return object_1 === object_2;
+		return false;
 	};
 }
 if(!Object.clone) {
