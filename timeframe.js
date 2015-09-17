@@ -1,27 +1,33 @@
 'use strict';
 
 function Timeframe(startDate, stopDate) {
+	if(startDate && stopDate && stopDate.getTime() < startDate.getTime()) {
+		throw new Error('Unable to create a timeframe with a stop date before its start date');
+	}
 	this.startDate = startDate;
 	this.stopDate = stopDate;
 }
+Timeframe.prototype.isStaked = function() {
+	return this.startDate && this.stopDate;
+};
 Timeframe.prototype.getDays = function() {
-	return Date.getDifferenceInDays(this.startDate, this.stopDate);
+	return this.isStaked() ? Date.getDifferenceInDays(this.startDate, this.stopDate) : undefined;
 };
 Timeframe.prototype.getHours = function() {
-	return Date.getDifferenceInHours(this.startDate, this.stopDate);
+	return this.isStaked() ? Date.getDifferenceInHours(this.startDate, this.stopDate) : undefined;
 };
 Timeframe.prototype.getMinutes = function() {
-	return Date.getDifferenceInMinutes(this.startDate, this.stopDate);
+	return this.isStaked() ? Date.getDifferenceInMinutes(this.startDate, this.stopDate) : undefined;
 };
 Timeframe.prototype.getSeconds = function() {
-	return Date.getDifferenceInSeconds(this.startDate, this.stopDate);
+	return this.isStaked() ? Date.getDifferenceInSeconds(this.startDate, this.stopDate) : undefined;
 };
 
 Timeframe.prototype.clone = function() {
-	return new Timeframe(this.startDate.clone(), this.stopDate.clone());
+	return new Timeframe(this.startDate ? this.startDate.clone() : undefined, this.stopDate ? this.stopDate.clone() : undefined);
 };
 Timeframe.prototype.surround = function(date) {
-	return this.startDate <= date && this.stopDate >= date;
+	return (!this.startDate || this.startDate <= date) && (!this.stopDate || this.stopDate >= date);
 };
 Timeframe.prototype.overlap = function(timeframe) {
 	return this.surround(timeframe.startDate) || this.surround(timeframe.stopDate) || timeframe.surround(this.startDate) || timeframe.surround(this.stopDate);
@@ -30,7 +36,9 @@ Timeframe.prototype.toString = function() {
 	return this.startDate + ' - ' + this.stopDate;
 };
 Timeframe.prototype.equals = function(timeframe) {
-	return this.startDate.getTime() === timeframe.startDate.getTime() && this.stopDate.getTime() === timeframe.stopDate.getTime();
+	var same_start_date = !this.startDate && !timeframe.startDate || this.startDate && timeframe.startDate && this.startDate.getTime() === timeframe.startDate.getTime();
+	var same_stop_date = !this.stopDate && !timeframe.stopDate || this.stopDate && timeframe.stopDate && this.stopDate.getTime() === timeframe.stopDate.getTime();
+	return same_start_date && same_stop_date;
 };
 
 Timeframe.prototype.extendPercentage = function(percentage) {
