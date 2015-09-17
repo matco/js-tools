@@ -165,7 +165,7 @@ Assert.prototype.similar = function(actual, expected, message, specification) {
 	Object.equals(actual, expected) ? this.success(message, specification) : this.fail(message + ': Actual [' + actual + '] - Expected [' + expected + ']', specification);
 };
 Assert.prototype.notSimilar = function(actual, notExpected, message, specification) {
-	!Object.equals(actual, expected) ? this.success(message, specification) : this.fail(message + ': Actual [' + actual + '] - Not expected [' + notExpected + ']', specification);
+	!Object.equals(actual, notExpected) ? this.success(message, specification) : this.fail(message + ': Actual [' + actual + '] - Not expected [' + notExpected + ']', specification);
 };
 
 Assert.prototype.defined = function(value, message, specification) {
