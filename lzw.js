@@ -8,7 +8,7 @@ var LZW = {
 		var i, length;
 		//build dictionary
 		var dictionary = {};
-		for(i = 0; i < 256; i++) {
+		for(i = 0; i < LZW.INITIAL_DICT_SIZE; i++) {
 			dictionary[String.fromCharCode(i)] = i;
 		}
 
@@ -54,7 +54,7 @@ var LZW = {
 		for(i = 1, length = data.length; i < length; i++) {
 			character = data[i];
 			//there is a match in dictionary
-			if(dictionary[.hasOwnProperty(phrase + character)) {
+			if(dictionary.hasOwnProperty(phrase + character)) {
 				phrase += character;
 			}
 			else {
