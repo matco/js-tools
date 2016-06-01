@@ -1,5 +1,4 @@
-js-tools
-==========
+# js-tools
 js-tools is a set of tools for developing Javascript applications.
 
 **extension.js** extends base Javascript classes with useful methods and helpers.
@@ -18,8 +17,7 @@ js-tools is a set of tools for developing Javascript applications.
 
 All tools are tested in their related file *.test.js.
 
-Usage
-----------
+## Usage
 The branch ```subtreeable``` can be used to import tools in your projects using [Git subtree](https://git-scm.com/book/en/v1/Git-Tools-Subtree-Merging).
 * Add this repository as a remote to your project
 ```
