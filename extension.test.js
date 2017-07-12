@@ -2,7 +2,7 @@
 
 assert.begin();
 
-//object
+//Object
 //isObject
 (function() {
 	var object = {toto : 'tutu'};
@@ -98,17 +98,6 @@ assert.begin();
 	assert.notOk(Function.isFunction(cloned_object.doNothing), 'Cloned object does not have a "doNothing" method');
 })();
 
-//values
-(function() {
-	assert.ok(Object.values({}).isEmpty(), 'Values of object {} is an empty array');
-	assert.similar(Object.values({toto : 'toto', titi : 'tutu'}), ['toto', 'tutu'], 'Values of object "{toto : "toto", titi : "tutu"}" are ["toto", "tutu"]');
-
-	var embedded_object = {mama : 'momo', mimi : 'mumu'};
-	var object = {toto : 'toto', titi : embedded_object};
-	assert.equal(Object.values(object)[0], 'toto', 'First value of object "{toto : "toto", titi : embedded_object}" is "toto"');
-	assert.equal(Object.values(object)[1], embedded_object, 'Second value of object "{toto : "toto", titi : embedded_object}" is "embedded_object"');
-})();
-
 //key
 (function() {
 	assert.equal(Object.key({titi : 'tutu'}, 'tutu'), 'titi', 'Key for a string value is the right key');
@@ -136,22 +125,6 @@ assert.begin();
 		},
 		'Asking key for a similar value throws an exception'
 	);
-})();
-
-//update
-(function() {
-	var object = {
-		property_1 : 'value_1',
-		property_2 : 'value_2',
-	};
-	var values = {
-		property_1 : 'new_value_1',
-		property_3 : 'new_value_3'
-	};
-	Object.update(object, values);
-	assert.equal(object.property_1, 'new_value_1', 'Object property 1 has been updated with the one from values');
-	assert.equal(object.property_2, 'value_2', 'Object property 2 has not been updated as it does not exists in values');
-	assert.equal(object.property_3, 'new_value_3', 'Object property 3 has been created and initialized with value from values');
 })();
 
 //getObjectPathValue and getLastObjectInPath
@@ -220,7 +193,7 @@ assert.begin();
 	assert.equal(Object.getLastObjectInPath(city, 'main_street.shops.length').property, 'length', 'Get last object in path "main_street.shops.length" gives the "length" property');
 })();
 
-//function
+//Function
 //isFunction
 (function() {
 	var func = function() {'nothing to do';};
@@ -427,27 +400,7 @@ assert.begin();
 
 })();
 
-//string
-//pad
-(function() {
-	assert.equal('toto'.rightPad(3, '='), 'toto', 'Pad "toto" to 3 with "=" gives "toto"');
-	assert.equal('toto'.rightPad(6, '='), 'toto==', 'Pad "toto" to 6 with "=" gives "toto=="');
-	assert.equal('toto'.rightPad(6, 'to'), 'tototo', 'Pad "toto" to 6 with "to" gives "tototo"');
-	assert.equal('toto'.rightPad(7, 'tu'), 'tototutu', 'Pad "toto" to 7 with "tu" gives "tototutu"');
-	assert.equal('toto'.rightPad(-5, '='), 'toto', 'Pad "toto" to -5 with "=" gives "toto"');
-	assert.equal(''.rightPad(3, '='), '===', 'Pad empty string to 3 with "=" gives "==="');
-	assert.equal(''.rightPad(5, ' '), '     ', 'Pad empty string to 5 with space gives 5 spaces');
-	var string = 'tutu';
-	var string_padded = string.rightPad(5, '%');
-	assert.equal(string, 'tutu', 'Pad creates a new string');
-	assert.notEqual(string, string_padded, 'Pad creates a new string');
-
-	assert.equal('toto'.leftPad(3, '='), 'toto', 'Pad "toto" to 3 with "=" gives "toto"');
-	assert.equal('toto'.leftPad(6, '='), '==toto', 'Pad "toto" to 6 with "=" gives "==toto"');
-	assert.equal('toto'.leftPad(6, 'to'), 'tototo', 'Pad "toto" to 6 with "to" gives "tototo"');
-	assert.equal('toto'.leftPad(7, 'tu'), 'tututoto', 'Pad "toto" to 7 with "to" gives "tututoto"');
-})();
-
+//String
 //capitalize
 (function() {
 	assert.equal('rodanotech'.capitalize(), 'Rodanotech', 'Capitalize "rodanotech" gives "Rodanotech"');
@@ -476,23 +429,16 @@ assert.begin();
 	assert.notEqual(rodano, rodano.reverse().reverse(), 'Reverse of reversed string is not the same string');
 })();
 
-//contains
+//nocaseIncludes
 (function() {
 	var rodano = new String('rodano');
 
-	assert.ok('rodano'.contains('od'), '"rodano" contains "od"');
-	assert.ok('rodano'.contains('rodano'), '"rodano" contains "rodano"');
-	assert.ok('rodano'.contains(''), '"rodano" contains ""');
-	assert.ok('rodano'.contains('o'), '"rodano" contains "o"');
-	assert.notOk('rodano'.contains('R'), '"rodano" does not contain "R"');
-	assert.ok(rodano.contains('od'), '"rodano" contains "od"');
-
-	assert.ok('rodano'.nocaseContains('o'), '"rodano" contains "o" without case check');
-	assert.ok('rodano'.nocaseContains('R'), '"rodano" contains "R" without case check');
-	assert.ok('rodano'.nocaseContains('DaNo'), '"rodano" contains "DaNo" without case check');
-	assert.notOk('rodano'.nocaseContains('DaNoN'), '"rodano" does not contains "DaNoN" without case check');
-	assert.ok(rodano.nocaseContains('od'), '"rodano" contains "od" without case check');
-	assert.ok(rodano.nocaseContains('RO'), '"rodano" contains "RO" without case check');
+	assert.ok('rodano'.nocaseIncludes('o'), '"rodano" contains "o" without case check');
+	assert.ok('rodano'.nocaseIncludes('R'), '"rodano" contains "R" without case check');
+	assert.ok('rodano'.nocaseIncludes('DaNo'), '"rodano" contains "DaNo" without case check');
+	assert.notOk('rodano'.nocaseIncludes('DaNoN'), '"rodano" does not contains "DaNoN" without case check');
+	assert.ok(rodano.nocaseIncludes('od'), '"rodano" contains "od" without case check');
+	assert.ok(rodano.nocaseIncludes('RO'), '"rodano" contains "RO" without case check');
 })();
 
 assert.ok('alpha'.compareTo('beta') < 0, '"alpha" is lower than "beta"');
@@ -541,7 +487,7 @@ assert.equal(new Number(42).pad(8), '00000042', 'Pad 8 for 42 is "00000042"');
 assert.equal(new Number(42).pad(1), '42', 'Pad 1 for 42 is "42"');
 assert.equal(new Number(42).pad(-1), '42', 'Pad -1 for 42 is "42"');
 
-//array
+//Array
 //objectFilter and objectMap
 (function() {
 	var country_1 = {
@@ -615,25 +561,28 @@ assert.notEqual([1,2,3], [1,2,3], 'New array [1,2,3] is not equals to an other n
 	assert.similar(array, [4], 'Remove (0,2) to array [1,2,3,4] gives array [4]');
 })();
 
-//contains
+//includes all
 (function() {
 	var array = ['toto', 'titi', 'tutu'];
-	assert.ok(array.contains('titi'), 'Array ["toto","titi","tutu"] contains "titi"');
-	assert.notOk(array.contains('tata'), 'Array ["toto","titi","tutu"] does not contain "tata"');
 
-	assert.ok(array.containsAll(['titi', 'tutu']), 'Array ["toto","titi","tutu"] contains all ["titi","tutu"]');
-	assert.ok(array.containsAll(['toto', 'titi', 'tutu']), 'Array ["toto","titi","tutu"] contains all ["toto","titi","tutu"]');
-	assert.ok(array.containsAll([]), 'Array ["toto","titi","tutu"] contains all []');
-	assert.notOk(array.containsAll(['toto', 'titi', 'tutu', 'tata']), 'Array ["toto","titi","tutu"] does not contain all ["toto","titi","tutu","tata"]');
-	assert.notOk(array.containsAll(['toto', 'tata']), 'Array ["toto","titi","tutu"] does not contain all ["toto","tata"]');
-	assert.notOk(array.containsAll(['tata']), 'Array ["toto","titi","tutu"] does not contain ["tata"]');
-
-	assert.ok(array.containsOne(['titi', 'tata']), 'Array ["toto","titi","tutu"] contains one of ["titi","tata"]');
-	assert.notOk(array.containsOne([]), 'Array ["toto","titi","tutu"] does not contains one of []');
-	assert.notOk(array.containsOne(['tata', 'tyty']), 'Array ["toto","titi","tutu"] does not contain one of ["tata","tyty"]');
+	assert.ok(array.includesAll(['titi', 'tutu']), 'Array ["toto","titi","tutu"] contains all ["titi","tutu"]');
+	assert.ok(array.includesAll(['toto', 'titi', 'tutu']), 'Array ["toto","titi","tutu"] contains all ["toto","titi","tutu"]');
+	assert.ok(array.includesAll([]), 'Array ["toto","titi","tutu"] contains all []');
+	assert.notOk(array.includesAll(['toto', 'titi', 'tutu', 'tata']), 'Array ["toto","titi","tutu"] does not contain all ["toto","titi","tutu","tata"]');
+	assert.notOk(array.includesAll(['toto', 'tata']), 'Array ["toto","titi","tutu"] does not contain all ["toto","tata"]');
+	assert.notOk(array.includesAll(['tata']), 'Array ["toto","titi","tutu"] does not contain ["tata"]');
 })();
 
-//contains same
+//includes one
+(function() {
+	var array = ['toto', 'titi', 'tutu'];
+
+	assert.ok(array.includesOne(['titi', 'tata']), 'Array ["toto","titi","tutu"] contains one of ["titi","tata"]');
+	assert.notOk(array.includesOne([]), 'Array ["toto","titi","tutu"] does not contains one of []');
+	assert.notOk(array.includesOne(['tata', 'tyty']), 'Array ["toto","titi","tutu"] does not contain one of ["tata","tyty"]');
+})();
+
+//includes same
 (function() {
 	var people_1 = {
 		firstname : 'Luke',
@@ -657,15 +606,15 @@ assert.notEqual([1,2,3], [1,2,3], 'New array [1,2,3] is not equals to an other n
 	};
 	var people = [people_1, people_2, people_3];
 
-	assert.ok(people.containsSame(people_3), '"Contains same" function works the same way than "Contains" function with an object which is equal to an object in the array');
-	assert.notOk(people.containsSame(people_5), '"Contains same" function works the same way than "Contains" function with an object which is equal to an object in the array');
+	assert.ok(people.includesSame(people_3), '"Contains same" function works the same way than "Contains" function with an object which is equal to an object in the array');
+	assert.notOk(people.includesSame(people_5), '"Contains same" function works the same way than "Contains" function with an object which is equal to an object in the array');
 
 	assert.notEqual(people_1, people_4, 'Two objects with same properties and values are not equals with the native way');
 	assert.ok(Object.equals(people_1, people_4), 'Two objects with same properties and values are equals with the special function "equals"');
-	assert.notOk(people.contains(people_4), '"Contains" function does not work with similar objects');
-	assert.ok(people.containsSame(people_4), '"Contains same" function works with similar objects');
-	assert.ok(people.containsSame({firstname : 'Luke', lastname : 'Skywalker'}), '"Contains same" function works with similar anonymous objects');
-	assert.notOk(people.containsSame({firstname : 'Anakin', lastname : 'Skywalker'}), '"Contains same" function does not work with not similar objects');
+	assert.notOk(people.includes(people_4), '"Contains" function does not work with similar objects');
+	assert.ok(people.includesSame(people_4), '"Contains same" function works with similar objects');
+	assert.ok(people.includesSame({firstname : 'Luke', lastname : 'Skywalker'}), '"Contains same" function works with similar anonymous objects');
+	assert.notOk(people.includesSame({firstname : 'Anakin', lastname : 'Skywalker'}), '"Contains same" function does not work with not similar objects');
 })();
 
 //removeElement, removeElements and replace
@@ -729,7 +678,7 @@ assert.notEqual([1,2,3], [1,2,3], 'New array [1,2,3] is not equals to an other n
 	assert.similar(a, b, 'Insert element at a position higher than array length is the same as push element');
 })();
 
-//date
+//Date
 //isDate
 (function() {
 	assert.ok(Date.isDate(new Date()), 'New date is a date');
@@ -751,61 +700,87 @@ assert.notEqual([1,2,3], [1,2,3], 'New array [1,2,3] is not equals to an other n
 	assert.ok(!Date.isValidDate(date) || date.getTime() === new Date('2013/05/02').getTime(), 'Date [2013/04/32] is valid date [2013/05/02] for some browsers and is invalid for others browsers');
 })();
 
+//compare
+(function() {
+	assert.ok(new Date('2009/01/01').isBefore(new Date('2009/01/05')), '[2009/01/01] is before [2009/01/05]');
+	assert.ok(new Date('2009/01/05').isAfter(new Date('2009/01/01')), '[2009/01/05] is after [2009/01/01]');
+	assert.notOk(new Date('2009/01/05').isBefore(new Date('2009/01/01')), '[2009/01/05] is not before [2009/01/05]');
+	assert.notOk(new Date('2009/01/01').isAfter(new Date('2009/01/05')), '[2009/01/05] is not after [2009/01/05]');
+})();
+
+//equals
+(function() {
+	assert.notOk(new Date('2009/01/01').equals(new Date('2009/01/05')), '[2009/01/01] is not equals to [2009/01/05]');
+	assert.ok(new Date('2009/01/01').equals(new Date('2009/01/01')), '[2009/01/01] is equals to [2009/01/01]');
+	assert.notOk(new Date('2009/01/01').equals(undefined), '[2009/01/01] is not equals to undefined date');
+})();
+
 assert.equal(new Date('2009/01/25').getMonthName('en'), 'January', 'Month name for date [2009/01/25] in "en" is "January"');
 assert.equal(new Date('2009/01/25').getMonthName('fr'), 'Janvier', 'Month name for date [2009/01/25] in "fr" is "Janvier"');
 assert.equal(new Date('2009/01/25').getMonthName('de'), 'January', 'Month name for date [2009/01/25] in "de" is "January" because this month has not been translated in German yet');
 assert.equal(new Date('2011/10/10').getDayName('en'), 'Monday', 'Day name for date [2011/10/10] is "Monday"');
 
+//toDisplay, toFullDisplay and format
 (function() {
-	assert.equal(new Date('2009/01/25').toDisplay(), '25.01.2009', 'Date [2009/01/25] to display is "25.01.2009"');
-	assert.equal(new Date('2009/01/25').toFullDisplay(), '25.01.2009 00:00:00', 'Date [2009/01/25] to full display is "25.01.2009 00:00:00"');
-	assert.equal(new Date(2009, 0, 25, 22, 38, 46, 234).toFullDisplay(), '25.01.2009 22:38:46', 'Date [2009, 1, 25, 22, 38, 46, 1234] to full display is "25.01.2009 22:38:46"');
-	assert.equal(new Date(2009, 11, 25, 22, 44).toFullDisplay(), '25.12.2009 22:44:00', 'Date [2009, 11, 25, 22, 44] to full display is "25.12.2009 22:38:00"');
-	assert.equal(new Date('2009/01/25').format('${day}.${month}.${year}'), '25.01.2009', 'Date [2009/01/25] formatter with formatter "${day}.${month}.${year}" is "25.01.2009"');
+	//do not set timezone in date string so Javascript engine will use the timezone of the context, like the toDisplay method
+	assert.equal(new Date('2009-01-25T00:00:00').toDisplay(), '25.01.2009', 'Date "2009-01-25T00:00:00" to display is "25.01.2009"');
+	assert.equal(new Date('2009-01-25T00:00:00+02:00').toUTCDisplay(), '24.01.2009', 'Date "2009-01-25T00:00:00+02:00" to UTC display is "24.01.2009"');
+	assert.equal(new Date('2009-01-25T00:00:00Z').toUTCDisplay(), '25.01.2009', 'Date "2009-01-25T00:00:00Z" to UTC display is "25.01.2009"');
+
+	assert.equal(new Date('2009-01-25T00:00:00').toFullDisplay(), '25.01.2009 00:00:00', 'Date "2009-01-25T00:00:00" to full display is "25.01.2009 00:00:00"');
+	assert.equal(new Date('2009-01-25T00:00:00+02:00').toUTCFullDisplay(), '24.01.2009 22:00:00', 'Date "2009-01-25T00:00:00+02:00" to UTC full display is "24.01.2009 22:00:00"');
+	assert.equal(new Date('2009-01-25T00:00:00Z').toUTCFullDisplay(), '25.01.2009 00:00:00', 'Date "2009-01-25T00:00:00Z" to UTC full display is "25.01.2009 00:00:00"');
+
+	assert.equal(new Date('2009-01-25T22:38:46.234').toFullDisplay(), '25.01.2009 22:38:46', 'Date "2009-01-25T22:38:46.234" to full display is "25.01.2009 22:38:46"');
+	assert.equal(new Date('2009-01-25T22:38:46.234Z').toUTCFullDisplay(), '25.01.2009 22:38:46', 'Date "2009-01-25T22:38:46.234Z" to full display is "25.01.2009 22:38:46"');
+
+	assert.equal(new Date('2009-12-25T22:44').toFullDisplay(), '25.12.2009 22:44:00', 'Date "2009-11-25T22:44" to full display is "25.12.2009 22:38:00"');
+	assert.equal(new Date('2009-12-25T22:44Z').toUTCFullDisplay(), '25.12.2009 22:44:00', 'Date "2009-11-25T22:44Z" to full display is "25.12.2009 22:38:00"');
+
+	assert.equal(new Date('2009-01-25T00:00:00').format('${day}.${month}.${year}'), '25.01.2009', 'Date "2009-01-25T00:00:00" formatter with formatter "${day}.${month}.${year}" is "25.01.2009"');
+	assert.equal(new Date('2009-01-25T00:00:00+02:00').formatUTC('${day}.${month}.${year}'), '24.01.2009', 'Date "2009-01-25T00:00:00+02:00" formatter with formatter "${day}.${month}.${year}" is "24.01.2009"');
+	assert.equal(new Date('2009-01-25T00:00:00Z').formatUTC('${day}.${month}.${year}'), '25.01.2009', 'Date "2009-01-25T00:00:00Z" formatter with formatter "${day}.${month}.${year}" is "25.01.2009"');
+
 	assert.equal(
-		new Date('2009/01/25').format('${day}.${month}.${year} ${hour}:${minute}:${second}:${millisecond}'),
+		new Date('2009-01-25T00:00:00').format('${day}.${month}.${year} ${hour}:${minute}:${second}:${millisecond}'),
 		'25.01.2009 00:00:00:000',
-		'Date [2009/01/25] formatted with formatter "${day}.${month}.${year} ${hour}:${minute}:${second}:${millisecond}" is "25.01.2009 00:00:00:000"');
+		'Date "2009-01-25T00:00:00" formatted with formatter "${day}.${month}.${year} ${hour}:${minute}:${second}:${millisecond}" is "25.01.2009 00:00:00:000"');
 	assert.equal(
-		new Date('December 17, 2009 03:24:12').format('${day}.${month}.${year} ${hour}:${minute}:${second}'),
+		new Date('2009-12-17T03:24:12').format('${day}.${month}.${year} ${hour}:${minute}:${second}'),
 		'17.12.2009 03:24:12',
-		'Date parsed from string "December 17, 2009 03:24:12" formatted with formatter "${day}.${month}.${year} ${hour}:${minute}:${second}" is "17.12.2009 03:24:12"');
+		'Date "2009-12-17T03:24:12" formatted with formatter "${day}.${month}.${year} ${hour}:${minute}:${second}" is "17.12.2009 03:24:12"');
 	assert.equal(
-		new Date(2042, 5, 1, 22, 20, 52, 420).format('${day}.${month}.${year} ${hour}:${minute}:${second}:${millisecond}'),
+		new Date('2042-06-01T22:20:52.420').format('${day}.${month}.${year} ${hour}:${minute}:${second}:${millisecond}'),
 		'01.06.2042 22:20:52:420',
-		'Date created with parameters [2042, 5, 1, 22, 20, 52, 420] formatted with formatter "${day}.${month}.${year} ${hour}:${minute}:${second}:${millisecond}" is "01.06.2042 22:20:52:420"');
+		'Date "2042-06-01T22:20:52.420" formatted with formatter "${day}.${month}.${year} ${hour}:${minute}:${second}:${millisecond}" is "01.06.2042 22:20:52:420"');
 	assert.equal(
-		new Date('2009/01/25').format('Date : ${month}.${day} (month, day)'),
+		new Date('2009-01-25T00:00:00').format('Date : ${month}.${day} (month, day)'),
 		'Date : 01.25 (month, day)',
-		'Date [2009/01/25] formatter with formatter "Date : ${month}.${day} (month, day)" is "Date : 01.25 (month, day)"');
+		'Date "2009-01-25T00:00:00" formatter with formatter "Date : ${month}.${day} (month, day)" is "Date : 01.25 (month, day)"');
 	assert.equal(
-		new Date('December 17, 2009 19:24:12').format('${hour}$${minute}seconds${second} // Day ${day} of month ${month} in year ${year}'),
+		new Date('2009-12-17T19:24:12').format('${hour}$${minute}seconds${second} // Day ${day} of month ${month} in year ${year}'),
 		'19$24seconds12 // Day 17 of month 12 in year 2009',
-		'Date parsed from string "December 17, 2009 19:24:12" formatted with formatter "${hour}$${minute}seconds${second} // Day ${day} of month ${month} in year ${year}" is "19$$24seconds12 // Day 17 of month 12 in year 2009"');
-	assert.equal(
-		Date.parseToDisplay('25.01.2009').getTime(),
-		new Date('2009/01/25').getTime(),
-		'Parsing date "25.01.2009" gives the good date');
+		'Date "2009-12-17T19:24:12" formatted with formatter "${hour}$${minute}seconds${second} // Day ${day} of month ${month} in year ${year}" is "19$$24seconds12 // Day 17 of month 12 in year 2009"');
+})();
+
+//parseToDisplay, parseToFullDisplay and parseToFullDisplayUTC
+(function() {
+	//parseToDisplay
+	assert.equal(Date.parseToDisplay('25.01.2009').getTime(), new Date('2009/01/25').getTime(), 'Parsing date "25.01.2009" gives the good date');
+	assert.equal(Date.parseToDisplay('5.2.2009').getTime(), new Date('2009/2/5').getTime(), 'Parsing date "5.2.2009" gives the good date');
+	assert.undefined(Date.parseToDisplay('25.01.09'), 'Uncomplete date "25.01.09" can not be parsed');
 	var date = Date.parseToDisplay('33.01.2009');
-	assert.ok(
-		!Date.isValidDate(date) || date.getTime() === new Date('2009/02/02').getTime(),
-		'Parsing date "33.01.2009" gives date [2009/02/02] for some browsers and gives an invalid date for others browsers');
-	assert.equal(
-		Date.parseToFullDisplay('25.01.2009 22:38:46').getTime(),
-		new Date(2009, 0, 25, 22, 38, 46).getTime(),
-		'Parsing date "25.01.2009 22:38:46" gives the good date');
-	assert.equal(
-		Date.parseToFullDisplay('25.01.2009 22:62:46').getTime(),
-		new Date(2009, 0, 25, 23, 2, 46).getTime(),
-		'Parsing date "25.01.2009 22:62:46" gives the good date');
-	assert.equal(
-		Date.parseToFullDisplayUTC('25.01.2009 22:38:46').getTime(),
-		new Date(Date.UTC(2009, 0, 25, 22, 38, 46)).getTime(),
-		'Parsing date "25.01.2009 22:38:46" gives the good date');
-	assert.equal(
-		Date.parseToFullDisplayUTC('25.01.2009 22:62:46').getTime(),
-		new Date(Date.UTC(2009, 0, 25, 23, 2, 46)).getTime(),
-		'Parsing date "25.01.2009 22:62:46" gives the good date');
+	assert.ok(!Date.isValidDate(date) || date.getTime() === new Date('2009/02/02').getTime(), 'Parsing date "33.01.2009" gives date [2009/02/02] for some browsers and gives an invalid date for others browsers');
+
+	//parseToFullDisplay
+	assert.equal(Date.parseToFullDisplay('25.01.2009 22:38:46').getTime(), new Date(2009, 0, 25, 22, 38, 46).getTime(), 'Parsing date "25.01.2009 22:38:46" gives the good date');
+	assert.equal(Date.parseToFullDisplay('25.01.2009 22:62:46').getTime(), new Date(2009, 0, 25, 23, 2, 46).getTime(), 'Parsing date "25.01.2009 22:62:46" gives the good date');
+	assert.equal(Date.parseToFullDisplay('25.01.2009 2:6:4').getTime(), new Date(2009, 0, 25, 2, 6, 4).getTime(), 'Parsing date "25.01.2009 2:6:4" gives the good date');
+	assert.undefined(Date.parseToFullDisplay('25.01.09 2:6:4'), 'Uncomplete date "25.01.09 2:6:4" can not be parsed');
+
+	//parseToFullDisplayUTC
+	assert.equal(Date.parseToFullDisplayUTC('25.01.2009 22:38:46').getTime(), new Date(Date.UTC(2009, 0, 25, 22, 38, 46)).getTime(), 'Parsing date "25.01.2009 22:38:46" gives the good date');
+	assert.equal(Date.parseToFullDisplayUTC('25.01.2009 22:62:46').getTime(), new Date(Date.UTC(2009, 0, 25, 23, 2, 46)).getTime(), 'Parsing date "25.01.2009 22:62:46" gives the good date');
 	assert.equal(
 		Date.parseToFullDisplayUTC('25.01.2014 10:42:30').getTime() - Date.parseToFullDisplay('25.01.2014 10:42:30').getTime(),
 		1 * 60 * 60 * 1000,
@@ -816,17 +791,7 @@ assert.equal(new Date('2011/10/10').getDayName('en'), 'Monday', 'Day name for da
 		'There is 2 hours between date "25.07.2014 10:42:30" parsed as UTC and the same date parsed as local time (UTC+2 in summer)');
 })();
 
-(function() {
-	assert.equal(Date.getDurationLiteral(0), '', 'Duration literal for 0 is the empty string');
-	assert.equal(Date.getDurationLiteral(2), '2 seconds', 'Duration literal for 2 is "2 seconds"');
-	assert.equal(Date.getDurationLiteral(60), '1 minutes', 'Duration literal for 60 is "1 minutes"');
-	assert.equal(Date.getDurationLiteral(61), '1 minutes 1 seconds', 'Duration literal for 61 is "1 minutes 1 seconds"');
-	assert.equal(Date.getDurationLiteral(179), '2 minutes 59 seconds', 'Duration literal for 179 is "2 minutes 59 seconds"');
-	assert.equal(Date.getDurationLiteral(3601), '1 hours 1 seconds', 'Duration literal for 3601 is "1 hours 1 seconds"');
-	assert.equal(Date.getDurationLiteral(86400), '1 days', 'Duration literal for 86400 is "1 days"');
-	assert.equal(Date.getDurationLiteral(86401), '1 days 1 seconds', 'Duration literal for 86401 is "1 days 1 seconds"');
-})();
-
+//toFullDisplay
 (function() {
 	var date = Date.parseToFullDisplay('20.01.2015 22:42:12');
 	date.roundToMinute();
@@ -849,6 +814,7 @@ assert.equal(new Date('2011/10/10').getDayName('en'), 'Monday', 'Day name for da
 	assert.equal(date.toFullDisplay(), '20.01.2015 00:00:00', 'Rounding date to day give a date with 0 hour');
 })();
 
+//add or remove duration
 (function() {
 	var date = new Date();
 	var time = date.getTime();
@@ -870,6 +836,19 @@ assert.equal(new Date('2011/10/10').getDayName('en'), 'Monday', 'Day name for da
 	assert.equal(date.toDisplay(), '29.01.2009', 'Add 4.1 days to [2009/01/25] to display is [29.01.2009]');
 })();
 
+//duration literal
+(function() {
+	assert.equal(Date.getDurationLiteral(0), '', 'Duration literal for 0 is the empty string');
+	assert.equal(Date.getDurationLiteral(2), '2 seconds', 'Duration literal for 2 is "2 seconds"');
+	assert.equal(Date.getDurationLiteral(60), '1 minutes', 'Duration literal for 60 is "1 minutes"');
+	assert.equal(Date.getDurationLiteral(61), '1 minutes 1 seconds', 'Duration literal for 61 is "1 minutes 1 seconds"');
+	assert.equal(Date.getDurationLiteral(179), '2 minutes 59 seconds', 'Duration literal for 179 is "2 minutes 59 seconds"');
+	assert.equal(Date.getDurationLiteral(3601), '1 hours 1 seconds', 'Duration literal for 3601 is "1 hours 1 seconds"');
+	assert.equal(Date.getDurationLiteral(86400), '1 days', 'Duration literal for 86400 is "1 days"');
+	assert.equal(Date.getDurationLiteral(86401), '1 days 1 seconds', 'Duration literal for 86401 is "1 days 1 seconds"');
+})();
+
+//age literal
 (function() {
 	assert.equal(new Date().getAgeLiteral(), 'just now', 'Literal age of now is "just now"');
 	assert.equal(new Date().addSeconds(-1).getAgeLiteral(), 'a second ago', 'Literal age of 1 second old date is "one second ago"');
