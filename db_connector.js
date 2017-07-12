@@ -49,8 +49,18 @@ DBConnector.prototype.open = function(callback) {
 	});
 };
 
-DBConnector.prototype.drop = function() {
-	indexedDB.deleteDatabase(this.name);
+DBConnector.prototype.drop = function(callback) {
+	var that = this;
+	var request = indexedDB.deleteDatabase(this.name);
+	//enabling this callback avoid success callback to be called in Chrome and Firefox
+	/*request.addEventListener('error', function(event) {
+		console.error('Error while deleting database ' + that.name, event);
+	});*/
+	request.addEventListener('success', function(event) {
+		if(callback) {
+			callback.call(undefined, event);
+		}
+	});
 };
 
 DBConnector.prototype.add = function(item, callback) {
@@ -115,7 +125,7 @@ DBConnector.prototype.get = function(item_id, callback) {
 	});
 };
 
-DBConnector.prototype.getAll = function(result_callback, callback) {
+DBConnector.prototype.getAll = function(callback) {
 	var that = this;
 	//start transaction
 	var transaction = this.database.transaction([this.name]);
@@ -127,42 +137,25 @@ DBConnector.prototype.getAll = function(result_callback, callback) {
 	});
 	//retrieve store
 	var store = transaction.objectStore(this.name);
-	//do request using cursor
-	var results = [];
-	var key_range = IDBKeyRange.lowerBound(0);
-	var cursor = store.openCursor(key_range);
-	cursor.addEventListener('error', function(event) {
+	//do request
+	var request = store.getAll();
+	request.addEventListener('error', function(event) {
 		console.error('Error with request while retrieving items', event);
 	});
-	cursor.addEventListener('success', function(event) {
-		var result = event.target.result;
-		if(result) {
-			results.push(result.value);
-			if(result_callback) {
-				result_callback.call(undefined, result.value);
-			}
-			result.continue();
-		}
-		//no more entry
-		else {
-			if(callback) {
-				callback.call(undefined, results);
-			}
+	request.addEventListener('success', function(event) {
+		if(callback) {
+			callback.call(undefined, event.target.result);
 		}
 	});
 };
 
 DBConnector.prototype.getSome = function(filter, callback) {
-	this.getAll(
-		undefined,
-		function(results) {
-			//apply filter on results if needed
-			var items = filter ? results.filter(filter) : results;
-			callback.call(undefined, items);
-		}
-	);
+	this.getAll(function(results) {
+		//apply filter on results if needed
+		var items = filter ? results.filter(filter) : results;
+		callback.call(undefined, items);
+	});
 };
-
 
 DBConnector.prototype.remove = function(item_id, callback) {
 	var that = this;
