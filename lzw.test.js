@@ -14,7 +14,7 @@ assert.equal(LZW.Decompress(LZW.Compress(text)), text, 'LZW encoding then decodi
 assert.equal(LZW.DecompressString(LZW.CompressToString(text)), text, 'LZW encoding a text to string then decoding gives the same text');
 
 text = 'TOBEORNOTTOBEORTOBEORNOT';
-encoded_text = 'TOBEORNOTĀĂĄĉăąć'
+encoded_text = 'TOBEORNOTĀĂĄĉăąć';
 assert.equal(LZW.CompressToString(text), encoded_text, 'LZW for "TOBEORNOTTOBEORTOBEORNOT" is "TOBEORNOTĀĂĄĉăąć" or "TOBEORNOT<256><258><260><265><259><261><263>"');
 assert.equal(LZW.DecompressString(LZW.CompressToString(text)), text, 'LZW encoding then decoding a text gives the same text');
 
@@ -37,6 +37,9 @@ assert.equal(LZW.DecompressString(LZW.CompressToString(text)), text, 'LZW works 
 
 text = '$42!-21=abc42!def42!ghi42!^';
 assert.equal(LZW.DecompressString(LZW.CompressToString(text)), text, 'LZW works with not so special characters');
+
+text = '5≤6 and 6≥5';
+assert.notEqual(LZW.DecompressString(LZW.CompressToString(text)), text, 'LZW does not works with characters code greater than 256 (using more than 8 bits)');
 
 text = 'ɖƇƳƏœʡӮ';
 assert.notEqual(LZW.DecompressString(LZW.CompressToString(text)), text, 'LZW does not works with characters code greater than 256 (using more than 8 bits)');
