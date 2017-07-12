@@ -116,6 +116,4 @@ assert.equal(localStorage.getObject('city').population, 500000, 'Store city obje
 assert.equal(localStorage.getItem('city'), '{"name":"Geneva","population":500000,"country":"Switzerland"}', 'Store city object in local storage and retrieve it');
 localStorage.removeItem('city');
 
-document
-
 assert.end();

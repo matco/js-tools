@@ -1,5 +1,21 @@
 'use strict';
 
+//Generic
+['indexOf', 'first', 'last', 'isEmpty', 'includes', 'slice', 'sort', 'forEach', 'map', 'find', 'filter', 'every', 'some'].forEach(function(method) {
+	//NodeList
+	if(!NodeList.prototype.hasOwnProperty(method)) {
+		NodeList.prototype[method] = Array.prototype[method];
+	}
+	//DOMStringList
+	if(!DOMStringList.prototype.hasOwnProperty(method)) {
+		DOMStringList.prototype[method] = Array.prototype[method];
+	}
+	//HTMLCollection
+	if(!HTMLCollection.prototype.hasOwnProperty(method)) {
+		HTMLCollection.prototype[method] = Array.prototype[method];
+	}
+});
+
 //DOM
 //Node
 Node.prototype.clear = function() {
@@ -20,22 +36,6 @@ Node.prototype.appendChilds = function(childs) {
 	}
 	return this.parentNode.up(tag);
 };*/
-
-//NodeList
-/*for(property in Array.prototype) {
-	if(Array.prototype.hasOwnProperty(property) && typeof(Array.prototype[property]) === 'function') {
-		console.log(property);
-		NodeList.prototype[property] = Array.prototype[property];
-	}
-}*/
-NodeList.prototype.indexOf = Array.prototype.indexOf;
-NodeList.prototype.filter = Array.prototype.filter;
-NodeList.prototype.forEach = Array.prototype.forEach;
-NodeList.prototype.every = Array.prototype.every;
-NodeList.prototype.map = Array.prototype.map;
-NodeList.prototype.some = Array.prototype.some;
-NodeList.prototype.sort = Array.prototype.sort;
-NodeList.prototype.find = Array.prototype.find;
 
 //Element
 Element.prototype.setAttributes = function(attributes) {
@@ -129,7 +129,7 @@ HTMLSelectElement.prototype.fill = function(entries, blank_entry, selected_entri
 			}
 		}
 		//unselect or select option according to new selection
-		if(!selected_options.contains(option.value)) {
+		if(!selected_options.includes(option.value)) {
 			option.removeAttribute('selected');
 		}
 		else {
@@ -153,7 +153,7 @@ HTMLSelectElement.prototype.fill = function(entries, blank_entry, selected_entri
 	for(var option in options) {
 		if(options.hasOwnProperty(option)) {
 			properties = {value : option};
-			if(selected_options.contains(properties.value)) {
+			if(selected_options.includes(properties.value)) {
 				properties.selected = 'selected';
 			}
 			this.appendChild(document.createFullElement('option', properties, options[option]));
@@ -177,15 +177,6 @@ HTMLSelectElement.prototype.fillObjects = function(objects, value_property, labe
 //HTMLDataListElement
 HTMLDataListElement.prototype.fill = HTMLSelectElement.prototype.fill;
 HTMLDataListElement.prototype.fillObjects = HTMLSelectElement.prototype.fillObjects;
-
-//HTMLCollection
-HTMLCollection.prototype.indexOf = Array.prototype.indexOf;
-HTMLCollection.prototype.filter = Array.prototype.filter;
-HTMLCollection.prototype.forEach = Array.prototype.forEach;
-HTMLCollection.prototype.every = Array.prototype.every;
-HTMLCollection.prototype.map = Array.prototype.map;
-HTMLCollection.prototype.some = Array.prototype.some;
-HTMLCollection.prototype.find = Array.prototype.find;
 
 //Storage
 Storage.prototype.setObject = function(key, value) {
