@@ -36,7 +36,7 @@ Bus.prototype.unregister = function(listener) {
 	}
 };
 Bus.prototype.isRegistered = function(listener) {
-	return this.listeners.contains(listener);
+	return this.listeners.includes(listener);
 };
 
 (function() {
