@@ -38,7 +38,7 @@ var SVG = (function() {
 				xmlns : SVG.Namespaces.SVG,
 				'xmlns:xhtml' : SVG.Namespaces.XHTML,
 				'xmlns:xlink' : SVG.Namespaces.XLINK,
-				width : width  + 'px',
+				width : width + 'px',
 				height : height + 'px'
 			});
 			return append_xhtml_properties(svg, properties);

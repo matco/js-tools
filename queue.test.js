@@ -41,7 +41,7 @@ queue.add(function(callback) {
 	assert.equal(messages[2], 'Message 3 (3d)', 'Third message is good message');
 	assert.equal(messages[3], 'Message 4 (4d)', 'Fourth message is good message');
 	assert.equal(messages[4], 'Message 5 (4.5d)', 'Fifth message is good message');
-	assert.equal(chrono, 4 * delay, 'Tests are done 4s later');
+	assert.equal(chrono, 4 * delay, 'Tests are done 4d later');
 	setTimeout(function() {
 		queue.resume();
 	}, 2 * delay);
