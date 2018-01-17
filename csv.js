@@ -31,7 +31,7 @@ CSV.prototype.download = function(name) {
 	if(/Chrome/.test(navigator.userAgent)) {
 		var link = document.createFullElement('a', {href : url, download : filename});
 		var event = document.createEvent('MouseEvents');
-		event.initUIEvent('click', true, true, this.window, 1);
+		event.initUIEvent('click', true, true, window, 1);
 		link.dispatchEvent(event);
 	}
 	else {
