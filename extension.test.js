@@ -781,14 +781,19 @@ assert.equal(new Date('2011/10/10').getDayName('en'), 'Monday', 'Day name for da
 	//parseToFullDisplayUTC
 	assert.equal(Date.parseToFullDisplayUTC('25.01.2009 22:38:46').getTime(), new Date(Date.UTC(2009, 0, 25, 22, 38, 46)).getTime(), 'Parsing date "25.01.2009 22:38:46" gives the good date');
 	assert.equal(Date.parseToFullDisplayUTC('25.01.2009 22:62:46').getTime(), new Date(Date.UTC(2009, 0, 25, 23, 2, 46)).getTime(), 'Parsing date "25.01.2009 22:62:46" gives the good date');
+	let local_date;
+	//test with winter time
+	local_date = new Date(2014, 1, 25, 10, 42, 30);
 	assert.equal(
-		Date.parseToFullDisplayUTC('25.01.2014 10:42:30').getTime() - Date.parseToFullDisplay('25.01.2014 10:42:30').getTime(),
-		1 * 60 * 60 * 1000,
-		'There is 1 hour between date "25.01.2014 10:42:30" parsed as UTC and the same date parsed as local time (UTC+1 in winter)');
+		Date.parseToFullDisplay('25.01.2014 10:42:30').getTime() - Date.parseToFullDisplayUTC('25.01.2014 10:42:30').getTime(),
+		local_date.getTimezoneOffset() * 60 * 1000,
+		'Difference between date "25.01.2014 10:42:30" parsed as UTC and the same date parsed as local time is equals to the local timezone offset');
+	//test with summer time
+	local_date = new Date(2014, 7, 25, 10, 42, 30);
 	assert.equal(
-		Date.parseToFullDisplayUTC('25.07.2014 10:42:30').getTime() - Date.parseToFullDisplay('25.07.2014 10:42:30').getTime(),
-		2 * 60 * 60 * 1000,
-		'There is 2 hours between date "25.07.2014 10:42:30" parsed as UTC and the same date parsed as local time (UTC+2 in summer)');
+		Date.parseToFullDisplay('25.07.2014 10:42:30').getTime() - Date.parseToFullDisplayUTC('25.07.2014 10:42:30').getTime(),
+		local_date.getTimezoneOffset() * 60 * 1000,
+		'Difference between date "25.07.2014 10:42:30" parsed as UTC and the same date parsed as local time is equals to the local timezone offset');
 })();
 
 //toFullDisplay
@@ -865,15 +870,7 @@ assert.equal(new Date('2011/10/10').getDayName('en'), 'Monday', 'Day name for da
 	assert.equal(new Date().addDays(-1).getAgeLiteral(), 'a day ago', 'Literal age of 24 hours old date is "a day ago"');
 	assert.equal(new Date().addDays(-42).getAgeLiteral(), '42 days ago', 'Literal age of 42 days old date is "42 days ago"');
 
-	assert.doesThrow(
-		function() {
-			new Date().addSeconds(10).getAgeLiteral();
-		},
-		function() {
-			return this.message === 'Date in the future not supported';
-		},
-		'Calling age literal on a date in the future throws an exception with message : "Date in the future not supported"'
-	);
+	assert.equal(new Date().addSeconds(10).getAgeLiteral(), 'in 10 seconds', 'Literal age of 10 seconds in the future date is "in 10 seconds"')
 })();
 
 assert.end();
