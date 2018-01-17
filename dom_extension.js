@@ -25,8 +25,8 @@ Node.prototype.clear = function() {
 	//allow chain
 	return this;
 };
-Node.prototype.appendChilds = function(childs) {
-	childs.forEach(Node.prototype.appendChild, this);
+Node.prototype.appendChildren = function(children) {
+	children.forEach(Node.prototype.appendChild, this);
 	//allow chain
 	return this;
 };
@@ -38,6 +38,15 @@ Node.prototype.appendChilds = function(childs) {
 };*/
 
 //Element
+Element.prototype.clear = function(selector) {
+	let children = this.childNodes.slice();
+	if(selector) {
+		children = children.filter(c => c.nodeType === Node.ELEMENT_NODE && c.matches(selector));
+	}
+	children.forEach(c => this.removeChild(c));
+	//allow chain
+	return this;
+};
 Element.prototype.setAttributes = function(attributes) {
 	if(attributes) {
 		for(var attribute in attributes) {

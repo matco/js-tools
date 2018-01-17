@@ -26,11 +26,11 @@ assert.begin();
 
 	//add random nodes
 	assert.equal(div.childNodes.length, 0, 'There is 0 child node in newly created container');
-	div.appendChilds([document.createElement('span'), document.createElement('span')]);
+	div.appendChildren([document.createElement('span'), document.createElement('span')]);
 	assert.equal(div.childNodes.length, 2, 'There is 2 child nodes in container after 2 child nodes have been added');
 
 	//add text node
-	div.appendChilds([document.createTextNode('hop')]);
+	div.appendChildren([document.createTextNode('hop')]);
 	assert.equal(div.childNodes.length, 3, 'There is 3 child nodes in container after 1 child text node has been added');
 })();
 
@@ -87,7 +87,7 @@ assert.begin();
 	var button_submit = document.createFullElement('button', {type : 'submit'}, 'Submit');
 	var button_close = document.createFullElement('button', {type : 'button'}, 'Close');
 	var p = document.createFullElement('p', {}, 'Form errors placeholder');
-	form.appendChilds([input, select, button_submit, button_close, p]);
+	form.appendChildren([input, select, button_submit, button_close, p]);
 
 	form.disable();
 	assert.ok(input.hasAttribute('disabled'), 'Input field has been disabled');
