@@ -21,16 +21,16 @@ var character_4 = {
 };
 
 function test_open_database() {
-	var db = new DBConnector('characters', 'id');
+	var db = new DBConnector(db_name, 'id');
 	db.open(function(indexed_db) {
 		assert.success('Database opened successfully');
-		assert.equal(indexed_db.name, 'characters', 'Database name is "characters"');
+		assert.equal(indexed_db.name, db_name, 'Database name is good');
 		db.drop(test_addition);
 	});
 }
 
 function test_addition() {
-	var db = new DBConnector('characters', 'id');
+	var db = new DBConnector(db_name, 'id');
 	db.open(function(indexed_db) {
 		//add character without id
 		assert.doesThrow(
@@ -76,7 +76,7 @@ function test_addition() {
 }
 
 function test_addition_multiple() {
-	var db = new DBConnector('characters', 'id');
+	var db = new DBConnector(db_name, 'id');
 	db.open(function(indexed_db) {
 		//add characters in database
 		db.addAll([character_1, character_2], function() {
@@ -100,7 +100,7 @@ function test_addition_multiple() {
 };
 
 function test_retrieval_and_deletion() {
-	var db = new DBConnector('characters', 'id');
+	var db = new DBConnector(db_name, 'id');
 	db.open(function(indexed_db) {
 		//add some characters
 		db.addAll([character_1, character_2, character_3, character_4], function() {
@@ -149,6 +149,9 @@ function test_retrieval_and_deletion() {
 		});
 	});
 }
+
+//genereate random database name because browsers don't manage to create and delete the same database multiple times
+let db_name = 'characters_' + Math.floor(Math.random() * 10000);
 
 assert.begin();
 test_open_database();
