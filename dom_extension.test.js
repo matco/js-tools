@@ -4,7 +4,7 @@ assert.begin();
 
 //node
 (function() {
-	var div = document.createElement('div');
+	const div = document.createElement('div');
 
 	//add random nodes
 	div.appendChild(document.createElement('span'));
@@ -22,7 +22,7 @@ assert.begin();
 })();
 
 (function() {
-	var div = document.createElement('div');
+	const div = document.createElement('div');
 
 	//add random nodes
 	assert.equal(div.childNodes.length, 0, 'There is 0 child node in newly created container');
@@ -36,7 +36,7 @@ assert.begin();
 
 //element
 (function() {
-	var a = document.createElement('a');
+	const a = document.createElement('a');
 
 	assert.notOk(a.hasAttribute('href'), 'Newly created link has no attribute "href"');
 
@@ -58,8 +58,8 @@ assert.begin();
 
 //document
 (function() {
-	var clicked = false;
-	var button = document.createFullElement(
+	let clicked = false;
+	const button = document.createFullElement(
 		'button',
 		{type : 'button', 'class' : 'important', style : 'cursor: pointer;'},
 		'Here',
@@ -81,12 +81,12 @@ assert.begin();
 
 //form
 (function() {
-	var form = document.createElement('form');
-	var input = document.createFullElement('input', {name : 'value_1'});
-	var select = document.createFullElement('select', {name : 'value_2'});
-	var button_submit = document.createFullElement('button', {type : 'submit'}, 'Submit');
-	var button_close = document.createFullElement('button', {type : 'button'}, 'Close');
-	var p = document.createFullElement('p', {}, 'Form errors placeholder');
+	const form = document.createElement('form');
+	const input = document.createFullElement('input', {name : 'value_1'});
+	const select = document.createFullElement('select', {name : 'value_2'});
+	const button_submit = document.createFullElement('button', {type : 'submit'}, 'Submit');
+	const button_close = document.createFullElement('button', {type : 'button'}, 'Close');
+	const p = document.createFullElement('p', {}, 'Form errors placeholder');
 	form.appendChildren([input, select, button_submit, button_close, p]);
 
 	form.disable();
@@ -105,7 +105,7 @@ assert.begin();
 })();
 
 //storage
-var city = {
+const city = {
 	name : 'Geneva',
 	population : 500000,
 	country : 'Switzerland'

@@ -9,7 +9,7 @@ if(!Object.isObject) {
 }
 if(!Object.isEmpty) {
 	Object.isEmpty = function(object) {
-		for(var key in object) {
+		for(const key in object) {
 			if(object.hasOwnProperty(key)) {
 				return false;
 			}
@@ -40,7 +40,7 @@ if(!Object.equals) {
 			if(object_1.length !== object_2.length) {
 				return false;
 			}
-			for(var i = object_1.length - 1; i >= 0; i--) {
+			for(let i = object_1.length - 1; i >= 0; i--) {
 				if(!Object.equals(object_1[i], object_2[i])) {
 					return false;
 				}
@@ -52,7 +52,7 @@ if(!Object.equals) {
 			if(!Object.equals(Object.keys(object_1), Object.keys(object_2))) {
 				return false;
 			}
-			for(var property in object_1) {
+			for(const property in object_1) {
 				if(object_1.hasOwnProperty(property)) {
 					if(!Object.equals(object_1[property], object_2[property])) {
 						return false;
@@ -71,7 +71,7 @@ if(!Object.clone) {
 }
 if(!Object.key) {
 	Object.key = function(object, value) {
-		for(var key in object) {
+		for(const key in object) {
 			if(object.hasOwnProperty(key) && object[key] === value) {
 				return key;
 			}
@@ -81,10 +81,10 @@ if(!Object.key) {
 }
 if(!Object.getObjectPathValue) {
 	Object.getObjectPathValue = function(source_object, source_path) {
-		var object = source_object;
-		var path = source_path;
+		let object = source_object;
+		let path = source_path;
 		while(path.includes('.')) {
-			var current = path.substring(0, path.indexOf('.'));
+			const current = path.substring(0, path.indexOf('.'));
 			object = Function.isFunction(object[current]) ? object[current]() : object[current];
 			path = path.substring(path.indexOf('.') + 1);
 		}
@@ -93,10 +93,10 @@ if(!Object.getObjectPathValue) {
 }
 if(!Object.getLastObjectInPath) {
 	Object.getLastObjectInPath = function(source_object, source_path) {
-		var object = source_object;
-		var path = source_path;
+		const object = source_object;
+		const path = source_path;
 		if(path.includes('.')) {
-			var last_property = path.substring(path.lastIndexOf('.') + 1);
+			const last_property = path.substring(path.lastIndexOf('.') + 1);
 			return {object : Object.getObjectPathValue(object, path.substring(0, path.lastIndexOf('.'))), property : last_property};
 		}
 		return {object : object, property : path};
@@ -113,14 +113,14 @@ if(!Function.isFunction) {
 
 //prototypes
 Function.prototype.negatize = function() {
-	var original = this;
+	const original = this;
 	return function() {
-		return !!!original.apply(undefined, arguments);
+		return !original.apply(undefined, arguments);
 	};
 };
 Function.prototype.callbackize = function() {
-	var original = this;
-	var args = arguments;
+	const original = this;
+	const args = arguments;
 	return function(object) {
 		return original.apply(object, args);
 	};
@@ -129,11 +129,11 @@ Function.prototype.unmemoize = function() {
 	throw new Error('Unable to unmemoize a function that has not been memoized');
 };
 Function.prototype.memoize = function() {
-	var original = this;
-	var cache = {};
+	const original = this;
+	const cache = {};
 
-	var memoized = function() {
-		var parameters = [];
+	const memoized = function() {
+		const parameters = [];
 		//add context in parameters
 		if(this) {
 			if(!this.serialize) {
@@ -188,8 +188,8 @@ String.prototype.replaceObject = function(object) {
 	});
 };
 String.prototype.getBytes = function() {
-	var bytes = [];
-	for(var i = 0; i < this.length; i++) {
+	const bytes = [];
+	for(let i = 0; i < this.length; i++) {
 		bytes.push(this.charCodeAt(i));
 	}
 	return bytes;
@@ -224,10 +224,10 @@ Number.prototype.compareTo = function(otherNumber) {
 //helpers
 Array.objectFilter = function(properties) {
 	return function(object) {
-		for(var property in properties) {
+		for(const property in properties) {
 			if(properties.hasOwnProperty(property)) {
 				//if object property is a function, call it only if the asked value is not a function too
-				var object_value = Function.isFunction(object[property]) && !Function.isFunction(properties[property]) ? object[property].call(object) : object[property];
+				const object_value = Function.isFunction(object[property]) && !Function.isFunction(properties[property]) ? object[property].call(object) : object[property];
 				if(object_value !== properties[property]) {
 					return false;
 				}
@@ -253,8 +253,7 @@ Array.prototype.first = function() {
 	return this[0];
 };
 Array.prototype.indexOfSame = function(element) {
-	var i = 0, length = this.length;
-	for(; i < length; i++) {
+	for(let i = 0; i < this.length; i++) {
 		if(Object.equals(this[i], element)) {
 			return i;
 		}
@@ -265,7 +264,7 @@ Array.prototype.includesSame = function(element) {
 	return this.indexOfSame(element) !== -1;
 };
 Array.prototype.includesAll = function(elements) {
-	for(var i = elements.length - 1; i >= 0; i--) {
+	for(let i = elements.length - 1; i >= 0; i--) {
 		if(!this.includes(elements[i])) {
 			return false;
 		}
@@ -273,7 +272,7 @@ Array.prototype.includesAll = function(elements) {
 	return true;
 };
 Array.prototype.includesOne = function(elements) {
-	for(var i = elements.length - 1; i >= 0; i--) {
+	for(let i = elements.length - 1; i >= 0; i--) {
 		if(this.includes(elements[i])) {
 			return true;
 		}
@@ -281,8 +280,7 @@ Array.prototype.includesOne = function(elements) {
 	return false;
 };
 Array.prototype.pushAll = function(array) {
-	var i = 0, length = array.length;
-	for(; i < length; i++) {
+	for(let i = 0; i < array.length; i++) {
 		this.push(array[i]);
 	}
 };
@@ -290,39 +288,27 @@ Array.prototype.insert = function(index, item) {
 	this.splice(index, 0, item);
 };
 Array.prototype.remove = function(from, to) {
-	var rest = this.slice((to || from) + 1 || this.length);
+	const rest = this.slice((to || from) + 1 || this.length);
 	this.length = from < 0 ? this.length + from : from;
 	this.push.apply(this, rest);
 };
 Array.prototype.removeElement = function(element) {
-	var index = this.indexOf(element);
+	const index = this.indexOf(element);
 	if(index !== -1) {
 		this.splice(index, 1);
 	}
 };
 Array.prototype.removeElements = function(elements) {
-	for(var i = 0, length = elements.length; i < length; i++) {
+	for(let i = 0, length = elements.length; i < length; i++) {
 		this.removeElement(elements[i]);
 	}
 };
 Array.prototype.replace = function(oldElement, newElement) {
-	var index = this.indexOf(oldElement);
+	const index = this.indexOf(oldElement);
 	if(index !== -1) {
 		this[index] = newElement;
 	}
 };
-if(!Array.prototype.find) {
-	Array.prototype.find = function(callback, thisArgument) {
-		var i = 0, length = this.length;
-		for(; i < length; i++) {
-			var element = this[i];
-			if(callback.call(thisArgument, element, i, this)) {
-				return element;
-			}
-		}
-		return undefined;
-	};
-}
 
 //Date
 //helpers
@@ -363,47 +349,53 @@ Date.locale = {
 
 //naive way to calculate differences
 Date.getDifferenceInDays = function(start, stop) {
-	var time = stop.getTime() - start.getTime();
+	const time = stop.getTime() - start.getTime();
 	return time / Date.MS_IN_DAY;
 };
 Date.getDifferenceInHours = function(start, stop) {
-	var time = stop.getTime() - start.getTime();
+	const time = stop.getTime() - start.getTime();
 	return time / Date.MS_IN_HOUR;
 };
 Date.getDifferenceInMinutes = function(start, stop) {
-	var time = stop.getTime() - start.getTime();
+	const time = stop.getTime() - start.getTime();
 	return time / Date.MS_IN_MINUTE;
 };
 Date.getDifferenceInSeconds = function(start, stop) {
-	var time = stop.getTime() - start.getTime();
+	const time = stop.getTime() - start.getTime();
 	return time / Date.MS_IN_SECOND;
 };
 Date.parseToDisplay = function(date) {
-	var parts = date.match(/^(\d{1,2}).(\d{1,2}).(\d{4})$/);
+	const parts = date.match(/^(\d{1,2}).(\d{1,2}).(\d{4})$/);
 	//return data only if format is valid
 	if(parts) {
 		return new Date(parts[3] + '/' + parts[2] + '/' + parts[1]);
 	}
+	//to be consistent with native date API, return an invalid date
+	return new Date('Invalid date');
 };
 (function() {
-	var parts_regexp = /^(\d{1,2}).(\d{1,2}).(\d{4}) (\d{1,2}):(\d{1,2}):(\d{1,2})/;
+	const parts_regexp = /^(\d{1,2}).(\d{1,2}).(\d{4}) (\d{1,2}):(\d{1,2}):(\d{1,2})/;
 	Date.parseToFullDisplay = function(date) {
-		var parts = date.match(parts_regexp);
+		const parts = date.match(parts_regexp);
 		//return data only if format is valid
 		if(parts) {
-			return new Date(parts[3], parts[2] - 1, parts[1], parts[4], parts[5], parts[6]);
+			return new Date(parseInt(parts[3]), parseInt(parts[2]) - 1, parseInt(parts[1]), parseInt(parts[4]), parseInt(parts[5]), parseInt(parts[6]));
 		}
+		//to be consistent with native date API, return an invalid date
+		return new Date('Invalid date');
 	};
 	Date.parseToFullDisplayUTC = function(date) {
-		var parts = date.match(parts_regexp);
+		const parts = date.match(parts_regexp);
 		//return data only if format is valid
 		if(parts) {
-			return new Date(Date.UTC(parts[3], parts[2] - 1, parts[1], parts[4], parts[5], parts[6]));
+			return new Date(Date.UTC(parseInt(parts[3]), parseInt(parts[2]) - 1, parseInt(parts[1]), parseInt(parts[4]), parseInt(parts[5]), parseInt(parts[6])));
 		}
+		//to be consistent with native date API, return an invalid date
+		return new Date('Invalid date');
 	};
 })();
 Date.getDurationLiteral = function(duration) {
-	var d, result = '';
+	let d, result = '';
 	//write seconds
 	d = duration % Date.SECONDS_IN_MINUTE;
 	if(d) {
@@ -470,19 +462,19 @@ Date.prototype.formatUTC = function(formatter) {
 	});
 };
 Date.prototype.getDayName = function(language) {
-	var lang = language && Date.locale.hasOwnProperty(language) ? language : 'en';
+	const lang = language && Date.locale.hasOwnProperty(language) ? language : 'en';
 	return Date.locale[lang].day_names[this.getDay()];
 };
 Date.prototype.getDayNameShort = function(language) {
-	var lang = language && Date.locale.hasOwnProperty(language) ? language : 'en';
+	const lang = language && Date.locale.hasOwnProperty(language) ? language : 'en';
 	return Date.locale[lang].day_names_short[this.getDay()];
 };
 Date.prototype.getMonthName = function(language) {
-	var lang = language && Date.locale.hasOwnProperty(language) ? language : 'en';
+	const lang = language && Date.locale.hasOwnProperty(language) ? language : 'en';
 	return Date.locale[lang].month_names[this.getMonth()];
 };
 Date.prototype.getMonthNameShort = function(language) {
-	var lang = language && Date.locale.hasOwnProperty(language) ? language : 'en';
+	const lang = language && Date.locale.hasOwnProperty(language) ? language : 'en';
 	return Date.locale[lang].month_names_short[this.getMonth()];
 };
 Date.prototype.equals = function(otherDate) {
@@ -555,9 +547,9 @@ Date.prototype.getAge = function() {
 	return new Date().getTime() - this.getTime();
 };
 Date.prototype.getAgeLiteral = function() {
-	var real_age = this.getAge();
+	const real_age = this.getAge();
 
-	var age = Math.round(real_age / Date.MS_IN_SECOND);
+	let age = Math.round(real_age / Date.MS_IN_SECOND);
 	if(age === 0) {
 		return 'just now';
 	}
@@ -611,7 +603,8 @@ Date.prototype.getAgeLiteral = function() {
 	}
 	if(age > 0) {
 		return age + ' days ago';
-	} else {
+	}
+	else {
 		return 'in ' + (-age) + ' days';
 	}
 };

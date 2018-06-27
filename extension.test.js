@@ -1,3 +1,5 @@
+/* eslint no-new-wrappers: "off" */
+
 'use strict';
 
 assert.begin();
@@ -5,9 +7,9 @@ assert.begin();
 //Object
 //isObject
 (function() {
-	var object = {toto : 'tutu'};
-	var func = function() {'nothing to do';};
-	var not_func = 'nothing';
+	const object = {toto : 'tutu'};
+	const func = function() {'nothing to do';};
+	const not_func = 'nothing';
 
 	assert.ok(Object.isObject(object), 'An object variable is an object');
 	assert.ok(Object.isObject({toto : 'titi'}), 'An anonymous object is an object');
@@ -23,10 +25,10 @@ assert.begin();
 	assert.ok(Object.isEmpty({}), 'Anonymous object {} is an empty object');
 	assert.notOk(Object.isEmpty({toto : undefined}), '{toto : undefined} is not an empty object');
 
-	var object = {};
+	let object = {};
 	assert.ok(Object.isEmpty(object), 'Variable containing {} is an empty object');
 
-	var constructor = function() {};
+	let constructor = function() {};
 	object = new constructor();
 	assert.ok(Object.isEmpty(object), 'Object built from empty constructor is an empty object');
 
@@ -70,20 +72,20 @@ assert.begin();
 			{property : 'value', other_property : ['toto', 'titi']},
 			{property : 'value', other_property : ['toto', 'titi']}
 		),
-		'Object containg string and array is equal to an other object containing an equal string and an equal array');
+		'Object containing string and array is equal to an other object containing an equal string and an equal array');
 
-	var value = [1,2,'tutu'];
-	assert.ok(Object.equals({property : value}, {property : value}), 'Object containg an array is equal to an other object containing the same array');
+	const value = [1,2,'tutu'];
+	assert.ok(Object.equals({property : value}, {property : value}), 'Object containing an array is equal to an other object containing the same array');
 })();
 
 //clone
 (function() {
-	var object = {property : 'value'};
-	var cloned_object = Object.clone(object);
+	let object = {property : 'value'};
+	let cloned_object = Object.clone(object);
 
 	assert.ok(cloned_object.hasOwnProperty('property'), 'Cloned object has the same property like the original');
 	assert.equal(cloned_object.property, object.property, 'Cloned object property has the same value than the original object property');
-	var constructor = function() {
+	const constructor = function() {
 		this.property = 'value';
 	};
 	constructor.prototype.doNothing = function() {
@@ -94,7 +96,7 @@ assert.begin();
 	assert.ok(cloned_object.hasOwnProperty('property'), 'Cloned object has the same property like the original');
 	assert.equal(cloned_object.property, object.property, 'Cloned object property has the same value than the original object property');
 	assert.notEqual(object.constructor, cloned_object.constructor, 'Unfortunately, cloned object from object built from a constructor does not share the same constructor than the original');
-	assert.ok(Function.isFunction(object.doNothing), 'Original object has a "doNothing" method inhereited from prototype chain');
+	assert.ok(Function.isFunction(object.doNothing), 'Original object has a "doNothing" method inherited from prototype chain');
 	assert.notOk(Function.isFunction(cloned_object.doNothing), 'Cloned object does not have a "doNothing" method');
 })();
 
@@ -107,13 +109,13 @@ assert.begin();
 			Object.key({titi : 'tutu'}, 'toto');
 		},
 		function() {
-			return this.message === 'Object does not contains value'
+			return this.message === 'Object does not contains value';
 		},
 		'Asking key for a non existing value throws an exception'
 	);
 
-	var embedded_object = {mama : 'momo', mimi : 'mumu'};
-	var object = {toto : 'toto', titi :embedded_object};
+	const embedded_object = {mama : 'momo', mimi : 'mumu'};
+	const object = {toto : 'toto', titi :embedded_object};
 
 	assert.equal(Object.key(object, embedded_object), 'titi', 'Key for an object value is the right key');
 	assert.doesThrow(
@@ -121,7 +123,7 @@ assert.begin();
 			Object.key(object, {mama : 'momo', mimi : 'mumu'});
 		},
 		function() {
-			return this.message === 'Object does not contains value'
+			return this.message === 'Object does not contains value';
 		},
 		'Asking key for a similar value throws an exception'
 	);
@@ -129,26 +131,26 @@ assert.begin();
 
 //getObjectPathValue and getLastObjectInPath
 (function() {
-	var family = {
+	const family = {
 		name : 'Doe'
 	};
 	assert.equal(Object.getObjectPathValue(family, 'name'), 'Doe', 'Get object path value on object for path "name" gives "John"');
 	assert.equal(Object.getObjectPathValue(family, 'age'), undefined, 'Get object path value on object for path "age" gives undefined');
-	var person = {
+	const person = {
 		name : 'John'
 	};
 	family.chief = person;
 	assert.equal(Object.getObjectPathValue(family, 'chief'), person, 'Get object path value on object for path "chief" gives the family chief person');
 	assert.equal(Object.getObjectPathValue(family, 'chief.name'), 'John', 'Get object path value on object for path "chief.name" gives "John"');
 
-	var main_shop = {
+	const main_shop = {
 		name : 'Migros',
 		category : 'Supermarket',
 		label : function() {
 			return this.category + ' ' + this.name;
 		}
 	};
-	var main_street = {
+	const main_street = {
 		name : 'Avenue de Champel',
 		population : 100,
 		shops : [
@@ -160,7 +162,7 @@ assert.begin();
 		],
 		main_shop : main_shop
 	};
-	var city = {
+	const city = {
 		names : {
 			en : 'Geneva',
 			fr : 'Genève'
@@ -178,16 +180,16 @@ assert.begin();
 
 	assert.equal(Object.getObjectPathValue(city, 'names.en'), 'Geneva', 'Get object path value on city for path "names.en" gives "Geneva"');
 	assert.equal(Object.getObjectPathValue(city, 'names.de'), undefined, 'Get object path value on city for path "names.de" gives undefined');
-	assert.equal(Object.getObjectPathValue(city, 'main_street.shops'), main_street.shops, 'Get object path value on city for path "main_street.shops" gives all main stret shops');
+	assert.equal(Object.getObjectPathValue(city, 'main_street.shops'), main_street.shops, 'Get object path value on city for path "main_street.shops" gives all main street shops');
 	assert.equal(Object.getObjectPathValue(city, 'main_street.population'), 100, 'Get object path value on city for path "main_street.population" gives the population of the main street');
-	assert.equal(Object.getObjectPathValue(city, 'main_street.main_shop.label'), 'Supermarket Migros', 'Get object path value on city for path "main_street.main_shop.label" gives the label od main shop of the maint street using a function');
+	assert.equal(Object.getObjectPathValue(city, 'main_street.main_shop.label'), 'Supermarket Migros', 'Get object path value on city for path "main_street.main_shop.label" gives the label od main shop of the main street using a function');
 
 	//TODO does not work yet
 	//assert.equal(Object.getObjectPathValue(city, 'streets[0].shops[0].name'), 'Migros', 'Get object path value on object for path "streets[0].shops[0].name" gives the population of the name of the first shop inf the first street');
 
 	assert.equal(Object.getLastObjectInPath(city, 'names.en').object, city.names, 'Get last object in path "names.en" gives the names object');
 	assert.equal(Object.getLastObjectInPath(city, 'names.en').property, 'en', 'Get last object in path "names.en" gives the "en" property');
-	assert.equal(Object.getLastObjectInPath(city, 'main_street.population').object, main_street, 'Get last object in path "main_street.population" gives the main steet object');
+	assert.equal(Object.getLastObjectInPath(city, 'main_street.population').object, main_street, 'Get last object in path "main_street.population" gives the main street object');
 	assert.equal(Object.getLastObjectInPath(city, 'main_street.population').property, 'population', 'Get last object in path "main_street.population" gives the "population" property');
 	assert.equal(Object.getLastObjectInPath(city, 'main_street.shops.length').object, main_street.shops, 'Get last object in path "main_street.shops.length" gives the array of shops in the main street object');
 	assert.equal(Object.getLastObjectInPath(city, 'main_street.shops.length').property, 'length', 'Get last object in path "main_street.shops.length" gives the "length" property');
@@ -196,8 +198,8 @@ assert.begin();
 //Function
 //isFunction
 (function() {
-	var func = function() {'nothing to do';};
-	var not_func = 'nothing';
+	const func = function() {'nothing to do';};
+	const not_func = 'nothing';
 
 	assert.ok(Function.isFunction(func), 'A function variable is a function');
 	assert.ok(Function.isFunction(function() {}), 'An empty anonymous function is a function');
@@ -218,29 +220,29 @@ assert.begin();
 	}
 	assert.ok(is_odd(2), '2 is odd according to function is_odd');
 	assert.notOk(is_odd(5), '5 is not odd to function is_odd');
-	var is_even = is_odd.negatize();
+	const is_even = is_odd.negatize();
 	assert.notOk(is_even(2), '2 is not even according to negatized function is_odd');
 	assert.ok(is_even(5), '5 is even according to negatized function is_odd');
 })();
 
 //callbackize
 (function() {
-	var text = 'toto';
+	const text = 'toto';
 	assert.equal(String.prototype.toUpperCase.callbackize().call(undefined, text), 'TOTO', 'Callbackize transform method function into callable function');
 	assert.equal(String.prototype.substring.callbackize(0, 2).call(undefined, text), 'to', 'Callbackize preserves arguments');
 
-	var people = ["Anakin", "Luke", "Leia", "Han"];
-	assert.similar(people.map(String.prototype.toUpperCase.callbackize()), ["ANAKIN", "LUKE", "LEIA", "HAN"], 'Callbackize transform method function into callable function which is handy for array functions');
-	assert.similar(people.map(String.prototype.substring.callbackize(0, 2)), ["An", "Lu", "Le", "Ha"], 'Callbackize preserves arguments which is handy for array functions');
+	const people = ['Anakin', 'Luke', 'Leia', 'Han'];
+	assert.similar(people.map(String.prototype.toUpperCase.callbackize()), ['ANAKIN', 'LUKE', 'LEIA', 'HAN'], 'Callbackize transform method function into callable function which is handy for array functions');
+	assert.similar(people.map(String.prototype.substring.callbackize(0, 2)), ['An', 'Lu', 'Le', 'Ha'], 'Callbackize preserves arguments which is handy for array functions');
 })();
 
 //memoize
 (function() {
-	var calculated = false;
-	var result;
+	let calculated = false;
+	let result;
 
 	//function
-	var square = function(value) {
+	let square = function(value) {
 		calculated = true;
 		return Math.pow(value, 2);
 	};
@@ -254,7 +256,7 @@ assert.begin();
 			square.unmemoize();
 		},
 		function() {
-			return this.message === 'Unable to unmemoize a function that has not been memoized'
+			return this.message === 'Unable to unmemoize a function that has not been memoized';
 		},
 		'It is not possible to unmemoize a function which has not been previously memoized'
 	);
@@ -310,7 +312,7 @@ assert.begin();
 			new Square(2).getArea();
 		},
 		function() {
-			return this.message === 'Unable to memoize method in object is not serializable (i.e. it has no serialize method)'
+			return this.message === 'Unable to memoize method in object is not serializable (i.e. it has no serialize method)';
 		},
 		'It is not possible to memoize a method if its object is not serializable'
 	);
@@ -409,8 +411,8 @@ assert.begin();
 	assert.equal('rodanotech sarl'.capitalize(), 'Rodanotech sarl', 'Capitalize "rodanotech sarl" gives "Rodanotech sarl"');
 	assert.equal('rodanotech sArL'.capitalize(), 'Rodanotech sArL', 'Capitalize "rodanotech sArL" gives "Rodanotech sArL"');
 	assert.equal(''.capitalize(), '', 'Capitalize "" gives ""');
-	var string = 'abçdé';
-	var string_capitalized = string.capitalize();
+	const string = 'abçdé';
+	const string_capitalized = string.capitalize();
 	assert.equal(string, 'abçdé', 'Capitalize create a new string');
 	assert.notEqual(string, string_capitalized, 'Capitalize create a new string');
 })();
@@ -419,10 +421,10 @@ assert.begin();
 (function() {
 	assert.equal('ab', 'ba'.reverse(), 'Reverse of "ab" is "ba"');
 	assert.notEqual('ab', 'baba'.reverse(), 'Reverse of "ab" is not "baba"');
-	assert.equal('1true3', new String('3eurt1').reverse(), 'Reverse works with any character');
-	assert.equal('-', new String('-').reverse(), 'Reverse works with any character');
+	assert.equal('1true3', '3eurt1'.reverse(), 'Reverse works with any character');
+	assert.equal('-', '-'.reverse(), 'Reverse works with any character');
 
-	var rodano = new String('rodano');
+	const rodano = new String('rodano');
 
 	assert.equal('onador', rodano.reverse(), 'Reverse of "rodano" is "onador"');
 	assert.equal('rodano', rodano.reverse().reverse(), '"rodano" reversed two times is "rodano"');
@@ -431,7 +433,7 @@ assert.begin();
 
 //nocaseIncludes
 (function() {
-	var rodano = new String('rodano');
+	const rodano = 'rodano';
 
 	assert.ok('rodano'.nocaseIncludes('o'), '"rodano" contains "o" without case check');
 	assert.ok('rodano'.nocaseIncludes('R'), '"rodano" contains "R" without case check');
@@ -477,37 +479,37 @@ assert.notOk(Number.isNumber('12abcd'), '"12abcd" is not a number');
 assert.ok(Number.isNumber(0), '0 is a number');
 assert.ok(Number.isNumber(12), '12 is a number');
 assert.ok(Number.isNumber(2.5), '2.5 is a number');
-assert.ok(Number.isNumber(2,5), '2,5 is a number');
 assert.ok(Number.isNumber('012'), '"012" is a number');
 assert.ok(Number.isNumber('012.0'), '"012.0" is a number');
 assert.ok(Number.isNumber('2.5'), '"2.5" is a number');
+assert.notOk(Number.isNumber('2,5'), '"2,5" is not a number');
 
-assert.equal(new Number(3).pad(3), '003', 'Pad 3 for 3 is "003"');
-assert.equal(new Number(42).pad(8), '00000042', 'Pad 8 for 42 is "00000042"');
-assert.equal(new Number(42).pad(1), '42', 'Pad 1 for 42 is "42"');
-assert.equal(new Number(42).pad(-1), '42', 'Pad -1 for 42 is "42"');
+assert.equal((3).pad(3), '003', 'Pad 3 for 3 is "003"');
+assert.equal((42).pad(8), '00000042', 'Pad 8 for 42 is "00000042"');
+assert.equal((42).pad(1), '42', 'Pad 1 for 42 is "42"');
+assert.equal((42).pad(-1), '42', 'Pad -1 for 42 is "42"');
 
 //Array
 //objectFilter and objectMap
 (function() {
-	var country_1 = {
+	const country_1 = {
 		name : 'France',
 		capital : 'Paris',
 		currency : 'Euro',
-		label : function() {return this.capital + ', ' + this.name}
-	}
-	var country_2 = {
+		label : function() {return this.capital + ', ' + this.name;}
+	};
+	const country_2 = {
 		name : 'Germany',
 		capital : 'Berlin',
 		currency : 'Euro',
-		label : function() {return this.capital + ', ' + this.name}
-	}
-	var country_3 = {
+		label : function() {return this.capital + ', ' + this.name;}
+	};
+	const country_3 = {
 		name : 'Canada',
 		capital : 'Ottawa',
 		currency : 'Dollar'
-	}
-	var countries = [country_1, country_2, country_3];
+	};
+	const countries = [country_1, country_2, country_3];
 
 	assert.similar(countries.map(Array.objectMap('currency')), ['Euro', 'Euro', 'Dollar'], 'Object map map object property');
 	assert.similar(countries.map(Array.objectMap('')), [undefined, undefined, undefined], 'Object map map object blank property as undefined');
@@ -547,7 +549,7 @@ assert.notEqual([1,2,3], [1,2,3], 'New array [1,2,3] is not equals to an other n
 
 //remove
 (function() {
-	var array;
+	let array;
 	array = [1,2,3,4];
 	array.remove(1);
 	assert.similar(array, [1,3,4], 'Remove (1) on array [1,2,3,4] gives array [1,3,4]');
@@ -563,7 +565,7 @@ assert.notEqual([1,2,3], [1,2,3], 'New array [1,2,3] is not equals to an other n
 
 //includes all
 (function() {
-	var array = ['toto', 'titi', 'tutu'];
+	const array = ['toto', 'titi', 'tutu'];
 
 	assert.ok(array.includesAll(['titi', 'tutu']), 'Array ["toto","titi","tutu"] contains all ["titi","tutu"]');
 	assert.ok(array.includesAll(['toto', 'titi', 'tutu']), 'Array ["toto","titi","tutu"] contains all ["toto","titi","tutu"]');
@@ -575,7 +577,7 @@ assert.notEqual([1,2,3], [1,2,3], 'New array [1,2,3] is not equals to an other n
 
 //includes one
 (function() {
-	var array = ['toto', 'titi', 'tutu'];
+	const array = ['toto', 'titi', 'tutu'];
 
 	assert.ok(array.includesOne(['titi', 'tata']), 'Array ["toto","titi","tutu"] contains one of ["titi","tata"]');
 	assert.notOk(array.includesOne([]), 'Array ["toto","titi","tutu"] does not contains one of []');
@@ -584,27 +586,27 @@ assert.notEqual([1,2,3], [1,2,3], 'New array [1,2,3] is not equals to an other n
 
 //includes same
 (function() {
-	var people_1 = {
+	const people_1 = {
 		firstname : 'Luke',
 		lastname : 'Skywalker'
 	};
-	var people_2 = {
+	const people_2 = {
 		fistname : 'Han',
 		lastname : 'Solo'
 	};
-	var people_3 = {
+	const people_3 = {
 		firstame : 'Leia',
 		lastname : ' Organa'
 	};
-	var people_4 = {
+	const people_4 = {
 		firstname : 'Luke',
 		lastname : 'Skywalker'
 	};
-	var people_5 = {
+	const people_5 = {
 		firstame : 'Anakin',
 		lastname : 'Skywalker'
 	};
-	var people = [people_1, people_2, people_3];
+	const people = [people_1, people_2, people_3];
 
 	assert.ok(people.includesSame(people_3), '"Contains same" function works the same way than "Contains" function with an object which is equal to an object in the array');
 	assert.notOk(people.includesSame(people_5), '"Contains same" function works the same way than "Contains" function with an object which is equal to an object in the array');
@@ -619,7 +621,7 @@ assert.notEqual([1,2,3], [1,2,3], 'New array [1,2,3] is not equals to an other n
 
 //removeElement, removeElements and replace
 (function() {
-	var array = ['toto', 'titi', 'tutu'];
+	let array = ['toto', 'titi', 'tutu'];
 	array.removeElement('tutu');
 	assert.similar(array, ['toto', 'titi'], 'Remove element "tutu" to array ["toto","titi","tutu"] gives array ["toto","titi"]');
 
@@ -646,12 +648,12 @@ assert.notEqual([1,2,3], [1,2,3], 'New array [1,2,3] is not equals to an other n
 
 //insert
 (function() {
-	var array = ['toto', 'titi', 'tutu'];
-	var a, b;
+	const array = ['toto', 'titi', 'tutu'];
+	let a, b;
 
 	a = array.slice();
 	a.insert(0, 'tata');
-	assert.similar(a, ['tata', 'toto', 'titi', 'tutu'], 'Insert element at position 0 inserts the element at the begining of the array');
+	assert.similar(a, ['tata', 'toto', 'titi', 'tutu'], 'Insert element at position 0 inserts the element at the beginning of the array');
 
 	a = array.slice();
 	b = array.slice();
@@ -696,7 +698,7 @@ assert.notEqual([1,2,3], [1,2,3], 'New array [1,2,3] is not equals to an other n
 	assert.notOk(Date.isValidDate(1368608924718), 'A timestamp is not a valid date');
 	assert.ok(Date.isValidDate(new Date(1368608924718)), 'A date built from a timestamp is a valid date');
 	assert.notOk(Date.isValidDate(new Date('une date')), 'A date built from string "une date" is not a valid date');
-	var date = new Date('2013/04/32');
+	const date = new Date('2013/04/32');
 	assert.ok(!Date.isValidDate(date) || date.getTime() === new Date('2013/05/02').getTime(), 'Date [2013/04/32] is valid date [2013/05/02] for some browsers and is invalid for others browsers');
 })();
 
@@ -768,15 +770,15 @@ assert.equal(new Date('2011/10/10').getDayName('en'), 'Monday', 'Day name for da
 	//parseToDisplay
 	assert.equal(Date.parseToDisplay('25.01.2009').getTime(), new Date('2009/01/25').getTime(), 'Parsing date "25.01.2009" gives the good date');
 	assert.equal(Date.parseToDisplay('5.2.2009').getTime(), new Date('2009/2/5').getTime(), 'Parsing date "5.2.2009" gives the good date');
-	assert.undefined(Date.parseToDisplay('25.01.09'), 'Uncomplete date "25.01.09" can not be parsed');
-	var date = Date.parseToDisplay('33.01.2009');
+	assert.notOk(Date.isValidDate(Date.parseToDisplay('25.01.09')), 'Incomplete date "25.01.09" can not be parsed');
+	const date = Date.parseToDisplay('33.01.2009');
 	assert.ok(!Date.isValidDate(date) || date.getTime() === new Date('2009/02/02').getTime(), 'Parsing date "33.01.2009" gives date [2009/02/02] for some browsers and gives an invalid date for others browsers');
 
 	//parseToFullDisplay
 	assert.equal(Date.parseToFullDisplay('25.01.2009 22:38:46').getTime(), new Date(2009, 0, 25, 22, 38, 46).getTime(), 'Parsing date "25.01.2009 22:38:46" gives the good date');
 	assert.equal(Date.parseToFullDisplay('25.01.2009 22:62:46').getTime(), new Date(2009, 0, 25, 23, 2, 46).getTime(), 'Parsing date "25.01.2009 22:62:46" gives the good date');
 	assert.equal(Date.parseToFullDisplay('25.01.2009 2:6:4').getTime(), new Date(2009, 0, 25, 2, 6, 4).getTime(), 'Parsing date "25.01.2009 2:6:4" gives the good date');
-	assert.undefined(Date.parseToFullDisplay('25.01.09 2:6:4'), 'Uncomplete date "25.01.09 2:6:4" can not be parsed');
+	assert.notOk(Date.isValidDate(Date.parseToFullDisplay('25.01.09 2:6:4')), 'Incomplete date "25.01.09 2:6:4" can not be parsed');
 
 	//parseToFullDisplayUTC
 	assert.equal(Date.parseToFullDisplayUTC('25.01.2009 22:38:46').getTime(), new Date(Date.UTC(2009, 0, 25, 22, 38, 46)).getTime(), 'Parsing date "25.01.2009 22:38:46" gives the good date');
@@ -798,7 +800,7 @@ assert.equal(new Date('2011/10/10').getDayName('en'), 'Monday', 'Day name for da
 
 //toFullDisplay
 (function() {
-	var date = Date.parseToFullDisplay('20.01.2015 22:42:12');
+	let date = Date.parseToFullDisplay('20.01.2015 22:42:12');
 	date.roundToMinute();
 	assert.equal(date.toFullDisplay(), '20.01.2015 22:42:00', 'Rounding date to minute give a date with 0 second');
 	date.roundToHour();
@@ -806,7 +808,7 @@ assert.equal(new Date('2011/10/10').getDayName('en'), 'Monday', 'Day name for da
 	date.roundToDay();
 	assert.equal(date.toFullDisplay(), '21.01.2015 00:00:00', 'Rounding date to day give a date with 0 hour');
 
-	var date = Date.parseToFullDisplay('20.01.2015 12:29:52');
+	date = Date.parseToFullDisplay('20.01.2015 12:29:52');
 	date.roundToMinute();
 	assert.equal(date.toFullDisplay(), '20.01.2015 12:30:00', 'Rounding date to minute give a date with 0 second');
 	date.roundToHour();
@@ -814,15 +816,15 @@ assert.equal(new Date('2011/10/10').getDayName('en'), 'Monday', 'Day name for da
 	date.roundToDay();
 	assert.equal(date.toFullDisplay(), '21.01.2015 00:00:00', 'Rounding date to day give a date with 0 hour');
 
-	var date = Date.parseToFullDisplay('20.01.2015 03:00:12');
+	date = Date.parseToFullDisplay('20.01.2015 03:00:12');
 	date.roundToDay();
 	assert.equal(date.toFullDisplay(), '20.01.2015 00:00:00', 'Rounding date to day give a date with 0 hour');
 })();
 
 //add or remove duration
 (function() {
-	var date = new Date();
-	var time = date.getTime();
+	let date = new Date();
+	const time = date.getTime();
 	date.addSeconds(2);
 	assert.equal(date.getTime() - time, 2000, 'Adding 2 seconds is the same as adding 2000 milliseconds');
 	assert.ok(date.getTime() - new Date().getTime() > 1998, 'Difference between 2 seconds added to now and now is more than 1998 milliseconds (less than 2ms are required to do the trick)');
@@ -870,7 +872,7 @@ assert.equal(new Date('2011/10/10').getDayName('en'), 'Monday', 'Day name for da
 	assert.equal(new Date().addDays(-1).getAgeLiteral(), 'a day ago', 'Literal age of 24 hours old date is "a day ago"');
 	assert.equal(new Date().addDays(-42).getAgeLiteral(), '42 days ago', 'Literal age of 42 days old date is "42 days ago"');
 
-	assert.equal(new Date().addSeconds(10).getAgeLiteral(), 'in 10 seconds', 'Literal age of 10 seconds in the future date is "in 10 seconds"')
+	assert.equal(new Date().addSeconds(10).getAgeLiteral(), 'in 10 seconds', 'Literal age of 10 seconds in the future date is "in 10 seconds"');
 })();
 
 assert.end();
