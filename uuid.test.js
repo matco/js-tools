@@ -1,5 +1,7 @@
 'use strict';
 
+import {UUID} from './uuid.js';
+
 assert.begin();
 
 assert.equal(UUID.Generate().length, 36, 'An UUID contains 36 characters');
@@ -10,9 +12,9 @@ assert.equal(UUID.Generate().split('-')[2].length, 4, 'Segment 3 of an UUID cont
 assert.equal(UUID.Generate().split('-')[3].length, 4, 'Segment 4 of an UUID contains 4 characters');
 assert.equal(UUID.Generate().split('-')[4].length, 12, 'Segment 5 of an UUID contains 12 characters');
 
-var uuid_regexp = /^[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}$/;
-var good_format = true;
-for(var i = 0; i < 100; i++) {
+const uuid_regexp = /^[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}$/;
+let good_format = true;
+for(let i = 0; i < 100; i++) {
 	if(!uuid_regexp.test(UUID.Generate())) {
 		good_format = false;
 		break;
@@ -21,10 +23,10 @@ for(var i = 0; i < 100; i++) {
 assert.ok(good_format, '100 generated UUIDs have the good format');
 
 assert.notEqual(UUID.Generate(), UUID.Generate(), '2 generated UUIDs are different');
-var uuids = [];
-var uniqueness = true;
-for(var i = 0; i < 100; i++) {
-	var uuid = UUID.Generate();
+const uuids = [];
+let uniqueness = true;
+for(let i = 0; i < 100; i++) {
+	const uuid = UUID.Generate();
 	if(uuids.indexOf(uuid) !== -1) {
 		uniqueness = false;
 		break;

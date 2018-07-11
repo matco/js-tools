@@ -1,10 +1,12 @@
 'use strict';
 
+import {Queue} from './queue.js';
+
 assert.begin();
 
-var messages = [];
-var chrono = 0;
-var delay = 200;
+const messages = [];
+let chrono = 0;
+const delay = 200;
 
 function timer_generator(message, time) {
 	return function(callback) {
@@ -12,10 +14,10 @@ function timer_generator(message, time) {
 		chrono += time;
 		console.log(message);
 		setTimeout(callback, time);
-	}
+	};
 }
 
-var queue = new Queue({
+const queue = new Queue({
 	onEnd : function() {
 		assert.end();
 	}

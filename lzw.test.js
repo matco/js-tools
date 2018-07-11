@@ -1,9 +1,11 @@
 ﻿'use strict';
 
+import {LZW} from './lzw.js';
+
 assert.begin();
 
-var text = 'taratata';
-var encoded_text = 'taraĀĀ';
+let text = 'taratata';
+let encoded_text = 'taraĀĀ';
 assert.similar(LZW.Compress(text), [116, 97, 114, 97, 256, 256], 'LZW for "taratata" is array of integers [116, 97, 114, 97, 256, 256]');
 assert.equal(LZW.CompressToString(text), encoded_text, 'LZW string for "taratata" is "taraĀĀ"');
 
@@ -48,13 +50,13 @@ text = '►◄▬■☺♥';
 assert.notEqual(LZW.DecompressString(LZW.CompressToString(text)), text, 'LZW does not works with characters code greater than 256 (using more than 8 bits)');
 
 //test with big data
-function test_big_data(callback) {
-	var xhr = new XMLHttpRequest();
+function test_big_data() {
+	const xhr = new XMLHttpRequest();
 	xhr.addEventListener(
 		'load',
 		function(event) {
-			var config = event.target.response;
-			var compressed_config, uncompressed_config;
+			const config = event.target.response;
+			let compressed_config, uncompressed_config;
 
 			compressed_config = LZW.Compress(config);
 			uncompressed_config = LZW.Decompress(compressed_config);
@@ -73,12 +75,12 @@ function test_big_data(callback) {
 
 //test with very big data which can exceed 2^16 for the dictionary
 function test_very_big_data() {
-	var xhr = new XMLHttpRequest();
+	const xhr = new XMLHttpRequest();
 	xhr.addEventListener(
 		'load',
 		function(event) {
-			var config = event.target.response;
-			var compressed_config, uncompressed_config;
+			const config = event.target.response;
+			let compressed_config, uncompressed_config;
 
 			compressed_config = LZW.Compress(config);
 			uncompressed_config = LZW.Decompress(compressed_config);
@@ -93,6 +95,6 @@ function test_very_big_data() {
 	);
 	xhr.open('GET', 'https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js', true);
 	xhr.send();
-};
+}
 
 test_big_data();

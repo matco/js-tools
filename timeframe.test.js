@@ -1,5 +1,7 @@
 'use strict';
 
+import {Timeframe} from './timeframe.js';
+
 assert.begin();
 
 assert.doesThrow(
@@ -10,7 +12,7 @@ assert.doesThrow(
 	'It is not possible to create a timeframe with a stop date before its start date'
 );
 
-var timeframe;
+let timeframe, timeframe_1, timeframe_2;
 
 //infinite
 assert.notOk(new Timeframe(new Date('2004/02/26'), new Date('2004/02/27')).isInfinite(), 'Timeframe with start date and stop date is not infinite');
@@ -72,19 +74,19 @@ assert.ok(timeframe.surround(new Date('2009/10/01')), '2009/10/01 is between 200
 assert.notOk(timeframe.surround(new Date('2009/01/25')), '2009/01/25 is not between 2009/02/01 and 2009/10/01');
 
 //infinite time frame surround
-var timeframe = new Timeframe(new Date('2009/02/01'));
+timeframe = new Timeframe(new Date('2009/02/01'));
 assert.ok(timeframe.surround(new Date('2009/04/01')), '2009/04/01 is between 2009/02/01 and infinite');
 assert.ok(timeframe.surround(new Date('2200/08/01')), '2200/08/01 is between 2009/02/01 and infinite');
 assert.notOk(timeframe.surround(new Date('2009/01/25')), '2009/01/25 is not between 2009/02/01 and infinite');
 
-var timeframe = new Timeframe(undefined, new Date('2009/02/01'));
+timeframe = new Timeframe(undefined, new Date('2009/02/01'));
 assert.ok(timeframe.surround(new Date('2009/01/25')), '2009/01/25 is between infinite and 2009/02/01');
 assert.ok(timeframe.surround(new Date('1800/08/01')), '1800/08/01 is between infinite and 2009/02/01');
 assert.notOk(timeframe.surround(new Date('2009/04/01')), '2009/04/01 is not between infinite and 2009/02/01');
 
 //overlap
-var timeframe_1 = new Timeframe(new Date('2009/02/01'), new Date('2009/10/01'));
-var timeframe_2 = new Timeframe(new Date('2009/04/01'), new Date('2009/08/01'));
+timeframe_1 = new Timeframe(new Date('2009/02/01'), new Date('2009/10/01'));
+timeframe_2 = new Timeframe(new Date('2009/04/01'), new Date('2009/08/01'));
 assert.ok(timeframe_1.overlap(timeframe_2), 'Timeframe [2009/04/01 to 2009/08/01] overlaps timeframe [2009/02/01 to 2009/10/01]');
 
 timeframe_1 = new Timeframe(new Date('2008/02/07'), new Date('2008/09/07'));
@@ -96,8 +98,8 @@ timeframe_2 = new Timeframe(new Date('2008/02/07'), new Date('2008/09/07'));
 assert.ok(timeframe_1.overlap(timeframe_2), 'Timeframe [2008/02/07 to 2008/02/07] overlaps timeframe [2008/02/07 to 2008/02/07]');
 
 //infinite time frame overlap
-var timeframe_1 = new Timeframe(new Date('2009/02/01'));
-var timeframe_2 = new Timeframe(new Date('2009/04/01'), new Date('2009/08/01'));
+timeframe_1 = new Timeframe(new Date('2009/02/01'));
+timeframe_2 = new Timeframe(new Date('2009/04/01'), new Date('2009/08/01'));
 assert.ok(timeframe_1.overlap(timeframe_2), 'Timeframe [2009/04/01 to infinite] overlaps timeframe [2009/02/01 to 2009/10/01]');
 
 timeframe_1 = new Timeframe(undefined, new Date('2008/09/07'));

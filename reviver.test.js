@@ -1,15 +1,17 @@
 'use strict';
 
-var TestEntities = {
+import {Reviver} from './reviver.js';
+
+const TestEntities = {
 	City : function() {
 		this.names = {};
 		this.population = 10;
 		this.streets = [];
 
 		this.getLongStreets = function() {
-			var streets = [];
-			for(var i = 0; i < this.streets.length; i++) {
-				var street = this.streets[i];
+			const streets = [];
+			for(let i = 0; i < this.streets.length; i++) {
+				const street = this.streets[i];
 				if(street.length > 1250) {
 					streets.push(street);
 				}
@@ -18,7 +20,7 @@ var TestEntities = {
 		};
 
 		this.getStreetFromName = function(name) {
-			for(var i = 0; i < this.streets.length; i++) {
+			for(let i = 0; i < this.streets.length; i++) {
 				if(this.streets[i].name === name) {
 					return this.streets[i];
 				}
@@ -34,7 +36,7 @@ var TestEntities = {
 		this.shops = [];
 
 		this.getHasMigros = function() {
-			for(var i = this.shops.length - 1; i >= 0; i--) {
+			for(let i = this.shops.length - 1; i >= 0; i--) {
 				if(this.shops[i].name === 'Migros') {
 					return true;
 				}
@@ -65,6 +67,7 @@ function getConstructorForEntity(entity) {
 		case 'Street' : return TestEntities.Street;
 		case 'Shop' : return TestEntities.Shop;
 	}
+	throw new Error('No constructor for entity ' + entity);
 }
 
 function getPropertiesForEntity(entity) {
@@ -73,94 +76,93 @@ function getPropertiesForEntity(entity) {
 		case 'Street' : return ['city', 'name', 'length', 'shops'];
 		case 'Shop' : return ['street', 'name', 'number', 'category'];
 	}
+	throw new Error('No properties for entity ' + entity);
 }
 
-var city = {
-	"names" : {
-		"en" : "Geneva",
-		"fr" : "Genève",
-		"de" : "Genf"
+const city = {
+	'names' : {
+		'en' : 'Geneva',
+		'fr' : 'Genève',
+		'de' : 'Genf'
 	},
-	"population" : 500000,
-	"entity" : "City",
-	"streets" : [
+	'population' : 500000,
+	'entity' : 'City',
+	'streets' : [
 		{
-			"name" : "Avenue de Champel",
-			"entity" : "Street",
-			"length" : 1500,
-			"population" : 100, //undecladred property
-			"shops" : [
+			'name' : 'Avenue de Champel',
+			'entity' : 'Street',
+			'length' : 1500,
+			'population' : 100, //undeclared property
+			'shops' : [
 				{
-					"name" : "Migros",
-					"number" : 81,
-					"entity" : "Shop",
-					"category" : "Supermarket"
+					'name' : 'Migros',
+					'number' : 81,
+					'entity' : 'Shop',
+					'category' : 'Supermarket'
 				},
 				{
-					"name" : "Pompei",
-					"number" : 75,
-					"entity" : "Shop",
-					"category" : "Restaurant"
+					'name' : 'Pompei',
+					'number' : 75,
+					'entity' : 'Shop',
+					'category' : 'Restaurant'
 				}
 			]
 		},
 		{
-			"name" : "Rue de Lausanne",
-			"entity" : "Street",
-			"length" : 1000
+			'name' : 'Rue de Lausanne',
+			'entity' : 'Street',
+			'length' : 1000
 		}
 	]
 };
 
-var streets = [
+const streets = [
 	{
-		"name" : "Avenue de Champel",
-		"entity" : "Street",
-		"length" : 1500,
-		"population" : 100, //undecladred property
-		"shops" : [
+		'name' : 'Avenue de Champel',
+		'entity' : 'Street',
+		'length' : 1500,
+		'population' : 100, //undeclared property
+		'shops' : [
 			{
-				"name" : "Migros",
-				"number" : 81,
-				"entity" : "Shop",
-				"category" : "Supermarket"
+				'name' : 'Migros',
+				'number' : 81,
+				'entity' : 'Shop',
+				'category' : 'Supermarket'
 			},
 			{
-				"name" : "Pompei",
-				"number" : 75,
-				"entity" : "Shop",
-				"category" : "Restaurant"
+				'name' : 'Pompei',
+				'number' : 75,
+				'entity' : 'Shop',
+				'category' : 'Restaurant'
 			}
 		]
 	},
 	{
-		"name" : "Rue de Lausanne",
-		"entity" : "Street",
-		"length" : 1000
+		'name' : 'Rue de Lausanne',
+		'entity' : 'Street',
+		'length' : 1000
 	}
 ];
 
-var shops = {
+const shops = {
 	Restaurant : {
-		"name" : "Pompei",
-		"number" : 75,
-		"entity" : "Shop",
-		"category" : "Restaurant"
+		'name' : 'Pompei',
+		'number' : 75,
+		'entity' : 'Shop',
+		'category' : 'Restaurant'
 	},
 	Supermarket : {
-		"name" : "Migros",
-		"number" : 81,
-		"entity" : "Shop",
-		"category" : "Supermarket"
+		'name' : 'Migros',
+		'number' : 81,
+		'entity' : 'Shop',
+		'category' : 'Supermarket'
 	}
 };
-
-
 
 try {
 	assert.begin();
 
-	var reviver;
+	let reviver;
 
 	//non strict mode, properties are not checked
 	reviver = new Reviver({
@@ -168,7 +170,7 @@ try {
 		entitiesConstructors : getConstructorForEntity,
 		preserveEntityProperty : true
 	});
-	var revived_city_1 = reviver.revive(city);
+	const revived_city_1 = reviver.revive(city);
 	assert.equal(revived_city_1.constructor, TestEntities.City, 'Constructor is the good class');
 	assert.equal(revived_city_1.names['en'], 'Geneva', 'Simple objects properties are not modified: city name in "en" is "Geneva"');
 	assert.equal(revived_city_1.population, 500000, 'Properties are not modified: population is 500000');
@@ -189,7 +191,7 @@ try {
 		preserveEntityProperty : true,
 		debug : false
 	});
-	var revived_city_2 = reviver.revive(city);
+	const revived_city_2 = reviver.revive(city);
 	assert.equal(revived_city_2.names['en'], 'Geneva', 'Simple objects properties are not modified: city name in "en" is "Geneva"');
 	assert.equal(revived_city_2.streets.entity, undefined, 'Entity property is undefined even if preserveEntityProperty has been set to true because entity property is not returned by entitiesProperties function');
 	assert.equal(revived_city_2.population, 500000, 'Properties are not modified: population is 500000');
@@ -197,14 +199,14 @@ try {
 	assert.equal(revived_city_2.streets[0].population, undefined, 'In strict mode, properties which have not been declared are not copied: population for first street is undefined');
 
 	//array
-	var revived_streets = reviver.revive(streets);
+	const revived_streets = reviver.revive(streets);
 	assert.equal(revived_streets.length, 2, 'Array structure is preserved: there is two streets');
 	assert.equal(revived_streets[0].constructor, TestEntities.Street, 'Constructor is the good class');
 	assert.ok(revived_streets[0].getHasMigros(), 'Methods are available: first street contains a Migros');
 	assert.notOk(revived_streets[1].getHasMigros(), 'Methods are available: second street contains a Migros');
 
 	//map
-	var revived_shops = reviver.revive(shops);
+	const revived_shops = reviver.revive(shops);
 	assert.ok('Restaurant' in revived_shops, 'Map structure is preserved');
 	assert.ok('Supermarket' in revived_shops, 'Map structure is preserved');
 	assert.equal(revived_shops['Restaurant'].constructor, TestEntities.Shop, 'Constructor is the good class');

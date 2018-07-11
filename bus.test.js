@@ -1,24 +1,26 @@
 'use strict';
 
+import {Bus, BusEvent} from './bus.js';
+
 assert.begin();
 
-var bus = new Bus();
+const bus = new Bus();
 
-var beeps_number = 0;
-var beeps_type_numbers = {
+let beeps_number = 0;
+const beeps_type_numbers = {
 	'short' : 0,
 	'long' : 0
 };
-var beeps_sequence = [];
+const beeps_sequence = [];
 
-var beep_counter = {
+const beep_counter = {
 	onBeep : function(event) {
 		beeps_type_numbers[event.type]++;
 		beeps_number++;
 	}
 };
 
-var beep_recorder = {
+const beep_recorder = {
 	onBeepShort : function(event) {
 		beeps_sequence.push({type : 'short', 'volume' : event.volume});
 	},
@@ -70,10 +72,10 @@ assert.notOk(bus.isRegistered(beep_recorder), 'Listener is not registered after 
 bus.register(beep_counter);
 bus.register(beep_recorder);
 
-var short_loud_beep = new BusEventBeep('short', 10);
-var long_loud_beep = new BusEventBeep('long', 10);
-var short_quiet_beep = new BusEventBeep('short', 1);
-var long_quiet_beep = new BusEventBeep('long', 1);
+const short_loud_beep = new BusEventBeep('short', 10);
+//var long_loud_beep = new BusEventBeep('long', 10);
+//var short_quiet_beep = new BusEventBeep('short', 1);
+const long_quiet_beep = new BusEventBeep('long', 1);
 
 bus.dispatch(short_loud_beep);
 assert.equal(beeps_number, 1, 'There was 1 beep');

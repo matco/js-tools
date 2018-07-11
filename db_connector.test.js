@@ -1,27 +1,32 @@
 'use strict';
 
-var character_1 = {
+import {DBConnector} from './db_connector.js';
+
+const character_1 = {
 	firstname : 'Anakin',
 	lastname : 'Skywalker'
 };
-var character_2 = {
+const character_2 = {
 	id : 2,
 	firstname : 'Luke',
 	lastname : 'Skywalker'
 };
-var character_3 = {
+const character_3 = {
 	id : 3,
 	firstname : 'Leia',
 	lastname : ' Organa'
 };
-var character_4 = {
+const character_4 = {
 	id : 4,
 	firstname : 'Han',
 	lastname : 'Solo'
 };
 
+//genereate random database name because browsers don't manage to create and delete the same database multiple times
+const db_name = 'characters_' + Math.floor(Math.random() * 10000);
+
 function test_open_database() {
-	var db = new DBConnector(db_name, 'id');
+	const db = new DBConnector(db_name, 'id');
 	db.open(function(indexed_db) {
 		assert.success('Database opened successfully');
 		assert.equal(indexed_db.name, db_name, 'Database name is good');
@@ -30,8 +35,8 @@ function test_open_database() {
 }
 
 function test_addition() {
-	var db = new DBConnector(db_name, 'id');
-	db.open(function(indexed_db) {
+	const db = new DBConnector(db_name, 'id');
+	db.open(function() {
 		//add character without id
 		assert.doesThrow(
 			function() {
@@ -55,7 +60,7 @@ function test_addition() {
 				db.add(character_1, function() {
 					assert.success('Add same object with same id in database results in success');
 					//modify second character and add it in database
-					var other_character_1 = Object.clone(character_1);
+					const other_character_1 = Object.clone(character_1);
 					other_character_1.firstname = 'Darth';
 					other_character_1.lastname = 'Vader';
 					db.add(other_character_1, function() {
@@ -76,8 +81,8 @@ function test_addition() {
 }
 
 function test_addition_multiple() {
-	var db = new DBConnector(db_name, 'id');
-	db.open(function(indexed_db) {
+	const db = new DBConnector(db_name, 'id');
+	db.open(function() {
 		//add characters in database
 		db.addAll([character_1, character_2], function() {
 			assert.success('Two objects added successfully in database');
@@ -97,11 +102,11 @@ function test_addition_multiple() {
 			});
 		});
 	});
-};
+}
 
 function test_retrieval_and_deletion() {
-	var db = new DBConnector(db_name, 'id');
-	db.open(function(indexed_db) {
+	const db = new DBConnector(db_name, 'id');
+	db.open(function() {
 		//add some characters
 		db.addAll([character_1, character_2, character_3, character_4], function() {
 			//retrieve all characters
@@ -149,9 +154,6 @@ function test_retrieval_and_deletion() {
 		});
 	});
 }
-
-//genereate random database name because browsers don't manage to create and delete the same database multiple times
-let db_name = 'characters_' + Math.floor(Math.random() * 10000);
 
 assert.begin();
 test_open_database();
