@@ -124,6 +124,20 @@ export const SVG = {
 			}
 		}
 	},
+	//work only with left to right languages
+	textellipsis : function(text, width) {
+		let letters = text.textContent.split('');
+		let truncated = false;
+		while(text.getComputedTextLength() > width) {
+			truncated = true;
+			letters = letters.slice(0, letters.length - 1);
+			text.textContent = letters.join('');
+		}
+		if(truncated) {
+			letters = letters.slice(0, letters.length - 3);
+			text.textContent = letters.join('') + '...';
+		}
+	},
 	center : function(element, x1, x2, y1, y2) {
 		const box = element.getBBox();
 		element.setAttribute('x', round_coordinate(x1 + (x2 - x1) / 2 - box.width / 2));
