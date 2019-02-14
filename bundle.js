@@ -12,6 +12,7 @@ export class Bundle {
 		this.website = website;
 		this.dependencies = dependencies || [];
 		this.test = test;
+		this.assert = undefined;
 		this.onassert = onassert;
 	}
 	run(doc) {

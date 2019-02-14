@@ -97,11 +97,11 @@ HTMLElement.prototype.getPosition = function() {
 
 //HTMLFormElement
 HTMLFormElement.prototype.disable = function() {
-	this.elements.forEach(HTMLElement.prototype.setAttribute.callbackize('disabled', 'disabled'));
+	this.elements.forEach(e => e.setAttribute('disabled', 'disabled'));
 };
 
 HTMLFormElement.prototype.enable = function() {
-	this.elements.forEach(HTMLElement.prototype.removeAttribute.callbackize('disabled'));
+	this.elements.forEach(e => e.removeAttribute('disabled'));
 };
 
 //HTMLSelectElement
