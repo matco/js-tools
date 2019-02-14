@@ -2,28 +2,31 @@
 
 export class Loader {
 	constructor(doc, parameters) {
-		//DOMDocument : document where scripts must be loaded
+		//DOMDocument: document where scripts must be loaded
 		this.document = doc || document;
-		//String : base url for scripts
-		this.url;
-		//Boolean : add a timestamp after each script to avoid browser cache
+		//String: base url for scripts
+		this.url = undefined;
+		//Boolean: add a timestamp after each script to avoid browser cache
 		this.nocache = true;
 		//bind parameters
 		for(const parameter in parameters) {
 			this[parameter] = parameters[parameter];
 		}
 	}
-	loadJavascript(js, type) {
-		//build javascript url
-		let js_url = '';
+	buildUrl(url) {
+		let full_url = '';
 		if(this.url) {
-			js_url += this.url;
+			full_url += this.url;
 		}
-		js_url += js;
+		full_url += url;
 		//append timestamp at the end of the url to avoid cache if required
 		if(this.nocache) {
-			js_url += '?' + new Date().getTime();
+			full_url += '?' + new Date().getTime();
 		}
+		return full_url;
+	}
+	loadJavascript(js, type) {
+		const js_url = this.buildUrl(js);
 		const that = this;
 		return new Promise(function(resolve, reject) {
 			//check javascript has not already been included
@@ -48,15 +51,7 @@ export class Loader {
 		return this.loadJavascript(mod, 'module');
 	}
 	loadCSS(css) {
-		//build css url
-		let css_url = '';
-		if(this.url) {
-			css_url += this.url;
-		}
-		css_url += css;
-		if(this.nocache) {
-			css_url += '?' + new Date().getTime();
-		}
+		const css_url = this.buildUrl(css);
 		const that = this;
 		return new Promise(function(resolve, reject) {
 			//check library has not already been included
@@ -76,15 +71,7 @@ export class Loader {
 		});
 	}
 	loadHTML(html, container) {
-		//build html url
-		let html_url = '';
-		if(this.url) {
-			html_url += this.url;
-		}
-		html_url += html;
-		if(this.nocache) {
-			html_url += '?' + new Date().getTime();
-		}
+		const html_url = this.buildUrl(html);
 		const that = this;
 		return new Promise(function(resolve, reject) {
 			const xhr = new XMLHttpRequest();
@@ -93,6 +80,30 @@ export class Loader {
 				function(event) {
 					if(event.target.status === 200) {
 						const node = that.document.importNode(event.target.response.body.firstElementChild, true);
+						container.appendChild(node);
+						resolve();
+					}
+					else {
+						reject();
+					}
+				}
+			);
+			xhr.responseType = 'document';
+			xhr.open('GET', html_url, true);
+			xhr.send();
+		});
+	}
+	//when loading a template, template node is put in the "head" element
+	loadHTMLTemplate(html, container) {
+		const html_url = this.buildUrl(html);
+		const that = this;
+		return new Promise(function(resolve, reject) {
+			const xhr = new XMLHttpRequest();
+			xhr.addEventListener(
+				'load',
+				function(event) {
+					if(event.target.status === 200) {
+						const node = that.document.importNode(event.target.response.head.firstElementChild, true);
 						container.appendChild(node);
 						resolve();
 					}
