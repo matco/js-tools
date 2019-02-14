@@ -221,27 +221,6 @@ Number.prototype.compareTo = function(otherNumber) {
 };
 
 //Array
-//helpers
-Array.objectFilter = function(properties) {
-	return function(object) {
-		for(const property in properties) {
-			if(properties.hasOwnProperty(property)) {
-				//if object property is a function, call it only if the asked value is not a function too
-				const object_value = Function.isFunction(object[property]) && !Function.isFunction(properties[property]) ? object[property].call(object) : object[property];
-				if(object_value !== properties[property]) {
-					return false;
-				}
-			}
-		}
-		return true;
-	};
-};
-Array.objectMap = function(property) {
-	return function(object) {
-		return Function.isFunction(object[property]) ? object[property].call(object) : object[property];
-	};
-};
-
 //prototypes
 Array.prototype.isEmpty = function() {
 	return this.length === 0;

@@ -490,55 +490,6 @@ assert.equal((42).pad(1), '42', 'Pad 1 for 42 is "42"');
 assert.equal((42).pad(-1), '42', 'Pad -1 for 42 is "42"');
 
 //Array
-//objectFilter and objectMap
-(function() {
-	const country_1 = {
-		name : 'France',
-		capital : 'Paris',
-		currency : 'Euro',
-		label : function() {return this.capital + ', ' + this.name;}
-	};
-	const country_2 = {
-		name : 'Germany',
-		capital : 'Berlin',
-		currency : 'Euro',
-		label : function() {return this.capital + ', ' + this.name;}
-	};
-	const country_3 = {
-		name : 'Canada',
-		capital : 'Ottawa',
-		currency : 'Dollar'
-	};
-	const countries = [country_1, country_2, country_3];
-
-	assert.similar(countries.map(Array.objectMap('currency')), ['Euro', 'Euro', 'Dollar'], 'Object map map object property');
-	assert.similar(countries.map(Array.objectMap('')), [undefined, undefined, undefined], 'Object map map object blank property as undefined');
-	assert.similar(countries.map(Array.objectMap('population')), [undefined, undefined, undefined], 'Object map map object unexisting property as undefined');
-	assert.similar(
-		countries.map(Array.objectMap('label')),
-		['Paris, France', 'Berlin, Germany', undefined],
-		'Object map works with function');
-
-	assert.similar(
-		countries.filter(Array.objectFilter({currency : 'Euro'})),
-		[country_1, country_2],
-		'Object filter filter object on properties');
-	assert.similar(
-		countries.filter(Array.objectFilter({})),
-		[country_1, country_2, country_3],
-		'Object filter does not filter if properties object is empty');
-	assert.similar(
-		countries.filter(Array.objectFilter({population : 50000})),
-		[],
-		'Object filter works unexisting properties');
-	assert.similar(
-		countries.filter(Array.objectFilter({label : 'Paris, France'})),
-		[country_1],
-		'Object filter works with function');
-
-	//TODO test with undefined parameters
-})();
-
 //isEmpty
 assert.ok(new Array().isEmpty(), 'A new array is empty');
 assert.ok([].isEmpty(), 'Array type is empty when created');
