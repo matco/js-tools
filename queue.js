@@ -20,7 +20,10 @@ class Queue {
 		//max number of tasks running at the same time
 		this.parallel = 1;
 		//triggered when all the tasks have been done
-		this.onEnd;
+		this.onEnd = undefined;
+		//triggered when an exception occurs while running a task
+		this.onException = undefined;
+
 		for(const key in options) {
 			if(options.hasOwnProperty(key)) {
 				this[key] = options[key];
@@ -37,7 +40,14 @@ class Queue {
 			const task = this.tasks.shift();
 			if(Function.isFunction(task)) {
 				//call task with callback as the last parameter
-				task.call(undefined, this.rerun.bind(this));
+				try {
+					task.call(undefined, this.rerun.bind(this));
+				}
+				catch(exception) {
+					if(this.onException) {
+						this.onException.call(undefined, exception);
+					}
+				}
 			}
 			else if(task.constructor === QueueTask) {
 				const parameters = task.parameters ? task.parameters.slice() : [];
@@ -56,7 +66,14 @@ class Queue {
 						parameters.push(this.rerun.bind(this));
 					}
 				}
-				task.block.apply(task.context, parameters);
+				try {
+					task.block.apply(task.context, parameters);
+				}
+				catch(exception) {
+					if(this.onException) {
+						this.onException.call(undefined, exception);
+					}
+				}
 				//for synchronous tasks, re run this method directly
 				if(task.synchronous) {
 					this.rerun();
