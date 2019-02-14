@@ -497,6 +497,26 @@ Date.prototype.addYears = function(years) {
 	this.setFullYear(this.getFullYear() + years);
 	return this;
 };
+//add time using a string
+Date.prototype.addTimeString = function(time) {
+	const time_regexp = /(-?\d+) ?([ymdHMS])/gi;
+	let match;
+	while((match = time_regexp.exec(time)) !== null) {
+		let method;
+		switch(match[2]) {
+			case 'y': method = Date.prototype.addYears; break;
+			case 'm': method = Date.prototype.addMonths; break;
+			case 'd': method = Date.prototype.addDays; break;
+			case 'H': method = Date.prototype.addHours; break;
+			case 'M': method = Date.prototype.addMinutes; break;
+			case 'S': method = Date.prototype.addSeconds; break;
+		}
+		if(method) {
+			method.call(this, parseInt(match[1]));
+		}
+	}
+	return this;
+};
 //round
 Date.prototype.roundToDay = function() {
 	this.roundToHour();

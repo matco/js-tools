@@ -794,6 +794,17 @@ assert.equal(new Date('2011/10/10').getDayName('en'), 'Monday', 'Day name for da
 	assert.equal(date.toDisplay(), '29.01.2009', 'Add 4.1 days to [2009/01/25] to display is [29.01.2009]');
 })();
 
+//add time using a string
+(function() {
+	const date = new Date('2009/01/25');
+	assert.similar(date.clone().addTimeString('1y'), date.clone().addYears(1), 'Add "1y" to a date adds 1 year"');
+	assert.similar(date.clone().addTimeString('1y5d'), date.clone().addYears(1).addDays(5), 'Add "1y5d" to a date adds 1 year and 5 days"');
+	assert.similar(date.clone().addTimeString('1y5d0M0S'), date.clone().addYears(1).addDays(5), 'Add "1y5d0M0S" to a date adds 1 year and 5 days"');
+	assert.similar(date.clone().addTimeString('-1y5d'), date.clone().addYears(-1).addDays(5), 'Add "-1y5d" to a date removes one year and add 5 days"');
+	assert.similar(date.clone().addTimeString('6m24H300S'), date.clone().addMonths(6).addHours(24).addSeconds(300), 'Add "6m24H300s" to a date adds 6 months, 24 hours and 300 seconds"');
+	assert.similar(date.clone().addTimeString('6m0H-30M'), date.clone().addMonths(6).addMinutes(-30), 'Add "6m24H300s" to a date adds 6 months and removes 30 minutes"');
+})();
+
 //duration literal
 (function() {
 	assert.equal(Date.getDurationLiteral(0), '', 'Duration literal for 0 is the empty string');
