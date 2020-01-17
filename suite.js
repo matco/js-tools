@@ -1,6 +1,5 @@
-'use strict';
-
 import {Bundle} from './bundle.js';
+import {PromiseQueue} from './promisequeue.js';
 
 export class Suite {
 	constructor(name, path, bundles) {
@@ -47,19 +46,25 @@ export class Suite {
 			return test_case;
 		}).forEach(Node.prototype.appendChild, test_suite);
 	}
-	run(doc) {
-		this.times.start = new Date();
-		const that = this;
-		return that.bundles.reduce((a, b) => a.then(Bundle.prototype.run.bind(b, doc)), Promise.resolve()).then(function() {
-			that.times.stop = new Date();
-			return that;
+	run() {
+		return new Promise(resolve => {
+			this.times.start = new Date();
+			const queue = new PromiseQueue()
+				.then(() => {
+					this.times.stop = new Date();
+					resolve(this);
+				})
+				.catch(exception => {
+					console.error(exception);
+				});
+			queue.addAll(this.bundles.map(b => Bundle.prototype.run.bind(b)));
 		});
 	}
 	static fromJSON(s) {
 		//create suite
 		const suite = new Suite(s.name, s.path);
 		//create bundles
-		suite.bundles = s.bundles.map(b => new Bundle(suite, b.native, b.dom, b.website, b.dependencies, b.test));
+		suite.bundles = s.bundles.map(b => new Bundle(suite, b.dom, b.website, b.dependencies, b.test));
 		return suite;
 	}
 	static generateReport(name, suites, stylesheet_url) {
@@ -73,9 +78,9 @@ export class Suite {
 		}
 		//add information
 		report.documentElement.setAttribute('name', name);
-		report.documentElement.setAttribute('failures', suites.map(s => s.counters.fails).reduce((previous, currrent) => previous + currrent));
-		report.documentElement.setAttribute('tests', suites.map(s => s.getTests()).reduce((previous, currrent) => previous + currrent));
-		report.documentElement.setAttribute('time', suites.map(s => s.getDuration()).reduce((previous, currrent) => previous + currrent) / 1000);
+		report.documentElement.setAttribute('failures', suites.map(s => s.counters.fails).reduce((previous, current) => previous + current));
+		report.documentElement.setAttribute('tests', suites.map(s => s.getTests()).reduce((previous, current) => previous + current));
+		report.documentElement.setAttribute('time', suites.map(s => s.getDuration()).reduce((previous, current) => previous + current) / 1000);
 		suites.map(s => s.contributeToReport(report));
 		return report;
 	}

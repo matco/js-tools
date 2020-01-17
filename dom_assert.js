@@ -1,10 +1,9 @@
-'use strict';
-
 import {Assert} from './assert.js';
 
 export class DOMAssert extends Assert {
-	constructor(onsuccess, onfail, onbegin, onend, debug) {
+	constructor(doc, onsuccess, onfail, onbegin, onend, debug) {
 		super(onsuccess, onfail, onbegin, onend, debug);
+		this.document = doc || document;
 	}
 	get(selector) {
 		return String.isString(selector) ? this.document.querySelector(selector) : selector;

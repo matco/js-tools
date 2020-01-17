@@ -1,13 +1,10 @@
-'use strict';
-
 import {Loader} from './loader.js';
 import {DOMAssert} from './dom_assert.js';
-import {Tester} from './tester.js';
+import {Driver} from './driver.js';
 
 export class Bundle {
-	constructor(suite, native, dom, website, dependencies, test, onassert) {
+	constructor(suite, dom, website, dependencies, test, onassert) {
 		this.suite = suite;
-		this.native = native;
 		this.dom = dom;
 		this.website = website;
 		this.dependencies = dependencies || [];
@@ -15,34 +12,12 @@ export class Bundle {
 		this.assert = undefined;
 		this.onassert = onassert;
 	}
-	run(doc) {
+	run() {
 		const that = this;
 
 		return new Promise(function(resolve) {
-			//create assert in this context
-			that.assert = new DOMAssert(
-				function(message, specification) {
-					that.suite.counters.successes++;
-					that.onassert(that.assert, 'success', message, specification);
-				},
-				function(message, specification) {
-					that.suite.counters.fails++;
-					that.onassert(that.assert, 'fail', message, specification);
-				},
-				function() {
-					if(that.website) {
-						iframe.style.display = 'block';
-					}
-				},
-				function() {
-					if(that.website) {
-						iframe.style.display = 'none';
-					}
-					resolve(that);
-				}
-			);
 			//create iframe to sandbox each test
-			const iframe = doc.createElement('iframe');
+			const iframe = document.createElement('iframe');
 			iframe.setAttribute('sandbox', 'allow-same-origin allow-top-navigation allow-forms allow-scripts allow-modals');
 			if(that.website) {
 				//load website and show iframe
@@ -64,19 +39,52 @@ export class Bundle {
 					//manage paths for dependencies and test
 					const dependencies_paths = that.dependencies.map(d => (that.suite.path || '') + d);
 					const test_path = (that.suite.path || '') + that.test;
-					const test_type = that.native ? 'text/javascript' : 'module';
-					//configure assert and give assert
-					that.assert.document = iframe.contentDocument;
+					//create assert in this context
+					that.assert = new DOMAssert(
+						iframe.contentDocument,
+						function(message, specification) {
+							that.suite.counters.successes++;
+							that.onassert(that.assert, 'success', message, specification);
+						},
+						function(message, specification) {
+							that.suite.counters.fails++;
+							that.onassert(that.assert, 'fail', message, specification);
+						},
+						function() {
+							if(that.website) {
+								iframe.style.display = 'block';
+							}
+						},
+						function() {
+							if(that.website) {
+								iframe.style.display = 'none';
+							}
+							resolve(that);
+						}
+					);
+					//configure assert and driver
+					//TODO remove this
 					iframe.contentWindow.assert = that.assert;
-					//give tester for website
-					if(that.website) {
-						new Tester(iframe.contentWindow, iframe.contentDocument).globalize(iframe.contentWindow);
-					}
-					//create loader
+					iframe.contentWindow.driver = new Driver(iframe.contentWindow, iframe.contentDocument);
+					//create testing script dynamically
+					const launch_test_code =
+					`
+						import('${test_path}').then(t => {
+							if(t.default) {
+								t.default(assert, driver);
+							}
+							else {
+								console.error('Test module must contain a default export function. Are you sure this is a test?');
+							}
+						});
+					`;
+					//create loader to load native dependencies that are not modules
 					const loader = new Loader(iframe.contentDocument);
-					//load native dependencies that are not modules
-					//TODO try to load them together
-					loader.loadQueuedLibraries(dependencies_paths).then(() => loader.loadJavascript(test_path, test_type));
+					loader.loadQueuedLibraries(dependencies_paths).then(() => {
+						//import in a statement and not a function
+						//it can not be called in the context of the iframe without using eval
+						iframe.contentWindow.eval(launch_test_code);
+					});
 				}
 			);
 			document.body.appendChild(iframe);
