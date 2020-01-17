@@ -26,10 +26,10 @@ export class DBConnector {
 			that.database = event.target.result;
 			//add error handler directly to the db to catch all errors
 			that.database.addEventListener('error', function(event) {
-				console.log('Uncatched general error with database: ' + event.target.errorCode, event);
+				console.log('Uncaught general error with database: ' + event.target.errorCode, event);
 			});
 			that.database.addEventListener('abort', function(event) {
-				console.log('Uncatched abort error with database: ' + event.target.errorCode, event);
+				console.log('Uncaught abort error with database: ' + event.target.errorCode, event);
 			});
 			if(callback) {
 				callback.call(undefined, that.database);
