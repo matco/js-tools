@@ -1,0 +1,21 @@
+{
+	"name": "js-tools",
+	"description": "js-tools is a set of tools that will make your life easier when developing Javascript applications",
+	"version": "0.0.1",
+	"keywords": [],
+	"author": {
+		"name": "Matthieu Corageoud",
+		"email": "matthieu.corageoud@gmail.com"
+	},
+	"license": "Unlicense",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/matco/js-tools.git"
+	},
+	"bugs": {
+		"url": "https://github.com/matco/js-tools/issues"
+	},
+	"scripts": {},
+	"dependencies": {},
+	"devDependencies": {}
+}
