@@ -1,5 +1,3 @@
-'use strict';
-
 class CSV {
 	constructor(data) {
 		this.data = data;

@@ -1,5 +1,3 @@
-'use strict';
-
 class Reviver {
 	constructor(parameters) {
 		//String : property used to know how to type raw objects

@@ -1,5 +1,3 @@
-'use strict';
-
 export class Timeframe {
 	constructor(startDate, stopDate) {
 		if (startDate && stopDate && stopDate.isBefore(startDate)) {

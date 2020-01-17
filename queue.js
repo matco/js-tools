@@ -1,5 +1,3 @@
-'use strict';
-
 class QueueTask {
 	constructor(block, context, parameters, synchronous, on_end) {
 		this.block = block;

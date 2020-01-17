@@ -1,5 +1,3 @@
-'use strict';
-
 export class DBConnector {
 	constructor(name, keypath) {
 		this.name = name;

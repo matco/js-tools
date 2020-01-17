@@ -1,5 +1,3 @@
-'use strict';
-
 export class Loader {
 	constructor(doc, parameters) {
 		//DOMDocument: document where scripts must be loaded

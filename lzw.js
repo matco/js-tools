@@ -1,10 +1,8 @@
-'use strict';
-
 export const LZW = {
-	INITIAL_DICT_SIZE : 256,
-	MAX_DICT_SIZE : 65536,
+	INITIAL_DICT_SIZE: 256,
+	MAX_DICT_SIZE: 65536,
 
-	Compress : function(string, dictionary_max_size) {
+	Compress: function(string, dictionary_max_size) {
 		let i, length;
 		//build initial dictionary
 		const dictionary = {};
@@ -70,11 +68,11 @@ export const LZW = {
 		return out;
 	},*/
 
-	CompressToString : function(string) {
+	CompressToString: function(string) {
 		return LZW.Compress(string, LZW.MAX_DICT_SIZE).map(c => String.fromCharCode(c)).join('');
 	},
 
-	Decompress : function(integers, dictionary_max_size) {
+	Decompress: function(integers, dictionary_max_size) {
 		const dictionary = {};
 		let character = String.fromCharCode(integers[0]);
 		let phrase;
@@ -101,7 +99,7 @@ export const LZW = {
 		return out.join('');
 	},
 
-	DecompressString : function(string) {
+	DecompressString: function(string) {
 		const integers = string.split('').map(function(character) {return character.charCodeAt(0);});
 		return LZW.Decompress(integers, LZW.MAX_DICT_SIZE);
 	}

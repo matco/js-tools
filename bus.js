@@ -1,5 +1,3 @@
-'use strict';
-
 const awaiting_events = [];
 
 class Bus {
