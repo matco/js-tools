@@ -1,8 +1,7 @@
-'use strict';
-
 export class PromiseQueue {
-	constructor() {
+	constructor(result_callback) {
 		this.promises = [];
+		this.resultCallback = result_callback;
 		this.endCallback;
 		this.exceptionCallback;
 		this.running;
@@ -17,8 +16,18 @@ export class PromiseQueue {
 			else {
 				this.running = this.promises.shift();
 				this.running.call()
-					.then(() => {this.running = undefined; this.run();})
-					.catch(exception => {if(this.exceptionCallback) {this.exceptionCallback(exception);}});
+					.then(result => {
+						if(this.resultCallback) {
+							this.resultCallback(result);
+						}
+						this.running = undefined;
+						this.run();
+					})
+					.catch(exception => {
+						if(this.exceptionCallback) {
+							this.exceptionCallback(exception);
+						}
+					});
 			}
 		}
 	}
