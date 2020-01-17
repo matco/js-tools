@@ -1,5 +1,3 @@
-'use strict';
-
 function log(success, message, specification) {
 	let text = success ? 'Success' : 'Fail';
 	if(message) {
@@ -62,11 +60,6 @@ export class Assert {
 	}
 	getTotal() {
 		return this.results.length;
-	}
-	globalize(object) {
-		const hook = object || window;
-		const methods = ['begin', 'end', 'success', 'fail', 'equal', 'notEqual', 'similar', 'notSimilar', 'defined', 'undefined', 'null', 'notNull', 'ok', 'notOk', 'doesThrow', 'doesNotThrow'];
-		methods.forEach(method => hook[method] = this[method].bind(this));
 	}
 	success(message, specification) {
 		check_has_begun.call(this);
