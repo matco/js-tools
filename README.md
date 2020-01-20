@@ -1,19 +1,28 @@
 # js-tools
 js-tools is a set of tools that will make your life easier when developing Javascript applications.
 
-**extension.js** extends base Javascript classes with useful methods and helpers.
+It contains two kind of tools:
+* Two tools "enhance" Javascript by prototyping Javascript native classes (use with caution)
+* The other tools are Javascript classes that can be imported as ES modules
 
-**dom_extension.js** extends DOM Javascript classes to make everyday DOM operations easier.
+Some tools can be used in Node.js, some require a DOM.
 
-**lzw.js** is an implementation of LZW.
+Javascript extensions:
+* **extension.js** extends base Javascript classes with useful methods and helpers.
+* **dom_extension.js** (requires a DOM) extends DOM Javascript classes to make everyday DOM operations easier.
 
-**timeframe.js** manages timeframe.
-
-**reviver.js** transforms a tree or raw objects in a tree of typed object.
-
-**bus.js** creates a bus for your events.
-
-**uuid.js** generates UUIDs.
+Javascript classes:
+* **bus.js** creates a bus for your events.
+* **csv.js** (requires a DOM) makes creation of CSV files easy.
+* **db_connector.js** (requires a DOM) simplifies manipulation of indexedDB.
+* **loader.js** (requires a DOM) is able to load code (HTML, CSS or Javascript) in a DOM document.
+* **lzw.js** is an implementation of LZW.
+* **promisequeue.js** executes a set promises one after the other.
+* **queue.js** is a custom implementation of a queue.
+* **reviver.js** transforms a tree or raw objects in a tree of typed object.
+* **svg.js** (requires a DOM) simplifies drawing in SVG.
+* **timeframe.js** manages timeframe.
+* **uuid.js** generated UUIDs.
 
 All tools are tested in their related file *.test.js.
 
