@@ -27,21 +27,17 @@ Javascript classes:
 All tools are tested in their related file *.test.js.
 
 ## Usage
-The branch ```subtreeable``` contains only required files (no tests). It allows to easily import these tools in your project using [Git subtree](https://git-scm.com/book/en/v1/Git-Tools-Subtree-Merging).
-
-First, add this repository as a remote to your project:
+Install as an NPM dependency:
 ```
-git remote add -f js-tools https://github.com/matco/js-tools.git
-```
-Then, create the subtree from branch ```subtreeable``` (be sure to update the folder path in the command below):
-```
-git subtree add --prefix=js-tools-folder --squash js-tools/subtreeable
+npm i -s git+ssh://git@github.com:matco/js-tools.git
 ```
 
-Later, to update code of tools in your project (again, update folder path in second command):
+For tools that enhance Javascript:
 ```
-git fetch js-tools subtreeable
-git subtree pull --prefix=js-tools-folder --squash js-tools subtreeable
+<script type="text/javascript" src="node_modules/js-tools/extension.js"></script>
 ```
 
-You are free to remove any tool you don't need.
+For other tools:
+```
+import {Timeframe} from './node_modules/js-tools/timeframe.js';
+```
