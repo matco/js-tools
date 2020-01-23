@@ -48,6 +48,12 @@ export class Loader {
 	loadModule(mod) {
 		return this.loadJavascript(mod, 'module');
 	}
+	loadQueuedLibraries(libraries) {
+		return libraries.reduce((a, l) => a.then(this.loadLibrary.bind(this, l)), Promise.resolve());
+	}
+	loadConcurrentLibraries(libraries) {
+		return Promise.all(libraries.map(l => this.loadLibrary(l)));
+	}
 	loadCSS(css) {
 		const css_url = this.buildUrl(css);
 		const that = this;
@@ -114,28 +120,5 @@ export class Loader {
 			xhr.open('GET', html_url, true);
 			xhr.send();
 		});
-	}
-	loadQueuedJavascript(libraries, type) {
-		return libraries.reduce((a, l) => {return a.then(this.loadJavascript.bind(this, l, type));}, Promise.resolve());
-	}
-	loadQueuedLibraries(libraries) {
-		return libraries.reduce((a, l) => {return a.then(this.loadLibrary.bind(this, l));}, Promise.resolve());
-	}
-	loadQueuedModules(libraries) {
-		return libraries.reduce((a, l) => {return a.then(this.loadModule.bind(this, l));}, Promise.resolve());
-	}
-	loadConcurrentLibraries(libraries) {
-		return Promise.all(libraries.map(l => this.load(l)));
-	}
-	load(libraries, concurrent) {
-		//array of libraries
-		if(Array.isArray(libraries)) {
-			if(concurrent) {
-				return this.loadConcurrentLibraries(libraries);
-			}
-			return this.loadQueuedLibraries(libraries);
-		}
-		//one library
-		return this.loadLibrary(libraries);
 	}
 }
