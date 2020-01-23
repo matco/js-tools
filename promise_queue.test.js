@@ -1,4 +1,4 @@
-import {PromiseQueue} from './promisequeue.js';
+import {PromiseQueue} from './promise_queue.js';
 
 export default function test(assert) {
 	assert.begin();
