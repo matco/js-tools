@@ -1,10 +1,18 @@
+const regexp = /"/g;
+
+function generate_line(line) {
+	return line
+		.map(cell => cell || '')
+		.map(cell => `"${cell.replace(regexp, '""')}"`)
+		.join(',');
+}
+
 class CSV {
 	constructor(data) {
 		this.data = data;
 	}
 	toString() {
-		const regexp = /"/g;
-		return this.data.map(l => l.map(c => '"' + c.replace(regexp, '""') + '"').join(',')).join('\n');
+		return this.data.map(generate_line).join('\n');
 	}
 	toBlob() {
 		return new Blob([this.toString()], {type: CSV.MIME_TYPE});
@@ -18,7 +26,7 @@ class CSV {
 		if(/Chrome/.test(navigator.userAgent)) {
 			const link = document.createFullElement('a', {href: url, download: filename});
 			const event = document.createEvent('MouseEvents');
-			event.initUIEvent('click', true, true, window, 1);
+			event.initEvent('click', true, true);
 			link.dispatchEvent(event);
 		}
 		else {
