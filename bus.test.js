@@ -29,15 +29,16 @@ export default function test(assert) {
 	};
 
 	//create node
-	function BusEventBeep(type, volume) {
-		this.type = type;
-		this.volume = volume;
+	class BusEventBeep extends BusEvent {
+		constructor(type, volume) {
+			super();
+			this.type = type;
+			this.volume = volume;
+		}
+		getCallbacks() {
+			return ['onBeep' + this.type.capitalize(), 'onBeep'];
+		}
 	}
-	BusEventBeep.prototype = new BusEvent();
-	BusEventBeep.prototype.constructor = BusEventBeep;
-	BusEventBeep.prototype.getCallbacks = function() {
-		return ['onBeep' + this.type.capitalize(), 'onBeep'];
-	};
 
 	bus.register(beep_counter);
 	assert.equal(bus.listeners.length, 1, 'There is 1 listener in bus after 1 listener has been registered');

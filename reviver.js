@@ -8,10 +8,10 @@ class Reviver {
 		//you create object manually
 		this.factory;
 		//Function : must return a constructor for an entity
-		this.entitiesConstructors;
+		this.entitiesConstructors = undefined;
 		//Function : must return an array of all properties for an entity
 		//only properties returned by this function are imported
-		this.entitiesProperties;
+		this.entitiesProperties = undefined;
 		//Boolean : preserve entity property
 		//entity property must be returned by this.entitiesProperties function to be kept in final object in strict mode
 		this.preserveEntityProperty = false;
@@ -20,7 +20,7 @@ class Reviver {
 		this.debug = false;
 		//Function : callback to apply for every objects after the revival
 		//callback is called after the revival with four arguments : revived object, entity, container and raw object
-		this.callback;
+		this.callback = undefined;
 
 		//bind parameters
 		for(const parameter in parameters) {

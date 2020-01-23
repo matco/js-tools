@@ -6,7 +6,7 @@ class Bus {
 		this.paused = false;
 		this.locked = false;
 		this.listeners = [];
-		this.onEvent;
+		this.onEvent = undefined;
 	}
 	disable() {
 		this.enabled = false;
@@ -62,12 +62,15 @@ class Bus {
 class BusEvent {
 	constructor() {
 	}
-	hit(object) {
+	getCallbacks() {
+		return [];
+	}
+	hit(listener) {
 		const callbacks = this.getCallbacks();
 		if(!callbacks && callbacks.isEmpty()) {
 			throw new Error('Bus event must describe callbacks');
 		}
-		callbacks.filter(c => !!object[c]).forEach(c => object[c].call(object, this));
+		callbacks.filter(c => !!listener[c]).forEach(c => listener[c].call(listener, this));
 	}
 }
 
