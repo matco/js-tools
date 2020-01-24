@@ -43,25 +43,25 @@ interface Number {
 	pad(length: number, pad?: string): string;
 }
 
-interface Array {
+interface Array<T> {
 	isEmpty(): boolean;
-	last(): any;
-	first(): any;
+	last(): T;
+	first(): T;
 
-	indexOfSame(element: any): number;
-	includesSame(element: any): boolean;
-	includesAll(elements: any): boolean;
-	includesOne(elements: any): boolean;
+	indexOfSame(element: T): number;
+	includesSame(element: T): boolean;
+	includesAll(elements: Array<T>): boolean;
+	includesOne(elements: Array<T>): boolean;
 
-	pushAll(elements: Array);
-	insert(number: number, object: any);
+	pushAll(elements: Array<T>);
+	insert(number: number, object: T);
 	remove(index: number);
 	remove(from: number, to: number);
-	removeElement(element: any);
-	removeElements(elements: Array<any>);
+	removeElement(element: T);
+	removeElements(elements: Array<T>);
 
-	replace(oldElement: any, newElement: any);
-};
+	replace(oldElement: T, newElement: T);
+}
 
 interface DateConstructor {
 	isDate(object: any): boolean;
@@ -86,6 +86,7 @@ interface DateConstructor {
 
 	locale: any;
 }
+
 interface Date {
 	toDisplay(): string;
 	toFullDisplay(): string;
