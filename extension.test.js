@@ -478,11 +478,6 @@ export default function test(assert) {
 		assert.notOk(new Date('2009/01/01').equals(undefined), '[2009/01/01] is not equals to undefined date');
 	})();
 
-	assert.equal(new Date('2009/01/25').getMonthName('en'), 'January', 'Month name for date [2009/01/25] in "en" is "January"');
-	assert.equal(new Date('2009/01/25').getMonthName('fr'), 'Janvier', 'Month name for date [2009/01/25] in "fr" is "Janvier"');
-	assert.equal(new Date('2009/01/25').getMonthName('de'), 'January', 'Month name for date [2009/01/25] in "de" is "January" because this month has not been translated in German yet');
-	assert.equal(new Date('2011/10/10').getDayName('en'), 'Monday', 'Day name for date [2011/10/10] is "Monday"');
-
 	//toDisplay, toFullDisplay and format
 	(function() {
 		//do not set timezone in date string so Javascript engine will use the timezone of the context, like the toDisplay method

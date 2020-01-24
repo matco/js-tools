@@ -78,8 +78,6 @@ interface DateConstructor {
 	MS_IN_MINUTE: number;
 	MS_IN_HOUR: number;
 	MS_IN_DAY: number;
-
-	locale: any;
 }
 
 interface Date {
@@ -89,11 +87,6 @@ interface Date {
 	toUTCDisplay(): string;
 	toUTCFullDisplay(): string;
 	formatUTC(formatter: string): string;
-
-	getDayName(language: string): string;
-	getDayNameShort(language: string): string;
-	getMonthName(language: string): string;
-	getMonthNameShort(language: string): string;
 
 	equals(otherDate: Date): boolean;
 	compareTo(otherDate: Date): number;

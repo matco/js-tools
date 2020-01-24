@@ -259,21 +259,6 @@ Date.MS_IN_MINUTE = Date.SECONDS_IN_MINUTE * Date.MS_IN_SECOND;
 Date.MS_IN_HOUR = Date.MINUTES_IN_HOUR * Date.MS_IN_MINUTE;
 Date.MS_IN_DAY = Date.HOURS_IN_DAY * Date.MS_IN_HOUR;
 
-Date.locale = {
-	en: {
-		day_names: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
-		day_names_short: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
-		month_names: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
-		month_names_short: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
-	},
-	fr: {
-		day_names: ['Dimanche', 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi'],
-		day_names_short: ['Dim', 'Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam'],
-		month_names: ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Decembre'],
-		month_names_short: ['Jan', 'Fev', 'Mar', 'Avr', 'Mai', 'Juin', 'Juil', 'Août', 'Sep', 'Oct', 'Nov', 'Dec']
-	}
-};
-
 //naive way to calculate differences
 Date.getDifferenceInDays = function(start, stop) {
 	const time = stop.getTime() - start.getTime();
@@ -387,22 +372,6 @@ Date.prototype.formatUTC = function(formatter) {
 		second: this.getUTCSeconds().pad(2),
 		millisecond: this.getUTCMilliseconds().pad(3)
 	});
-};
-Date.prototype.getDayName = function(language) {
-	const lang = language && Date.locale.hasOwnProperty(language) ? language : 'en';
-	return Date.locale[lang].day_names[this.getDay()];
-};
-Date.prototype.getDayNameShort = function(language) {
-	const lang = language && Date.locale.hasOwnProperty(language) ? language : 'en';
-	return Date.locale[lang].day_names_short[this.getDay()];
-};
-Date.prototype.getMonthName = function(language) {
-	const lang = language && Date.locale.hasOwnProperty(language) ? language : 'en';
-	return Date.locale[lang].month_names[this.getMonth()];
-};
-Date.prototype.getMonthNameShort = function(language) {
-	const lang = language && Date.locale.hasOwnProperty(language) ? language : 'en';
-	return Date.locale[lang].month_names_short[this.getMonth()];
 };
 Date.prototype.equals = function(otherDate) {
 	return !!otherDate && this.getTime() === otherDate.getTime();
