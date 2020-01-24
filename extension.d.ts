@@ -1,9 +1,9 @@
 interface ObjectConstructor {
 	isObject(object: any): boolean;
-	isEmpty(object: any): boolean;
+	isEmpty(object: object): boolean;
 	equals(object1: any, object2: any): boolean;
-	key(object: any, value: any): any;
-	clone(object: any): any;
+	key(object: object, value: any): any;
+	clone(object: object): any;
 	getObjectPathValue(object: any, path: string): any;
 	getLastObjectInPath(object: any, path: string): any;
 }
@@ -21,7 +21,7 @@ interface String {
 	reverse(): string;
 	nocaseIncludes(string: string): boolean;
 	compareTo(string: string): number;
-	replaceObject(object: any): string;
+	replaceObject(object: {[key: string]: string}): string;
 	getBytes(): Array<number>;
 }
 
