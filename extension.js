@@ -180,36 +180,19 @@ Array.prototype.first = function() {
 	return this[0];
 };
 Array.prototype.indexOfSame = function(element) {
-	for(let i = 0; i < this.length; i++) {
-		if(Object.equals(this[i], element)) {
-			return i;
-		}
-	}
-	return -1;
+	return this.findIndex(e => Object.equals(e, element));
 };
 Array.prototype.includesSame = function(element) {
 	return this.indexOfSame(element) !== -1;
 };
 Array.prototype.includesAll = function(elements) {
-	for(let i = elements.length - 1; i >= 0; i--) {
-		if(!this.includes(elements[i])) {
-			return false;
-		}
-	}
-	return true;
+	return elements.every(e => this.includes(e));
 };
 Array.prototype.includesOne = function(elements) {
-	for(let i = elements.length - 1; i >= 0; i--) {
-		if(this.includes(elements[i])) {
-			return true;
-		}
-	}
-	return false;
+	return elements.some(e => this.includes(e));
 };
 Array.prototype.pushAll = function(array) {
-	for(let i = 0; i < array.length; i++) {
-		this.push(array[i]);
-	}
+	this.push(...array);
 };
 Array.prototype.insert = function(index, item) {
 	this.splice(index, 0, item);
