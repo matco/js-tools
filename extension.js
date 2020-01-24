@@ -109,21 +109,6 @@ if(!Function.isFunction) {
 	};
 }
 
-//prototypes
-Function.prototype.negatize = function() {
-	const original = this;
-	return function() {
-		return !original.apply(undefined, arguments);
-	};
-};
-Function.prototype.callbackize = function() {
-	const original = this;
-	const args = arguments;
-	return function(object) {
-		return original.apply(object, args);
-	};
-};
-
 //String
 //helpers
 if(!String.isString) {

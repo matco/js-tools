@@ -12,11 +12,6 @@ interface FunctionConstructor {
 	isFunction(f: any): boolean;
 }
 
-interface Function {
-	negatize(): any;
-	callbackize(): any;
-}
-
 interface StringConstructor {
 	isString(n: any): boolean;
 }

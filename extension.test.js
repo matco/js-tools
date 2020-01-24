@@ -212,29 +212,6 @@ export default function test(assert) {
 		assert.notOk(Function.isFunction([]), 'Empty array is not a function');
 	})();
 
-	//negatize
-	(function() {
-		function is_odd(number) {
-			return number % 2 === 0;
-		}
-		assert.ok(is_odd(2), '2 is odd according to function is_odd');
-		assert.notOk(is_odd(5), '5 is not odd to function is_odd');
-		const is_even = is_odd.negatize();
-		assert.notOk(is_even(2), '2 is not even according to negatized function is_odd');
-		assert.ok(is_even(5), '5 is even according to negatized function is_odd');
-	})();
-
-	//callbackize
-	(function() {
-		const text = 'toto';
-		assert.equal(String.prototype.toUpperCase.callbackize().call(undefined, text), 'TOTO', 'Callbackize transform method function into callable function');
-		assert.equal(String.prototype.substring.callbackize(0, 2).call(undefined, text), 'to', 'Callbackize preserves arguments');
-
-		const people = ['Anakin', 'Luke', 'Leia', 'Han'];
-		assert.similar(people.map(String.prototype.toUpperCase.callbackize()), ['ANAKIN', 'LUKE', 'LEIA', 'HAN'], 'Callbackize transform method function into callable function which is handy for array functions');
-		assert.similar(people.map(String.prototype.substring.callbackize(0, 2)), ['An', 'Lu', 'Le', 'Ha'], 'Callbackize preserves arguments which is handy for array functions');
-	})();
-
 	//String
 	//capitalize
 	(function() {
