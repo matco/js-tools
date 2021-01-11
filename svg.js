@@ -35,7 +35,6 @@ export const SVG = {
 			version: '1.2',
 			xmlns: SVG.Namespaces.SVG,
 			'xmlns:xhtml': SVG.Namespaces.XHTML,
-			'xmlns:xlink': SVG.Namespaces.XLINK,
 			width: `${width}px`,
 			height: `${height}px`
 		});
@@ -85,10 +84,10 @@ export const SVG = {
 		title.appendChild(document.createTextNode(content));
 		return title;
 	},
-	Link: function(url, properties) {
-		const link = SVG.Element('a');
-		link.setAttributeNS(SVG.Namespaces.XLINK, 'href', url);
-		return append_properties(link, properties);
+	Link: function(href, properties) {
+		return append_properties(SVG.Element('a', {
+			href: href
+		}), properties);
 	},
 	Path: function(x, y, path, properties) {
 		return append_properties(SVG.Element('path', {'d': `M${round_coordinate(x)} ${round_coordinate(y)} ${path}`}), properties);
@@ -147,6 +146,5 @@ export const SVG = {
 
 SVG.Namespaces = {
 	SVG: 'http://www.w3.org/2000/svg',
-	XHTML: 'http://www.w3.org/1999/xhtml',
-	XLINK: 'http://www.w3.org/1999/xlink'
+	XHTML: 'http://www.w3.org/1999/xhtml'
 };
