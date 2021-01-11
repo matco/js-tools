@@ -165,7 +165,7 @@ Number.prototype.pad = function(length, pad) {
 	return this.toString().padStart(length, pad || '0');
 };
 Number.prototype.compareTo = function(otherNumber) {
-	return this - otherNumber;
+	return this.valueOf() - otherNumber;
 };
 
 //Array
@@ -263,7 +263,7 @@ Date.parseToDisplay = function(date) {
 	const parts = date.match(/^(\d{1,2}).(\d{1,2}).(\d{4})$/);
 	//return data only if format is valid
 	if(parts) {
-		return new Date(parts[3] + '/' + parts[2] + '/' + parts[1]);
+		return new Date(`${parts[3]}/${parts[2]}/${parts[1]}`);
 	}
 	//to be consistent with native date API, return an invalid date
 	return new Date('Invalid date');
@@ -294,7 +294,7 @@ Date.getDurationLiteral = function(duration) {
 	//write seconds
 	d = duration % Date.SECONDS_IN_MINUTE;
 	if(d) {
-		result = d + ' seconds';
+		result = `${d} seconds`;
 	}
 	duration = Math.floor(duration / Date.SECONDS_IN_MINUTE);
 	if(duration < 1) {
@@ -303,7 +303,7 @@ Date.getDurationLiteral = function(duration) {
 	//write minutes
 	d = duration % Date.MINUTES_IN_HOUR;
 	if(d) {
-		result = d + ' minutes' + (result ? ' ' + result : '');
+		result = `${d} minutes${result ? ` ${result}` : ''}`;
 	}
 	duration = Math.floor(duration / Date.MINUTES_IN_HOUR);
 	if(duration < 1) {
@@ -312,21 +312,21 @@ Date.getDurationLiteral = function(duration) {
 	//write hours
 	d = duration % Date.HOURS_IN_DAY;
 	if(d) {
-		result = d + ' hours' + (result ? ' ' + result : '');
+		result = `${d} hours${result ? ` ${result}` : ''}`;
 	}
 	duration = Math.floor(duration / Date.HOURS_IN_DAY);
 	if(duration < 1) {
 		return result;
 	}
-	return duration + ' days' + (result ? ' ' + result : '');
+	return `${duration} days${result ? ` ${result}` : ''}`;
 };
 
 //prototypes
 Date.prototype.toDisplay = function() {
-	return this.getDate().pad(2) + '.' + (this.getMonth() + 1).pad(2) + '.' + this.getFullYear();
+	return `${this.getDate().pad(2)}.${(this.getMonth() + 1).pad(2)}.${this.getFullYear()}`;
 };
 Date.prototype.toFullDisplay = function() {
-	return this.toDisplay() + ' ' + this.getHours().pad(2) + ':' + this.getMinutes().pad(2) + ':' + this.getSeconds().pad(2);
+	return `${this.toDisplay()} ${this.getHours().pad(2)}:${this.getMinutes().pad(2)}:${this.getSeconds().pad(2)}`;
 };
 Date.prototype.format = function(formatter) {
 	return formatter.replaceObject({
@@ -340,10 +340,10 @@ Date.prototype.format = function(formatter) {
 	});
 };
 Date.prototype.toUTCDisplay = function() {
-	return this.getUTCDate().pad(2) + '.' + (this.getUTCMonth() + 1).pad(2) + '.' + this.getUTCFullYear();
+	return `${this.getUTCDate().pad(2)}.${(this.getUTCMonth() + 1).pad(2)}.${this.getUTCFullYear()}`;
 };
 Date.prototype.toUTCFullDisplay = function() {
-	return this.toUTCDisplay() + ' ' + this.getUTCHours().pad(2) + ':' + this.getUTCMinutes().pad(2) + ':' + this.getUTCSeconds().pad(2);
+	return `${this.toUTCDisplay()} ${this.getUTCHours().pad(2)}:${this.getUTCMinutes().pad(2)}:${this.getUTCSeconds().pad(2)}`;
 };
 Date.prototype.formatUTC = function(formatter) {
 	return formatter.replaceObject({
@@ -459,10 +459,10 @@ Date.prototype.getAgeLiteral = function() {
 		return 'in a second';
 	}
 	if(age > 0 && age < Date.SECONDS_IN_MINUTE) {
-		return age + ' seconds ago';
+		return `${age} seconds ago`;
 	}
 	if(age < 0 && -age < Date.SECONDS_IN_MINUTE) {
-		return 'in ' + (-age) + ' seconds';
+		return `in ${-age} seconds`;
 	}
 
 	age = Math.round(real_age / Date.MS_IN_MINUTE);
@@ -473,10 +473,10 @@ Date.prototype.getAgeLiteral = function() {
 		return 'in a minute';
 	}
 	if(age > 0 && age < Date.MINUTES_IN_HOUR) {
-		return age + ' minutes ago';
+		return `${age} minutes ago`;
 	}
 	if(age < 0 && -age < Date.MINUTES_IN_HOUR) {
-		return 'in ' + (-age) + ' minutes';
+		return `in ${-age} minutes`;
 	}
 
 	age = Math.round(real_age / Date.MS_IN_HOUR);
@@ -487,10 +487,10 @@ Date.prototype.getAgeLiteral = function() {
 		return 'in an hour';
 	}
 	if(age > 0 && age < Date.HOURS_IN_DAY) {
-		return age + ' hours ago';
+		return `${age} hours ago`;
 	}
 	if(age < 0 && -age < Date.HOURS_IN_DAY) {
-		return 'in ' + (-age) + ' hours';
+		return `in ${-age} hours`;
 	}
 
 	age = Math.round(real_age / Date.MS_IN_DAY);
@@ -501,9 +501,9 @@ Date.prototype.getAgeLiteral = function() {
 		return 'in a day';
 	}
 	if(age > 0) {
-		return age + ' days ago';
+		return `${age} days ago`;
 	}
 	else {
-		return 'in ' + (-age) + ' days';
+		return `in ${-age} days`;
 	}
 };

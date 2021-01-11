@@ -21,7 +21,7 @@ interface String {
 	reverse(): string;
 	nocaseIncludes(string: string): boolean;
 	compareTo(string: string): number;
-	replaceObject(object: {[key: string]: string}): string;
+	replaceObject(object: {[key: string]: any}): string;
 	getBytes(): Array<number>;
 }
 

@@ -1,8 +1,8 @@
 interface Document {
-	createFullElement<K extends keyof HTMLElementTagNameMap>(tag: K, attributes?: object, text?: string, listeners?: object): HTMLElementTagNameMap[K];
-	createFullElement(tag: string, attributes?: object, text?: string, listeners?: object): HTMLElement;
-	createFullElementNS<K extends keyof HTMLElementTagNameMap>(ns: string, tag: K, attributes?: object, text?: string, listeners?: object): HTMLElementTagNameMap[K];
-	createFullElementNS(ns: string, tag: string, attributes?: object, text?: string, listeners?: object): Element;
+	createFullElement<K extends keyof HTMLElementTagNameMap>(tag: K, attributes?: object, text?: string, listeners?: {[key: string]: (this: Element, event: any) => any;}): HTMLElementTagNameMap[K];
+	createFullElement(tag: string, attributes?: object, text?: string, listeners?: {[key: string]: (this: Element, event: any) => any;}): HTMLElement;
+	createFullElementNS<K extends keyof HTMLElementTagNameMap>(ns: string, tag: K, attributes?: object, text?: string, listeners?: {[key: string]: (this: Element, event: any) => any;}): HTMLElementTagNameMap[K];
+	createFullElementNS(ns: string, tag: string, attributes?: object, text?: string, listeners?: {[key: string]: (this: Element, event: any) => any;}): Element;
 }
 
 interface Node {
@@ -23,7 +23,17 @@ interface NodeList {
 	some(callback: Function, that?: any): boolean;
 }
 
-interface NodeListOf extends NodeList {
+interface NodeListOf<TNode extends Node> extends NodeList {
+	indexOf(element: Node): number;
+	includes(element: Node): boolean;
+	slice(start?: number, end?: number): Array<TNode>;
+
+	forEach(callback: Function, that?: any): void;
+	map(callback: Function, that?: any): Array<TNode>;
+	find(callback: Function, that?: any): TNode;
+	filter(callback: Function, that?: any): Array<TNode>;
+	every(callback: Function, that?: any): boolean;
+	some(callback: Function, that?: any): boolean;
 }
 
 interface Element {
@@ -45,9 +55,9 @@ interface HTMLCollectionBase {
 	slice(): Array<any>;
 
 	forEach(callback: Function, that?: any): void;
-	map(callback: Function, that?: any): Array<any>;
-	find(callback: Function, that?: any): any;
-	filter(callback: Function, that?: any): Array<any>;
+	map(callback: Function, that?: any): Array<HTMLElement>;
+	find(callback: Function, that?: any): HTMLElement;
+	filter(callback: Function, that?: any): Array<HTMLElement>;
 	every(callback: Function, that?: any): boolean;
 	some(callback: Function, that?: any): boolean;
 }
@@ -72,20 +82,6 @@ interface Storage {
 	getObject(key: string);
 }
 
-//TODO this does not work
-interface EventConstructor {
-	stop(event: Event);
-}
-
 interface Event {
-	stop(event: Event);
-	static stop(event: Event);
+	stop();
 }
-
-var Event: {
-	stop(event: Event);
-};
-
-declare var Event: {
-	stop(event: Event);
-};
