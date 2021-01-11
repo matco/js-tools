@@ -1,3 +1,5 @@
+import './extension.js';
+
 function append_xhtml_properties(object, properties) {
 	if(object && properties) {
 		for(const property in properties) {
@@ -27,77 +29,77 @@ function round_dimension(dimension) {
 }
 
 export const SVG = {
-	create: function(width, height, properties) {
+	Create: function(width, height, properties) {
 		const svg = document.createElementNS(SVG.Namespaces.SVG, 'svg');
 		append_xhtml_properties(svg, {
 			version: '1.2',
 			xmlns: SVG.Namespaces.SVG,
 			'xmlns:xhtml': SVG.Namespaces.XHTML,
 			'xmlns:xlink': SVG.Namespaces.XLINK,
-			width: width + 'px',
-			height: height + 'px'
+			width: `${width}px`,
+			height: `${height}px`
 		});
 		return append_xhtml_properties(svg, properties);
 	},
-	element: function(tag, properties) {
+	Element: function(tag, properties) {
 		return append_properties(document.createElementNS(SVG.Namespaces.SVG, tag), properties);
 	},
-	rectangle: function(x, y, width, height, properties) {
-		return append_properties(SVG.element('rect', {
+	Rectangle: function(x, y, width, height, properties) {
+		return append_properties(SVG.Element('rect', {
 			x: round_coordinate(x),
 			y: round_coordinate(y),
 			width: round_dimension(width),
 			height: round_dimension(height)
 		}), properties);
 	},
-	circle: function(cx, cy, r, properties) {
-		return append_properties(SVG.element('circle', {
+	Circle: function(cx, cy, r, properties) {
+		return append_properties(SVG.Element('circle', {
 			cx: round_coordinate(cx),
 			cy: round_coordinate(cy),
 			r: round_dimension(r)
 		}), properties);
 	},
-	line: function(x1, y1, x2, y2, properties) {
-		return append_properties(SVG.element('line', {
+	Line: function(x1, y1, x2, y2, properties) {
+		return append_properties(SVG.Element('line', {
 			x1: round_coordinate(x1),
 			y1: round_coordinate(y1),
 			x2: round_coordinate(x2),
 			y2: round_coordinate(y2)
 		}), properties);
 	},
-	polyline: function(points, properties) {
-		return append_properties(SVG.element('polyline', {
+	Polyline: function(points, properties) {
+		return append_properties(SVG.Element('polyline', {
 			points: points.map(round_coordinate).join(' '),
 		}), properties);
 	},
-	text: function(x, y, content, properties) {
-		const text = append_properties(SVG.element('text', {
+	Text: function(x, y, content, properties) {
+		const text = append_properties(SVG.Element('text', {
 			x: round_coordinate(x),
 			y: round_coordinate(y)
 		}), properties);
 		text.appendChild(document.createTextNode(content));
 		return text;
 	},
-	title: function(content, properties) {
-		const title = SVG.element('title', properties);
+	Title: function(content, properties) {
+		const title = SVG.Element('title', properties);
 		title.appendChild(document.createTextNode(content));
 		return title;
 	},
-	link: function(url, properties) {
-		const link = SVG.element('a');
-		link.setAttributeNS(SVG.Namespaces.XLINK, 'xlink:href', url);
+	Link: function(url, properties) {
+		const link = SVG.Element('a');
+		link.setAttributeNS(SVG.Namespaces.XLINK, 'href', url);
 		return append_properties(link, properties);
 	},
-	path: function(x, y, path, properties) {
-		return append_properties(SVG.element('path', {'d': 'M' + round_coordinate(x) + ' ' + round_coordinate(y) + ' ' + path}), properties);
+	Path: function(x, y, path, properties) {
+		return append_properties(SVG.Element('path', {'d': `M${round_coordinate(x)} ${round_coordinate(y)} ${path}`}), properties);
 	},
 	//work only with left to right and top to bottom languages
-	textwrap: function(text, width) {
+	TextWrap: function(text, width) {
 		//retrieve all words and clear text
 		const words = text.textContent.split(' ');
 		text.textContent = '';
 		//create first line
-		let tspan = append_properties(SVG.element('tspan', {x: text.getAttribute('x'), dy: 0}));
+		let tspan = append_properties(SVG.Element('tspan', {x: text.getAttribute('x'), dy: 0}));
 		text.appendChild(tspan);
 		//re-add word one after an other
 		let word;
@@ -114,7 +116,7 @@ export const SVG = {
 				line.pop();
 				tspan.textContent = line.join(' ');
 				//start a new line
-				tspan = append_properties(SVG.element('tspan', {x: text.getAttribute('x'), dy: 15}));
+				tspan = append_properties(SVG.Element('tspan', {x: text.getAttribute('x'), dy: 15}));
 				text.appendChild(tspan);
 				line = [];
 				//excluded word must be managed next loop
@@ -123,7 +125,7 @@ export const SVG = {
 		}
 	},
 	//work only with left to right languages
-	textellipsis: function(text, width) {
+	TextEllipsis: function(text, width) {
 		let letters = text.textContent.split('');
 		let truncated = false;
 		while(text.getComputedTextLength() > width) {
@@ -133,10 +135,10 @@ export const SVG = {
 		}
 		if(truncated) {
 			letters = letters.slice(0, letters.length - 3);
-			text.textContent = letters.join('') + '...';
+			text.textContent = `${letters.join('')}...`;
 		}
 	},
-	center: function(element, x1, x2, y1, y2) {
+	Center: function(element, x1, x2, y1, y2) {
 		const box = element.getBBox();
 		element.setAttribute('x', round_coordinate(x1 + (x2 - x1) / 2 - box.width / 2));
 		element.setAttribute('y', round_coordinate(y1 + (y2 - y1) / 2 + box.height / 2));
