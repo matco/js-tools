@@ -43,7 +43,7 @@ export class Timeframe {
 		return this.surround(timeframe.startDate) || this.surround(timeframe.stopDate) || timeframe.surround(this.startDate);
 	}
 	toString() {
-		return this.startDate + ' - ' + this.stopDate;
+		return `${this.startDate} - ${this.stopDate}`;
 	}
 	equals(timeframe) {
 		if (!timeframe) {
