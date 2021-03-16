@@ -11,8 +11,8 @@ export class DBConnector {
 		return new Promise((resolve, reject) => {
 			const version = 1;
 			const request = indexedDB.open(this.name, version);
-			request.addEventListener('upgradeneeded', event => {
-				const db = event.target.result;
+			request.addEventListener('upgradeneeded', () => {
+				const db = request.result;
 				//delete old store
 				if(db.objectStoreNames.contains(this.name)) {
 					db.deleteObjectStore(this.name);
@@ -21,15 +21,15 @@ export class DBConnector {
 				db.createObjectStore(this.name, {keyPath: this.keypath});
 			});
 			//onsuccess is called after onupgradeneeded
-			request.addEventListener('success', event => {
+			request.addEventListener('success', () => {
 				//store handle to database
-				this.database = event.target.result;
+				this.database = request.result;
 				//add error handler directly to the db to catch all errors
-				this.database.addEventListener('error', event => {
-					reject(`Uncaught general error with database ${this.name}: ${event.target.error}`);
+				this.database.addEventListener('error', () => {
+					reject(`Uncaught general error with database ${this.name}`);
 				});
-				this.database.addEventListener('abort', event => {
-					reject(`Uncaught abort error with database ${this.name}: ${event.target.error}`);
+				this.database.addEventListener('abort', () => {
+					reject(`Uncaught abort error with database ${this.name}`);
 				});
 				resolve(this.database);
 			});
@@ -66,18 +66,18 @@ export class DBConnector {
 			}
 			//start transaction
 			const transaction = this.database.transaction([this.name], 'readwrite');
-			transaction.addEventListener('error', event => {
-				reject(`Error with transaction while adding item ${item[this.keypath]} in database ${this.name}: ${event.target.error}`);
+			transaction.addEventListener('error', () => {
+				reject(`Error with transaction while adding item ${item[this.keypath]} in database ${this.name}: ${transaction.error}`);
 			});
-			transaction.addEventListener('abort', event => {
-				reject(`Transaction aborted while adding item ${item[this.keypath]} in database ${this.name}: ${event.target.error}`);
+			transaction.addEventListener('abort', () => {
+				reject(`Transaction aborted while adding item ${item[this.keypath]} in database ${this.name}: ${transaction.error}`);
 			});
 			//retrieve store
 			const store = transaction.objectStore(this.name);
 			//do request
 			const request = store.put(item);
-			request.addEventListener('error', event => {
-				reject(`Error with request while adding item ${item[this.keypath]} in database ${this.name}: ${event.target.error}`);
+			request.addEventListener('error', () => {
+				reject(`Error with request while adding item ${item[this.keypath]} in database ${this.name}: ${transaction.error}`);
 			});
 			request.addEventListener('success', resolve);
 		});
@@ -92,21 +92,21 @@ export class DBConnector {
 			}
 			//start transaction
 			const transaction = this.database.transaction([this.name]);
-			transaction.addEventListener('error', event => {
-				reject(`Error with transaction while retrieving item ${key} in database ${this.name}: ${event.target.error}`);
+			transaction.addEventListener('error', () => {
+				reject(`Error with transaction while retrieving item ${key} in database ${this.name}: ${transaction.error}`);
 			});
-			transaction.addEventListener('abort', event => {
-				reject(`Transaction aborted while retrieving item ${key} in database ${this.name}: ${event.target.error}`);
+			transaction.addEventListener('abort', () => {
+				reject(`Transaction aborted while retrieving item ${key} in database ${this.name}: ${transaction.error}`);
 			});
 			//retrieve store
 			const store = transaction.objectStore(this.name);
 			//do request
 			const request = store.get(key);
-			request.addEventListener('error', event => {
-				reject(`Error with request while retrieving item ${key} in database ${this.name}: ${event.target.error}`);
+			request.addEventListener('error', () => {
+				reject(`Error with request while retrieving item ${key} in database ${this.name}: ${transaction.error}`);
 			});
-			request.addEventListener('success', event => {
-				resolve(event.target.result);
+			request.addEventListener('success', () => {
+				resolve(request.result);
 			});
 		});
 	}
@@ -117,21 +117,21 @@ export class DBConnector {
 			}
 			//start transaction
 			const transaction = this.database.transaction([this.name]);
-			transaction.addEventListener('error', event => {
-				reject(`Error with transaction while retrieving all items from database ${this.name}: ${event.target.error}`);
+			transaction.addEventListener('error', () => {
+				reject(`Error with transaction while retrieving all items from database ${this.name}: ${transaction.error}`);
 			});
-			transaction.addEventListener('abort', event => {
-				reject(`Transaction aborted while retrieving all items from database ${this.name}: ${event.target.error}`);
+			transaction.addEventListener('abort', () => {
+				reject(`Transaction aborted while retrieving all items from database ${this.name}: ${transaction.error}`);
 			});
 			//retrieve store
 			const store = transaction.objectStore(this.name);
 			//do request
 			const request = store.getAll();
-			request.addEventListener('error', event => {
-				reject(`Error with request while retrieving all items from database ${this.name}: ${event.target.error}`);
+			request.addEventListener('error', () => {
+				reject(`Error with request while retrieving all items from database ${this.name}: ${transaction.error}`);
 			});
-			request.addEventListener('success', event => {
-				resolve(event.target.result);
+			request.addEventListener('success', () => {
+				resolve(request.result);
 			});
 		});
 	}
@@ -148,21 +148,21 @@ export class DBConnector {
 			}
 			//start transaction
 			const transaction = this.database.transaction([this.name], 'readwrite');
-			transaction.addEventListener('error', event => {
-				reject(`Error with transaction while removing item ${key} in database ${this.name}: ${event.target.error}`);
+			transaction.addEventListener('error', () => {
+				reject(`Error with transaction while removing item ${key} in database ${this.name}: ${transaction.error}`);
 			});
-			transaction.addEventListener('abort', event => {
-				reject(`Transaction aborted while removing item ${key} in database ${this.name}: ${event.target.error}`);
+			transaction.addEventListener('abort', () => {
+				reject(`Transaction aborted while removing item ${key} in database ${this.name}: ${transaction.error}`);
 			});
 			//retrieve store
 			const store = transaction.objectStore(this.name);
 			//do request
 			const request = store.delete(key);
-			request.addEventListener('error', event => {
-				reject(`Error with request while removing item ${key} in database ${this.name}: ${event.target.error}`);
+			request.addEventListener('error', () => {
+				reject(`Error with request while removing item ${key} in database ${this.name}: ${transaction.error}`);
 			});
-			request.addEventListener('success', event => {
-				resolve(event.target.result);
+			request.addEventListener('success', () => {
+				resolve(request.result);
 			});
 		});
 	}
