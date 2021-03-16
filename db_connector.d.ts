@@ -1,8 +1,9 @@
 export class DBConnector<T> {
 	constructor(name: string, keypath: string)
 	isOpen(): boolean
-	open(): Promise<DBConnector>
+	open(): Promise<IDBDatabase>
 	drop(): Promise<Event>
+	getCursor(): IDBRequest;
 	add(item: T): Promise<Event>
 	addAll(items: Array<T>): Promise<Array<Event>>
 	add(): Promise<Event>

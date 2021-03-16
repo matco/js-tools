@@ -26,10 +26,10 @@ export class DBConnector {
 				this.database = event.target.result;
 				//add error handler directly to the db to catch all errors
 				this.database.addEventListener('error', event => {
-					reject(`Uncaught general error with database ${this.name}: ${event.target.errorCode}`);
+					reject(`Uncaught general error with database ${this.name}: ${event.target.error}`);
 				});
 				this.database.addEventListener('abort', event => {
-					reject(`Uncaught abort error with database ${this.name}: ${event.target.errorCode}`);
+					reject(`Uncaught abort error with database ${this.name}: ${event.target.error}`);
 				});
 				resolve(this.database);
 			});
@@ -51,6 +51,14 @@ export class DBConnector {
 			request.addEventListener('success', resolve);
 		});
 	}
+	getCursor() {
+		//start transaction
+		const transaction = this.database.transaction([this.name], 'readwrite');
+		//retrieve store
+		const store = transaction.objectStore(this.name);
+		//do request
+		return store.openCursor();
+	}
 	add(item) {
 		return new Promise((resolve, reject) => {
 			if(!this.isOpen()) {
@@ -59,17 +67,17 @@ export class DBConnector {
 			//start transaction
 			const transaction = this.database.transaction([this.name], 'readwrite');
 			transaction.addEventListener('error', event => {
-				reject(`Error with transaction while adding item ${item[this.keypath]} in database ${this.name}: ${event.target.errorCode}`);
+				reject(`Error with transaction while adding item ${item[this.keypath]} in database ${this.name}: ${event.target.error}`);
 			});
 			transaction.addEventListener('abort', event => {
-				reject(`Transaction aborted while adding item ${item[this.keypath]} in database ${this.name}: ${event.target.errorCode}`);
+				reject(`Transaction aborted while adding item ${item[this.keypath]} in database ${this.name}: ${event.target.error}`);
 			});
 			//retrieve store
 			const store = transaction.objectStore(this.name);
 			//do request
 			const request = store.put(item);
 			request.addEventListener('error', event => {
-				reject(`Error with request while adding item ${item[this.keypath]} in database ${this.name}: ${event.target.errorCode}`);
+				reject(`Error with request while adding item ${item[this.keypath]} in database ${this.name}: ${event.target.error}`);
 			});
 			request.addEventListener('success', resolve);
 		});
@@ -85,17 +93,17 @@ export class DBConnector {
 			//start transaction
 			const transaction = this.database.transaction([this.name]);
 			transaction.addEventListener('error', event => {
-				reject(`Error with transaction while retrieving item ${key} in database ${this.name}: ${event.target.errorCode}`);
+				reject(`Error with transaction while retrieving item ${key} in database ${this.name}: ${event.target.error}`);
 			});
 			transaction.addEventListener('abort', event => {
-				reject(`Transaction aborted while retrieving item ${key} in database ${this.name}: ${event.target.errorCode}`);
+				reject(`Transaction aborted while retrieving item ${key} in database ${this.name}: ${event.target.error}`);
 			});
 			//retrieve store
 			const store = transaction.objectStore(this.name);
 			//do request
 			const request = store.get(key);
 			request.addEventListener('error', event => {
-				reject(`Error with request while retrieving item ${key} in database ${this.name}: ${event.target.errorCode}`);
+				reject(`Error with request while retrieving item ${key} in database ${this.name}: ${event.target.error}`);
 			});
 			request.addEventListener('success', event => {
 				resolve(event.target.result);
@@ -110,17 +118,17 @@ export class DBConnector {
 			//start transaction
 			const transaction = this.database.transaction([this.name]);
 			transaction.addEventListener('error', event => {
-				reject(`Error with transaction while retrieving all items from database ${this.name}: ${event.target.errorCode}`);
+				reject(`Error with transaction while retrieving all items from database ${this.name}: ${event.target.error}`);
 			});
 			transaction.addEventListener('abort', event => {
-				reject(`Transaction aborted while retrieving all items from database ${this.name}: ${event.target.errorCode}`);
+				reject(`Transaction aborted while retrieving all items from database ${this.name}: ${event.target.error}`);
 			});
 			//retrieve store
 			const store = transaction.objectStore(this.name);
 			//do request
 			const request = store.getAll();
 			request.addEventListener('error', event => {
-				reject(`Error with request while retrieving all items from database ${this.name}: ${event.target.errorCode}`);
+				reject(`Error with request while retrieving all items from database ${this.name}: ${event.target.error}`);
 			});
 			request.addEventListener('success', event => {
 				resolve(event.target.result);
@@ -141,17 +149,17 @@ export class DBConnector {
 			//start transaction
 			const transaction = this.database.transaction([this.name], 'readwrite');
 			transaction.addEventListener('error', event => {
-				reject(`Error with transaction while removing item ${key} in database ${this.name}: ${event.target.errorCode}`);
+				reject(`Error with transaction while removing item ${key} in database ${this.name}: ${event.target.error}`);
 			});
 			transaction.addEventListener('abort', event => {
-				reject(`Transaction aborted while removing item ${key} in database ${this.name}: ${event.target.errorCode}`);
+				reject(`Transaction aborted while removing item ${key} in database ${this.name}: ${event.target.error}`);
 			});
 			//retrieve store
 			const store = transaction.objectStore(this.name);
 			//do request
 			const request = store.delete(key);
 			request.addEventListener('error', event => {
-				reject(`Error with request while removing item ${key} in database ${this.name}: ${event.target.errorCode}`);
+				reject(`Error with request while removing item ${key} in database ${this.name}: ${event.target.error}`);
 			});
 			request.addEventListener('success', event => {
 				resolve(event.target.result);
