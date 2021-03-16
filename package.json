@@ -2,6 +2,9 @@
 	"name": "js-tools",
 	"description": "js-tools is a set of tools that will make your life easier when developing Javascript applications",
 	"version": "0.0.1",
+	"scripts": {
+		"lint": "eslint ."
+	},
 	"keywords": [],
 	"author": {
 		"name": "Matthieu Corageoud",
@@ -15,7 +18,11 @@
 	"bugs": {
 		"url": "https://github.com/matco/js-tools/issues"
 	},
-	"scripts": {},
-	"dependencies": {},
-	"devDependencies": {}
+	"devDependencies": {
+		"@babel/core": "^7.13.1",
+		"@babel/eslint-parser": "^7.13.4",
+		"@babel/plugin-proposal-class-properties": "^7.13.0",
+		"eslint": "^7.22.0",
+		"eslint-plugin-jsdoc": "^32.2.0"
+	}
 }
