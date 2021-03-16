@@ -29,19 +29,20 @@ function round_dimension(dimension) {
 }
 
 export const SVG = {
-	Create: function(width, height, properties) {
+	Create: function(properties) {
 		const svg = document.createElementNS(SVG.Namespaces.SVG, 'svg');
 		append_xhtml_properties(svg, {
 			version: '1.2',
 			xmlns: SVG.Namespaces.SVG,
-			'xmlns:xhtml': SVG.Namespaces.XHTML,
-			width: `${width}px`,
-			height: `${height}px`
+			'xmlns:xhtml': SVG.Namespaces.XHTML
 		});
 		return append_xhtml_properties(svg, properties);
 	},
 	Element: function(tag, properties) {
 		return append_properties(document.createElementNS(SVG.Namespaces.SVG, tag), properties);
+	},
+	Group: function(properties) {
+		return SVG.Element('g', properties);
 	},
 	Rectangle: function(x, y, width, height, properties) {
 		return append_properties(SVG.Element('rect', {
@@ -109,7 +110,7 @@ export const SVG = {
 			tspan.textContent = line.join(' ');
 			//check if text is too long
 			//a single word line must necessary fit in one line
-			//otherwise, that means that a single word alone can not fit in specified width and will create a infinite loop
+			//otherwise, that means that a single word alone cannot fit in specified width and will create a infinite loop
 			if(line.length > 1 && tspan.getComputedTextLength() > width) {
 				//remove last word and close line
 				line.pop();
