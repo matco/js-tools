@@ -1,27 +1,3 @@
-function create_data_transfer() {
-	let data = {};
-	return {
-		getData: function(key) {
-			return data[key];
-		},
-		setData: function(key, value) {
-			data[key] = value;
-			this.types.push(key);
-		},
-		clearData: function() {
-			data = {};
-			this.types = [];
-		},
-		types: [],
-		setDragImage: function() {
-			//parameters should be image, x and y
-			//not implemented
-		},
-		effectAllowed: undefined,
-		dropEffect: undefined
-	};
-}
-
 function trigger_change(element) {
 	const change = new UIEvent('change', {bubbles: true, cancelable: true});
 	element.dispatchEvent(change);
@@ -47,6 +23,25 @@ function trigger_keyup(element, key) {
 	element.dispatchEvent(keydown);
 }
 
+function mouse_event_properties(window, element) {
+	const properties = {
+		view: window,
+		bubbles: true,
+		cancelable: true,
+		detail: 1
+	};
+	//try to put the event at the right position
+	//this may not always been possible if the element does not appear on screen (due to a scroll for example)
+	const rect = element.getBoundingClientRect();
+	if(rect.x > 0) {
+		properties.clientX = rect.x;
+	}
+	if(rect.y > 0) {
+		properties.clientY = rect.y;
+	}
+	return properties;
+}
+
 export class Driver {
 	constructor(win, doc) {
 		this.window = win || window;
@@ -70,7 +65,7 @@ export class Driver {
 				//try to find element
 				const element = this.document.querySelector(selector);
 				if(!element) {
-					this.throwError('No element match selector ' + selector);
+					this.throwError(`No element match selector ${selector}`);
 				}
 				resolve(element);
 			}
@@ -91,7 +86,7 @@ export class Driver {
 				//do advanced check that takes more time but is reliable
 				const style = this.window.getComputedStyle(element);
 				if(style.display === 'none') {
-					this.throwError('Element is not visible ' + selector);
+					this.throwError(`Element is not visible ${selector}`);
 				}
 			}
 		}
@@ -105,6 +100,10 @@ export class Driver {
 		const element = await this.get(selector);
 		const children = element.children;
 		return children.find(c => c.textContent === text) || children.find(async c => await this.getByText(c, text));
+	}
+	async getTextContent(selector) {
+		const element = await this.get(selector);
+		return element.textContent;
 	}
 	async getValue(selector) {
 		const element = await this.get(selector);
@@ -128,60 +127,46 @@ export class Driver {
 		const element = await this.get(selector);
 		element.focus();
 	}
+	/**
+	 * @param {string|HTMLElement} selector - The HTML element (or a string selector) to click
+	 * @param {object} [options] - The options used to retrieve the HTML element is a selector is used
+	 */
 	async click(selector, options) {
 		const element = await this.get(selector, options);
 		element.focus();
-		const click = new MouseEvent('click', {view: this.window, bubbles: true, cancelable: true, detail: 1});
+		const click = new MouseEvent('click', mouse_event_properties(this.window, element));
 		element.dispatchEvent(click);
 	}
 	async doubleClick(selector) {
 		const element = await this.get(selector);
-		const dblclick = new MouseEvent('dblclick', {view: this.window, bubbles: true, cancelable: true, detail: 1});
+		const dblclick = new MouseEvent('dblclick', mouse_event_properties(this.window, element));
 		element.dispatchEvent(dblclick);
 	}
-	async rightClick(selector) {
+	async contextMenu(selector) {
 		const element = await this.get(selector);
-		const contextmenu = new MouseEvent('contextmenu', {view: this.window, bubbles: true, cancelable: true, detail: 1});
+		const contextmenu = new MouseEvent('contextmenu', mouse_event_properties(this.window, element));
 		element.dispatchEvent(contextmenu);
 	}
 	async dragAndDrop(draggable_selector, droppable_selector) {
 		const draggable = await this.get(draggable_selector);
 		const droppable = await this.get(droppable_selector);
-		const data_transfer = create_data_transfer();
+		const data_transfer = new DataTransfer();
 
-		const dragstart = new MouseEvent('DragEvent');
+		const dragstart = new DragEvent('DragEvent', {dataTransfer: data_transfer});
 		dragstart.initEvent('dragstart', true, true);
-		dragstart.dataTransfer = data_transfer;
 		draggable.dispatchEvent(dragstart);
 
-		const dragenter = new MouseEvent('DragEvent');
+		const dragenter = new DragEvent('DragEvent', {dataTransfer: data_transfer});
 		dragenter.initEvent('dragenter', true, true);
-		dragenter.dataTransfer = data_transfer;
 		droppable.dispatchEvent(dragenter);
 
-		const drop = new MouseEvent('DragEvent');
+		const drop = new DragEvent('DragEvent', {dataTransfer: data_transfer});
 		drop.initEvent('drop', true, true);
-		drop.dataTransfer = data_transfer;
 		droppable.dispatchEvent(drop);
 
-		const dragend = new MouseEvent('DragEvent');
+		const dragend = new DragEvent('DragEvent', {dataTransfer: data_transfer});
 		dragend.initEvent('dragend', true, true);
-		dragend.dataTransfer = data_transfer;
 		draggable.dispatchEvent(dragend);
-
-		//TODO use following code as soon as possible
-		/*var dragstart_event = new DragEvent('dragstart');
-		console.log(dragstart_event.dataTransfer);
-		draggable.dispatchEvent(dragstart_event);
-
-		var dragenter_event = new DragEvent('dragenter');
-		droppable.dispatchEvent(dragenter_event);
-
-		var drop_event = new DragEvent('drop');
-		droppable.dispatchEvent(drop_event);
-
-		var dragend_event = new DragEvent('dragend');
-		draggable.dispatchEvent(dragend_event);*/
 	}
 	//forms
 	async type(selector, value) {
@@ -213,6 +198,10 @@ export class Driver {
 	//you can also send other keys such as "Escape", "F2", "PageDown"
 	//a valid sequence is ['a', 'Escape', 'q', '5', 'PageDown']
 	//this code does not manage modifier keys (such as "Ctrl", "Alt" or "Shift") and only set the key property of the event (and not the code property)
+	/**
+	 * @param {Array<string>} sequence - An array of key to press (see https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/key)
+	 * @param {string|HTMLElement} [selector] - The HTML element (or a string selector) where the keys will be pressed
+	 */
 	async press(sequence, selector) {
 		//keys are usually sent on the whole document element
 		const element = selector ? await this.get(selector) : this.document;
@@ -222,6 +211,10 @@ export class Driver {
 			trigger_keyup(element, k);
 		});
 	}
+	/**
+	 * @param {number} [time=100] - Time to wait in milliseconds
+	 * @returns {Promise} - A promise that resolves after the specified time
+	 */
 	async wait(time) {
 		return new Promise(resolve => {
 			const timeout = time || 100;
