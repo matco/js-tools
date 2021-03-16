@@ -1,5 +1,5 @@
 interface ObjectConstructor {
-	isObject(object: any): boolean;
+	isObject(object: any): object is {};
 	isEmpty(object: object): boolean;
 	equals(object1: any, object2: any): boolean;
 	key(object: object, value: any): any;
@@ -9,11 +9,11 @@ interface ObjectConstructor {
 }
 
 interface FunctionConstructor {
-	isFunction(f: any): boolean;
+	isFunction(object: any): object is Function;
 }
 
 interface StringConstructor {
-	isString(n: any): boolean;
+	isString(object: any): object is string;
 }
 
 interface String {
@@ -22,6 +22,7 @@ interface String {
 	nocaseIncludes(string: string): boolean;
 	compareTo(string: string): number;
 	replaceObject(object: {[key: string]: any}): string;
+	interpolate(object: {[key: string]: any}): string;
 	getBytes(): Array<number>;
 }
 
@@ -30,7 +31,7 @@ interface Boolean {
 }
 
 interface NumberConstructor {
-	isNumber(n: any): boolean;
+	isNumber(object: any): object is number;
 }
 
 interface Number {
@@ -59,7 +60,7 @@ interface Array<T> {
 }
 
 interface DateConstructor {
-	isDate(object: any): boolean;
+	isDate(object: any): object is Date;
 	isValidDate(object: any): boolean;
 	getDifferenceInDays(start: Date, stop: Date): number;
 	getDifferenceInHours(start: Date, stop: Date): number;

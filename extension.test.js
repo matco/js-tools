@@ -1,5 +1,7 @@
 /*eslint no-new-wrappers: "off"*/
 
+import './extension.js';
+
 export default function test(assert) {
 	assert.begin();
 
@@ -104,12 +106,8 @@ export default function test(assert) {
 		assert.equal(Object.key({titi: 'tutu'}, 'tutu'), 'titi', 'Key for a string value is the right key');
 		assert.equal(Object.key({titi: 42}, 42), 'titi', 'Key for a number value is the right key');
 		assert.doesThrow(
-			function() {
-				Object.key({titi: 'tutu'}, 'toto');
-			},
-			function() {
-				return this.message === 'Object does not contains value';
-			},
+			() => Object.key({titi: 'tutu'}, 'toto'),
+			e => e.message === 'Object does not contains value',
 			'Asking key for a non existing value throws an exception'
 		);
 
@@ -118,12 +116,8 @@ export default function test(assert) {
 
 		assert.equal(Object.key(object, embedded_object), 'titi', 'Key for an object value is the right key');
 		assert.doesThrow(
-			function() {
-				Object.key(object, {mama: 'momo', mimi: 'mumu'});
-			},
-			function() {
-				return this.message === 'Object does not contains value';
-			},
+			() => Object.key(object, {mama: 'momo', mimi: 'mumu'}),
+			e => e.message === 'Object does not contains value',
 			'Asking key for a similar value throws an exception'
 		);
 	})();
@@ -146,7 +140,7 @@ export default function test(assert) {
 			name: 'Migros',
 			category: 'Supermarket',
 			label: function() {
-				return this.category + ' ' + this.name;
+				return `${this.category} ${this.name}`;
 			}
 		};
 		const main_street = {
@@ -206,7 +200,6 @@ export default function test(assert) {
 		assert.notOk(Function.isFunction(not_func), 'A string is not a function');
 		assert.ok(Function.isFunction(not_func.toString), 'toString method of string is a function');
 		assert.ok(Function.isFunction(func.constructor), 'Function constructor is a function');
-		assert.notOk(Function.isFunction(String.capitalize), 'Static capitalize property of String is not a function');
 		assert.ok(Function.isFunction(String.prototype.capitalize), 'capitalize method of String prototype is a function');
 		assert.notOk(Function.isFunction({}), 'Empty object is not a function');
 		assert.notOk(Function.isFunction([]), 'Empty array is not a function');
@@ -269,15 +262,15 @@ export default function test(assert) {
 		'Cool characters : $, { or } or even {}.',
 		'ReplaceObject works with any character');
 	assert.equal(
-		'Welcome ${person.firstame} ${person.lastname} or ${surname}'.replaceObject({'person': {firstame: 'John', lastname: 'Doe'}, 'surname': 'Jdo'}),
+		'Welcome ${person.firstname} ${person.lastname} or ${surname}'.replaceObject({'person': {firstname: 'John', lastname: 'Doe'}, 'surname': 'Jdo'}),
 		'Welcome John Doe or Jdo',
 		'ReplaceObject fill blanks with object path');
 	assert.equal(
-		'Welcome ${person.firstame.reverse} ${person.lastname.reverse} or ${surname.reverse}'.replaceObject({'person': {firstame: 'John', lastname: 'Doe'}, 'surname': 'Jdo'}),
+		'Welcome ${person.firstname.reverse} ${person.lastname.reverse} or ${surname.reverse}'.replaceObject({'person': {firstname: 'John', lastname: 'Doe'}, 'surname': 'Jdo'}),
 		'Welcome nhoJ eoD or odJ',
 		'ReplaceObject fill blanks with object path containing a method');
 	assert.equal(
-		'Welcome ${person.firstame.reverse.reverse}'.replaceObject({'person': {firstame: 'John'}}),
+		'Welcome ${person.firstname.reverse.reverse}'.replaceObject({'person': {firstname: 'John'}}),
 		'Welcome John',
 		'ReplaceObject fill blanks with object path containing a chain of methods');
 
@@ -526,7 +519,7 @@ export default function test(assert) {
 		//parseToDisplay
 		assert.equal(Date.parseToDisplay('25.01.2009').getTime(), new Date('2009/01/25').getTime(), 'Parsing date "25.01.2009" gives the good date');
 		assert.equal(Date.parseToDisplay('5.2.2009').getTime(), new Date('2009/2/5').getTime(), 'Parsing date "5.2.2009" gives the good date');
-		assert.notOk(Date.isValidDate(Date.parseToDisplay('25.01.09')), 'Incomplete date "25.01.09" can not be parsed');
+		assert.notOk(Date.isValidDate(Date.parseToDisplay('25.01.09')), 'Incomplete date "25.01.09" cannot be parsed');
 		const date = Date.parseToDisplay('33.01.2009');
 		assert.ok(!Date.isValidDate(date) || date.getTime() === new Date('2009/02/02').getTime(), 'Parsing date "33.01.2009" gives date [2009/02/02] for some browsers and gives an invalid date for others browsers');
 
@@ -534,7 +527,7 @@ export default function test(assert) {
 		assert.equal(Date.parseToFullDisplay('25.01.2009 22:38:46').getTime(), new Date(2009, 0, 25, 22, 38, 46).getTime(), 'Parsing date "25.01.2009 22:38:46" gives the good date');
 		assert.equal(Date.parseToFullDisplay('25.01.2009 22:62:46').getTime(), new Date(2009, 0, 25, 23, 2, 46).getTime(), 'Parsing date "25.01.2009 22:62:46" gives the good date');
 		assert.equal(Date.parseToFullDisplay('25.01.2009 2:6:4').getTime(), new Date(2009, 0, 25, 2, 6, 4).getTime(), 'Parsing date "25.01.2009 2:6:4" gives the good date');
-		assert.notOk(Date.isValidDate(Date.parseToFullDisplay('25.01.09 2:6:4')), 'Incomplete date "25.01.09 2:6:4" can not be parsed');
+		assert.notOk(Date.isValidDate(Date.parseToFullDisplay('25.01.09 2:6:4')), 'Incomplete date "25.01.09 2:6:4" cannot be parsed');
 
 		//parseToFullDisplayUTC
 		assert.equal(Date.parseToFullDisplayUTC('25.01.2009 22:38:46').getTime(), new Date(Date.UTC(2009, 0, 25, 22, 38, 46)).getTime(), 'Parsing date "25.01.2009 22:38:46" gives the good date');

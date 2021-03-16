@@ -1,6 +1,7 @@
 //Object
 //helpers
 if(!Object.isObject) {
+	//@ts-ignore
 	Object.isObject = function(object) {
 		return Object.prototype.toString.call(object) === '[object Object]';
 	};
@@ -104,6 +105,7 @@ if(!Object.getLastObjectInPath) {
 //Function
 //helpers
 if(!Function.isFunction) {
+	//@ts-ignore
 	Function.isFunction = function(object) {
 		return {}.toString.call(object) === '[object Function]';
 	};
@@ -112,9 +114,10 @@ if(!Function.isFunction) {
 //String
 //helpers
 if(!String.isString) {
-	String.isString = function(object) {
+	//@ts-ignore
+	String.isString = function(value) {
 		//return toString.call(object) === '[object String]';
-		return typeof(object) === 'string';
+		return typeof(value) === 'string';
 	};
 }
 //prototypes
@@ -134,6 +137,11 @@ String.prototype.replaceObject = function(object) {
 	return this.replace(/\$\{([A-Za-z._]+)\}/g, function(match, path) {
 		return Object.getObjectPathValue(object, path);
 	});
+};
+String.prototype.interpolate = function(parameters) {
+	const names = Object.keys(parameters);
+	const values = Object.values(parameters);
+	return new Function(...names, `return \`${this}\`;`)(...values);
 };
 String.prototype.getBytes = function() {
 	const bytes = [];
@@ -155,6 +163,7 @@ Boolean.prototype.compareTo = function(otherBoolean) {
 //Number
 //helpers
 if(!Number.isNumber) {
+	//@ts-ignore
 	Number.isNumber = function isNumber(object) {
 		return !isNaN(parseFloat(object)) && isFinite(object);
 	};
@@ -223,6 +232,7 @@ Array.prototype.replace = function(oldElement, newElement) {
 //Date
 //helpers
 if(!Date.isDate) {
+	//@ts-ignore
 	Date.isDate = function(object) {
 		return Object.prototype.toString.call(object) === '[object Date]';
 	};
