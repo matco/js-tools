@@ -19,7 +19,7 @@ export class Loader {
 		full_url += url;
 		//append timestamp at the end of the url to avoid cache if required
 		if(this.nocache) {
-			full_url += '?' + new Date().getTime();
+			full_url += `?${new Date().getTime()}`;
 		}
 		return full_url;
 	}
@@ -28,7 +28,7 @@ export class Loader {
 		const that = this;
 		return new Promise(function(resolve, reject) {
 			//check javascript has not already been included
-			if(!that.document.head.querySelector('script[type="' + type + '"][src^="' + js_url + '"]')) {
+			if(!that.document.head.querySelector(`script[type="${type}"][src^="${js_url}"]`)) {
 				//create script element
 				const script = that.document.createElement('script');
 				script.setAttribute('type', type);
@@ -59,7 +59,7 @@ export class Loader {
 		const that = this;
 		return new Promise(function(resolve, reject) {
 			//check library has not already been included
-			if(!that.document.head.querySelector('link[type="text/css"][href^="' + css_url + '"]')) {
+			if(!that.document.head.querySelector(`link[type="text/css"][href^="${css_url}"]`)) {
 				//create link element
 				const link = that.document.createElement('link');
 				link.setAttribute('type', 'text/css');
@@ -81,11 +81,11 @@ export class Loader {
 			const xhr = new XMLHttpRequest();
 			xhr.addEventListener(
 				'load',
-				function(event) {
-					if(event.target.status === 200) {
-						const node = that.document.importNode(event.target.response.body.firstElementChild, true);
+				function() {
+					if(this.status === 200) {
+						const node = that.document.importNode(this.response.body.firstElementChild, true);
 						container.appendChild(node);
-						resolve();
+						resolve(node);
 					}
 					else {
 						reject();
@@ -105,9 +105,9 @@ export class Loader {
 			const xhr = new XMLHttpRequest();
 			xhr.addEventListener(
 				'load',
-				function(event) {
-					if(event.target.status === 200) {
-						const node = that.document.importNode(event.target.response.head.firstElementChild, true);
+				function() {
+					if(this.status === 200) {
+						const node = that.document.importNode(this.response.head.firstElementChild, true);
 						container.appendChild(node);
 						resolve();
 					}

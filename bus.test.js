@@ -1,3 +1,5 @@
+import './extension.js';
+
 import {Bus, BusEvent} from './bus.js';
 
 export default function test(assert) {
@@ -36,7 +38,7 @@ export default function test(assert) {
 			this.volume = volume;
 		}
 		getCallbacks() {
-			return ['onBeep' + this.type.capitalize(), 'onBeep'];
+			return [`onBeep${this.type.capitalize()}`, 'onBeep'];
 		}
 	}
 

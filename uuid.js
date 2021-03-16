@@ -4,6 +4,6 @@ function s4() {
 
 export const UUID = {
 	Generate: function() {
-		return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4();
+		return `${s4() + s4()}-${s4()}-${s4()}-${s4()}-${s4()}${s4()}${s4()}`;
 	}
 };

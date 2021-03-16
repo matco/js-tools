@@ -53,8 +53,8 @@ export default function test(assert) {
 		const xhr = new XMLHttpRequest();
 		xhr.addEventListener(
 			'load',
-			function(event) {
-				const config = event.target.response;
+			function() {
+				const config = this.response;
 				let compressed_config, uncompressed_config;
 
 				compressed_config = LZW.Compress(config);
@@ -77,8 +77,8 @@ export default function test(assert) {
 		const xhr = new XMLHttpRequest();
 		xhr.addEventListener(
 			'load',
-			function(event) {
-				const config = event.target.response;
+			function() {
+				const config = this.response;
 				let compressed_config, uncompressed_config;
 
 				compressed_config = LZW.Compress(config);

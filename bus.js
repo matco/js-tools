@@ -1,3 +1,5 @@
+import './extension.js';
+
 const awaiting_events = [];
 
 class Bus {
@@ -21,7 +23,7 @@ class Bus {
 		this.locked = false;
 	}
 	reset() {
-		this.listeners.length = 0;
+		this.listeners = [];
 	}
 	register(listener) {
 		if(!this.locked) {
@@ -52,9 +54,7 @@ class Bus {
 			else {
 				awaiting_events.push(event);
 			}
-			if(this.onEvent) {
-				this.onEvent(event);
-			}
+			this.onEvent?.call(undefined, event);
 		}
 	}
 }
@@ -62,15 +62,16 @@ class Bus {
 class BusEvent {
 	constructor() {
 	}
+	//get list of callback method names for the event
+	/**
+	 * @returns {string[]} - A list of method names that will be called on the listener
+	 * @abstract
+	 */
 	getCallbacks() {
-		return [];
+		throw new Error(`getCallbacks() is not implemented for ${this.constructor.name}`);
 	}
 	hit(listener) {
-		const callbacks = this.getCallbacks();
-		if(!callbacks && callbacks.isEmpty()) {
-			throw new Error('Bus event must describe callbacks');
-		}
-		callbacks.filter(c => !!listener[c]).forEach(c => listener[c].call(listener, this));
+		this.getCallbacks().forEach(c => listener[c]?.call(listener, this));
 	}
 }
 
