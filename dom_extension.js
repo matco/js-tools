@@ -39,9 +39,9 @@ Node.prototype.appendChildren = function(children) {
 
 //Element
 Element.prototype.empty = function(selector) {
-	let children = this.children.slice();
+	let children = this.childNodes.slice();
 	if(selector) {
-		children = children.filter(c => c.matches(selector));
+		children = children.filter(c => c.nodeType === Node.ELEMENT_NODE && /**@type {HTMLElement}*/ (c).matches(selector));
 	}
 	children.forEach(c => this.removeChild(c));
 	//allow chain
