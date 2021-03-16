@@ -1,5 +1,7 @@
 export class Timeframe {
-	constructor(startDate: Date, stopDate: Date)
+	constructor(startDate?: Date, stopDate?: Date)
+	startDate: Date
+	stopDate: Date
 	isInfinite(): boolean
 	isStaked(): boolean
 	getDays(): number
