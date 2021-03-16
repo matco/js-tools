@@ -12,13 +12,13 @@ export default function test(assert) {
 		div.appendChild(document.createElement('span'));
 		div.appendChild(document.createTextNode('hop'));
 		assert.equal(div.childNodes.length, 3, 'There is 3 child nodes in newly created container');
-		div.clear();
+		div.empty();
 		assert.equal(div.childNodes.length, 0, 'There is 0 child node in container after it has been cleared');
 
 		//add text node
 		div.appendChild(document.createTextNode('hop'));
 		assert.equal(div.childNodes.length, 1, 'There is 1 child text node in container');
-		div.clear();
+		div.empty();
 		assert.equal(div.childNodes.length, 0, 'There is 0 child text node in container after it has been cleared');
 	})();
 

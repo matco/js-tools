@@ -18,7 +18,7 @@ import './extension.js';
 
 //DOM
 //Node
-Node.prototype.clear = function() {
+Node.prototype.empty = function() {
 	while(this.firstChild) {
 		this.removeChild(this.firstChild);
 	}
@@ -38,10 +38,10 @@ Node.prototype.appendChildren = function(children) {
 };*/
 
 //Element
-Element.prototype.clear = function(selector) {
-	let children = this.childNodes.slice();
+Element.prototype.empty = function(selector) {
+	let children = this.children.slice();
 	if(selector) {
-		children = children.filter(c => c.nodeType === Node.ELEMENT_NODE && c.matches(selector));
+		children = children.filter(c => c.matches(selector));
 	}
 	children.forEach(c => this.removeChild(c));
 	//allow chain
