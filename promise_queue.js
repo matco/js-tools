@@ -1,3 +1,5 @@
+import './extension.js';
+
 export class PromiseQueue {
 	constructor(result_callback) {
 		this.promises = [];
@@ -31,13 +33,13 @@ export class PromiseQueue {
 			}
 		}
 	}
-	add(promise) {
-		this.promises.push(promise);
+	add(promiser) {
+		this.promises.push(promiser);
 		this.run();
 		return this;
 	}
-	addAll(promises) {
-		this.promises.pushAll(promises);
+	addAll(promisers) {
+		this.promises.pushAll(promisers);
 		this.run();
 		return this;
 	}
