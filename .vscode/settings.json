@@ -1,0 +1,14 @@
+// Place your settings in this file to overwrite default and user settings.
+{
+	"files.exclude": {
+		"package-lock.json": true,
+		"node_modules": true
+	},
+	"javascript.format.insertSpaceAfterOpeningAndBeforeClosingNonemptyBraces": false,
+	"javascript.format.insertSpaceAfterFunctionKeywordForAnonymousFunctions": false,
+	"javascript.format.insertSpaceAfterKeywordsInControlFlowStatements": false,
+	"typescript.format.insertSpaceAfterOpeningAndBeforeClosingNonemptyBraces": false,
+	"typescript.format.insertSpaceAfterFunctionKeywordForAnonymousFunctions": false,
+	"typescript.format.insertSpaceAfterKeywordsInControlFlowStatements": false,
+	"eslint.lintTask.enable": true
+}
