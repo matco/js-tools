@@ -1,8 +1,8 @@
 import {Assert} from './assert.js';
 
 export class DOMAssert extends Assert {
-	constructor(doc, onsuccess, onfail, onbegin, onend, debug) {
-		super(onsuccess, onfail, onbegin, onend, debug);
+	constructor(doc, onAssert, onSuccess, onFail, onBegin, onEnd, debug) {
+		super(onAssert, onSuccess, onFail, onBegin, onEnd, debug);
 		this.document = doc || document;
 	}
 	get(selector) {
@@ -11,19 +11,19 @@ export class DOMAssert extends Assert {
 	selectContains(selector, value, message) {
 		const element = this.get(selector);
 		if(element.childNodes.find(n => n.getAttribute('value') === value)) {
-			this.success(message || ('Select contains ' + value));
+			this.success(message || (`Select contains ${value}`));
 		}
 		else {
-			this.fail(message || ('Select does not contain ' + value));
+			this.fail(message || (`Select does not contain ${value}`));
 		}
 	}
 	selectNotContains(selector, value, message) {
 		const element = this.get(selector);
 		if(element.childNodes.find(n => n.getAttribute('value') === value)) {
-			this.fail(message || ('Select contains ' + value));
+			this.fail(message || (`Select contains ${value}`));
 		}
 		else {
-			this.success(message || ('Select does not contain ' + value));
+			this.success(message || (`Select does not contain ${value}`));
 		}
 	}
 	hidden(selector, message) {

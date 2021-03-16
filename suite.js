@@ -1,87 +1,47 @@
 import {Bundle} from './bundle.js';
-import {PromiseQueue} from './promisequeue.js';
 
 export class Suite {
-	constructor(name, path, bundles) {
+	constructor(name, path, bundles, runner) {
 		this.name = name;
 		this.path = path;
-		this.bundles = bundles;
-
-		this.began = false;
-		this.times = {};
-		this.counters = {
-			successes: 0,
-			fails: 0
-		};
+		this.bundles = bundles || [];
+		this.runner = runner;
+		this.beginTime = undefined;
+		this.endTime = undefined;
 	}
-	getTests() {
-		return this.counters.successes + this.counters.fails;
+	getAsserts() {
+		return this.bundles.map(b => b.assert).filter(a => a !== undefined);
+	}
+	getTestsNumber() {
+		const asserts = this.getAsserts();
+		return asserts.reduce((previous, assert) => previous + assert.counters.successes + assert.counters.fails, 0);
+	}
+	getSuccessesNumber() {
+		const asserts = this.getAsserts();
+		return asserts.reduce((previous, assert) => previous + assert.counters.successes, 0);
+	}
+	getFailsNumber() {
+		const asserts = this.getAsserts();
+		return asserts.reduce((previous, assert) => previous + assert.counters.fails, 0);
 	}
 	getDuration() {
 		//suite may still be running
-		const stop = this.times.stop || new Date();
-		return stop.getTime() - this.times.start.getTime();
+		const stop = this.endTime || new Date();
+		return stop.getTime() - this.beginTime.getTime();
 	}
-	contributeToReport(report) {
-		const test_suite = report.createFullElement('testsuite', {
-			name: this.name,
-			hostname: window.navigator.userAgent,
-			failures: this.counters.fails,
-			tests: this.getTests(),
-			time: this.getDuration() / 1000,
-			timestamp: this.times.start.toISOString()
-		});
-		report.documentElement.appendChild(test_suite);
-		//add properties
-		const properties = report.createElement('properties');
-		test_suite.appendChild(properties);
-		properties.appendChild(report.createFullElement('property', {name: 'platform', value: window.navigator.platform}));
-		properties.appendChild(report.createFullElement('property', {name: 'os.name', value: window.navigator.oscpu}));
-		//add test cases
-		this.bundles.flatMap(b => b.assert.results).map(function(result) {
-			const test_case = report.createFullElement('testcase', {name: result.message || '', specification: result.specification || ''});
-			if(!result.success) {
-				test_case.appendChild(report.createFullElement('failure', {message: result.message}));
-			}
-			return test_case;
-		}).forEach(Node.prototype.appendChild, test_suite);
-	}
-	run() {
-		return new Promise(resolve => {
-			this.times.start = new Date();
-			const queue = new PromiseQueue()
-				.then(() => {
-					this.times.stop = new Date();
-					resolve(this);
-				})
-				.catch(exception => {
-					console.error(exception);
-				});
-			queue.addAll(this.bundles.map(b => Bundle.prototype.run.bind(b)));
-		});
+	async run() {
+		this.beginTime = new Date();
+		for(let i = 0; i < this.bundles.length; i++) {
+			await this.runner.run(this.bundles[i]);
+		}
+		this.endTime = new Date();
+		return this;
 	}
 	static fromJSON(s) {
 		//create suite
 		const suite = new Suite(s.name, s.path);
 		//create bundles
-		suite.bundles = s.bundles.map(b => new Bundle(suite, b.dom, b.website, b.dependencies, b.test));
+		suite.bundles = s.bundles.map(b => new Bundle(suite, b.dom, b.website, b.test));
 		return suite;
-	}
-	static generateReport(name, suites, stylesheet_url) {
-		//generate report from bundle asserts
-		const report = document.implementation.createDocument(null, 'testsuites', null);
-		//add style sheet
-		if(stylesheet_url) {
-			report.styleSheetsSets = [{type: 'text/xsl', href: stylesheet_url}];
-			const pi = report.createProcessingInstruction('xml-stylesheet', 'type="text/xsl" href="' + stylesheet_url + '"');
-			report.insertBefore(pi, report.documentElement);
-		}
-		//add information
-		report.documentElement.setAttribute('name', name);
-		report.documentElement.setAttribute('failures', suites.map(s => s.counters.fails).reduce((previous, current) => previous + current));
-		report.documentElement.setAttribute('tests', suites.map(s => s.getTests()).reduce((previous, current) => previous + current));
-		report.documentElement.setAttribute('time', suites.map(s => s.getDuration()).reduce((previous, current) => previous + current) / 1000);
-		suites.map(s => s.contributeToReport(report));
-		return report;
 	}
 }
