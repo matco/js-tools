@@ -11,6 +11,10 @@ interface Node {
 }
 
 interface NodeList {
+	isEmpty(): boolean;
+	last(): Node;
+	first(): Node;
+
 	indexOf(element: Node): number;
 	includes(element: Node): boolean;
 	slice(start?: number, end?: number): Array<Node>;
@@ -24,6 +28,10 @@ interface NodeList {
 }
 
 interface NodeListOf<TNode extends Node> extends NodeList {
+	isEmpty(): boolean;
+	last(): TNode;
+	first(): TNode;
+
 	indexOf(element: Node): number;
 	includes(element: Node): boolean;
 	slice(start?: number, end?: number): Array<TNode>;
@@ -68,13 +76,13 @@ interface HTMLFormElement {
 }
 
 interface HTMLDataListElement {
-	fill(entries: Array<string> | {[key: string]: string;}, blank_entry: boolean, selected_entries: any): void;
-	fillObjects<T>(objects: Array<any>, value_property: string | ((object: T) => string), label_property: string | ((object: T) => string), blank_entry: boolean, selected_entries: any): void;
+	fill(entries: Array<string> | {[key: string]: string;}, blank_entry: boolean, selected_entries: any): HTMLDataListElement;
+	fillObjects<T>(objects: Array<any>, value_property: string | ((object: T) => string), label_property: string | ((object: T) => string), blank_entry: boolean, selected_entries: any): HTMLDataListElement;
 }
 
 interface HTMLSelectElement {
-	fill(entries: Array<string> | {[key: string]: string;}, blank_entry: boolean, selected_entries: any): void;
-	fillObjects<T>(objects:  Array<T>, value_property: string | ((object: T) => string), label_property: string | ((object: T) => string), blank_entry: boolean, selected_entries: any): void;
+	fill(entries: Array<string> | {[key: string]: string;}, blank_entry: boolean, selected_entries: any): HTMLSelectElement;
+	fillObjects<T>(objects:  Array<T>, value_property: string | ((object: T) => string), label_property: string | ((object: T) => string), blank_entry: boolean, selected_entries: any): HTMLSelectElement;
 }
 
 interface Storage {

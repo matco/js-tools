@@ -1,3 +1,5 @@
+import './dom_extension.js';
+
 export default function test(assert) {
 	assert.begin();
 

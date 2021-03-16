@@ -101,6 +101,13 @@ HTMLFormElement.prototype.enable = function() {
 };
 
 //HTMLSelectElement
+/**
+ * @type {Function}
+ * @param {any[] | {}} entries - List of entries
+ * @param {boolean} [blank_entry] - Add or not a blank entry
+ * @param {string[] | string} [selected_entries] - Entries that will be selected
+ * @returns {HTMLSelectElement} - The select element that will be filled
+ */
 HTMLSelectElement.prototype.fill = function(entries, blank_entry, selected_entries) {
 	//store options as a map to avoid duplicate keys while keeping order (map keeps order of insertion)
 	let options;
@@ -179,6 +186,15 @@ HTMLSelectElement.prototype.fill = function(entries, blank_entry, selected_entri
 	//allow chain
 	return this;
 };
+/**
+ * @type {Function}
+ * @param {any[]} objects - List of objects used to fill the select
+ * @param {string|Function} value_property - Property of the object or function applied to the object to obtain the object value
+ * @param {string|Function} label_property - Property of the object or function applied to the object to obtain the object label
+ * @param {boolean} [blank_entry] - Add or not a blank entry
+ * @param {string[] | string} [selected_entries] - Entries that will be selected
+ * @returns {HTMLSelectElement} - The select element that will be filled
+ */
 HTMLSelectElement.prototype.fillObjects = function(objects, value_property, label_property, blank_entry, selected_entries) {
 	const entries = Object.fromEntries(objects.map(o => {
 		const value = Function.isFunction(value_property) ? value_property.call(o) : o[value_property];
